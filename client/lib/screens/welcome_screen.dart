@@ -18,11 +18,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void initState() {
     super.initState();
     for (int i = 0; i < 5; i++) {
-      Future.delayed(Duration(milliseconds: 300 * i), () {
-        _controllers[i]
-            .forward()
-            .then((value) => _controllers[i].repeat(reverse: true));
-      });
       _controllers.add(AnimationController(
         vsync: this,
         duration: const Duration(seconds: 1),
@@ -31,6 +26,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         parent: _controllers[i],
         curve: Curves.easeInOut,
       ));
+      Future.delayed(Duration(milliseconds: 400 * (5 - i)), () {
+        _controllers[i]
+            .forward()
+            .then((value) => _controllers[i].repeat(reverse: true));
+      });
     }
   }
 
@@ -86,10 +86,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             child: child,
                           ),
                           child: Container(
-                            width: 5,
-                            height: 5,
+                            width: 6,
+                            height: 6,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
+                              color: Color.fromRGBO(48, 96, 96, 1.0),
                               shape: BoxShape.circle,
                             ),
                           ),
