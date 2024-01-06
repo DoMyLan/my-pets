@@ -90,14 +90,8 @@ Widget placesAutoCompleteTextField(TextEditingController controller) {
 Future<LatLng> convertAddressToLatLng(String inputAddress) async {
   LatLng coordinate;
   try {
-    // Thay thế bằng API key của bạn
-    const apiKey = 'AIzaSyChnbx9TGSXLu6GePcdzb9IjYBGWHRsqcc';
-
-
-    final encodedAddress = Uri.encodeComponent(inputAddress);
-
     final endpoint =
-        'https://maps.googleapis.com/maps/api/geocode/json?address=$encodedAddress&key=$apiKey';
+        'https://maps.googleapis.com/maps/api/geocode/json?address=$inputAddress&key=$GOOGLE_MAPS_API_KEY';
 
     final response = await http.get(Uri.parse(endpoint));
 
@@ -114,8 +108,11 @@ Future<LatLng> convertAddressToLatLng(String inputAddress) async {
       throw Exception('Failed to load data');
     }
 
+    print('Convert đc nè: $coordinate');
+
     return coordinate;
   } catch (e) {
+    print('error convert to coordinates: ${e.toString()}');
     return LatLng(0.0, 0.0);
   }
 }

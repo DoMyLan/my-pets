@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/services/user/user_form_api.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RegistrationForm extends StatefulWidget {
   final String accountId;
@@ -190,6 +191,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       addressController.text.toString(),
                       selectedRadio,
                       auboutMeController.text.toString());
+
+                      // LatLng a =await convertAddressToLatLng(addressController.text.toString());
+
+                      // print('Tọa độ Address mới nhập: $a');
                 },
                 color: const Color.fromRGBO(48, 96, 96, 1.0),
                 elevation: 0,

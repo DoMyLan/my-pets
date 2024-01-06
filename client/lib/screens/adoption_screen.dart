@@ -433,15 +433,15 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             text: '$infor: ',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.grey,
             ),
           ),
           TextSpan(
-            text: '$inforDetail',
+            text: inforDetail,
             style: TextStyle(
               fontStyle: FontStyle.italic,
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,
             ),
@@ -520,33 +520,39 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 8),
                               fieldInforPet('Breed', animal.breed),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 8),
                               fieldInforPet('Age', '${animal.age * 12} months'),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 8),
                               Row(
+                               
                                 children: [
                                   Icon(
                                     FontAwesomeIcons.mapMarkerAlt,
                                     color: Theme.of(context).primaryColor,
                                     size: 16.0,
                                   ),
-                                  const SizedBox(width: 6),
+                                  const SizedBox(width: 1),
                                   Text(
                                     'Distance: ',
                                     style: TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 13,
                                       color: Theme.of(context).primaryColor,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  Text(
-                                    distanceString,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w400,
+                                  Flexible(
+                                    child: Text(
+                                      // '  $distanceString KM',
+                                      'KM',
+                                    
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      softWrap: true,
                                     ),
                                   ),
                                 ],
@@ -586,8 +592,11 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   //tính toán khoảng cách
   Future<double> calculateDistance(
       String currentAddress, String otherAddress) async {
-    LatLng currentP = await convertAddressToLatLng(currentAddress);
-    LatLng pDestination = await convertAddressToLatLng(otherAddress);
+    // LatLng currentP = await convertAddressToLatLng(currentAddress);
+    // LatLng pDestination = await convertAddressToLatLng(otherAddress);
+  LatLng currentP = LatLng(10.776275, 106.695809);
+    LatLng pDestination = LatLng(10.756607, 106.671960);
+
     double distance = Geolocator.distanceBetween(
       currentP.latitude,
       currentP.longitude,
