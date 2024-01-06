@@ -3,7 +3,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:found_adoption_application/services/auth/loginApi.dart';
 import 'package:found_adoption_application/screens/signUp_screen.dart';
-import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/custom_widget/input_widget.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 
@@ -23,22 +22,16 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(
-          'Back to Home',
+          'Login',
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0,
         // brightness: Brightness.light,
         backgroundColor: Color.fromRGBO(48, 96, 96, 1.0),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) =>  WelcomeScreen()));
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.white,
-          ),
+        leading: const Icon(
+          Icons.arrow_back_ios,
+          size: 20,
+          color: Color.fromRGBO(48, 96, 96, 1.0),
         ),
       ),
       body: Container(
@@ -196,7 +189,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           email); // Call the forgotPassword function
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
-                                      
                                     },
                                   ),
                                 ],

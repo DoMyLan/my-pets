@@ -10,6 +10,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/profile_ce
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/post/comment.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -346,8 +347,7 @@ class _CommentScreenState extends State<CommentScreen> {
                     FocusScope.of(context).unfocus();
                     commentController.clear();
 
-                    var id = await postComment(
-                        widget.postId, commentText);                    
+                    var id = await postComment(widget.postId, commentText);
                     if (id != '') {
                       var currentClient = await getCurrentClient();
 
@@ -426,9 +426,12 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
             TextButton(
               onPressed: () async {
+                Loading(context);
                 // Gọi hàm xóa comment khi người dùng xác nhận
                 var message = await deleteComment(postId, commentId);
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
+
                 String commentId2 = extractCommentId(message);
                 if (commentId2 != '') {
                   setState(() {

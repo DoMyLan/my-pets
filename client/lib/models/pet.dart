@@ -10,7 +10,7 @@ class Pet {
   final String petType;
   final String breed;
   final String gender;
-  final int age;
+  final double age;
   final String color;
   final String description;
   List<dynamic> images;
@@ -64,7 +64,7 @@ class Pet {
       petType: json['petType'],
       breed: json['breed'],
       gender: json['gender'],
-      age: json['age'] as int,
+      age: double.parse(json['age'] as String),
       color: json['color'],
       description: json['description'],
       images: json['images'] as List<dynamic>,

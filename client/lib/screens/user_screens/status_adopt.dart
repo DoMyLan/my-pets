@@ -5,7 +5,6 @@ import 'package:found_adoption_application/models/adopt.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
-import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';

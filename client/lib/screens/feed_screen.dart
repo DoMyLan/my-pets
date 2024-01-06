@@ -22,6 +22,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   int itemsPerPage = 10;
   int currentPage = 1;
+  int countScroll = 0;
+  int totalPages = 1;
 
   bool isLoading = true;
 
@@ -49,8 +51,10 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<void> _loadVisiblePosts() async {
     PostResult postReturn = await getAllPost(currentPage, itemsPerPage);
     List<Post> newPosts = postReturn.posts;
+    totalPages = postReturn.totalPages;
     setState(() {
       visiblePosts.addAll(newPosts);
+      countScroll = 0;
     });
 
     setState(() {
@@ -145,7 +149,12 @@ class _FeedScreenState extends State<FeedScreen> {
             if (scrollInfo is ScrollEndNotification &&
                 scrollInfo.metrics.pixels ==
                     scrollInfo.metrics.maxScrollExtent) {
-              _loadMoreItems();
+              countScroll++;
+              if (countScroll == 1) {
+                if (currentPage <= totalPages) {
+                  _loadMoreItems();
+                }
+              }
             }
             return true;
           },

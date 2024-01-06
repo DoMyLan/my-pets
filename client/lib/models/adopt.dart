@@ -69,7 +69,7 @@ class Adopt {
               petType: json['petId']['petType'],
               breed: json['petId']['breed'],
               gender: json['petId']['gender'],
-              age: json['petId']['age'] as int,
+              age: double.parse(json['petId']['age'] as String),
               color: json['petId']['color'],
               description: json['petId']['description'],
               images: json['petId']['images'] as List<dynamic>,

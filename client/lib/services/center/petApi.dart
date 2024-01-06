@@ -63,6 +63,8 @@ Future<List<Pet>> getAllPet() async {
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
   return pets;
+
+
 }
 
 Future<List<Pet>> getAllPetOfCenter(centerId) async {

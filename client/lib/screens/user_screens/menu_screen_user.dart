@@ -87,76 +87,79 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 Row(
+                Row(
                   children: [
-    FutureBuilder(
-  // Trả về một Future có kiểu dữ liệu là String (URL của avatar)
-  future: getCurrentClient().then((currentClient) => currentClient.avatar),
-  builder: (context, snapshotAvatar) {
-    if (snapshotAvatar.connectionState == ConnectionState.waiting) {
-      // Hiển thị một vòng tròn chờ nếu đang tải dữ liệu
-      return CircleAvatar(
-        radius: 24.0,
-        child: CircularProgressIndicator(),
-      );
-    } else if (snapshotAvatar.hasError) {
-      // Xử lý lỗi nếu có
-      return Text('Error: ${snapshotAvatar.error}');
-    } else {
-      // Hiển thị CircleAvatar khi dữ liệu avatar sẵn sàng
-      return CircleAvatar(
-        radius: 24.0,
-        backgroundImage: NetworkImage(snapshotAvatar.data!),
-      );
-    }
-  },
-),
-    const SizedBox(width: 8),
-    FutureBuilder(
-     
-      future: getCurrentClient().then((currentClient) => currentClient.firstName +' '+ currentClient.lastName),
-      builder: (context, snapshotName) {
-        if (snapshotName.connectionState == ConnectionState.waiting) {
-        
-          return const CircularProgressIndicator();
-        } else if (snapshotName.hasError) {
-       
-          return Text('Error: ${snapshotName.error}');
-        } else {
-          // Hiển thị tên trung tâm khi dữ liệu tên sẵn sàng
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                snapshotName.data!,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                ),
-              ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.circle,
-                    color: Colors.green,
-                    size: 12,
-                  ),
-                  SizedBox(width: 8.0),
-                  Text(
-                    'Đang hoạt động',
-                    style: TextStyle(
-                      color: Colors.white,
+                    FutureBuilder(
+                      // Trả về một Future có kiểu dữ liệu là String (URL của avatar)
+                      future: getCurrentClient()
+                          .then((currentClient) => currentClient.avatar),
+                      builder: (context, snapshotAvatar) {
+                        if (snapshotAvatar.connectionState ==
+                            ConnectionState.waiting) {
+                          // Hiển thị một vòng tròn chờ nếu đang tải dữ liệu
+                          return CircleAvatar(
+                            radius: 24.0,
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshotAvatar.hasError) {
+                          // Xử lý lỗi nếu có
+                          return Text('Error: ${snapshotAvatar.error}');
+                        } else {
+                          // Hiển thị CircleAvatar khi dữ liệu avatar sẵn sàng
+                          return CircleAvatar(
+                            radius: 24.0,
+                            backgroundImage: NetworkImage(snapshotAvatar.data!),
+                          );
+                        }
+                      },
                     ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        }
-      },
-    ),
-  ],
+                    const SizedBox(width: 8),
+                    FutureBuilder(
+                      future: getCurrentClient().then((currentClient) =>
+                          currentClient.firstName +
+                          ' ' +
+                          currentClient.lastName),
+                      builder: (context, snapshotName) {
+                        if (snapshotName.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshotName.hasError) {
+                          return Text('Error: ${snapshotName.error}');
+                        } else {
+                          // Hiển thị tên trung tâm khi dữ liệu tên sẵn sàng
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshotName.data!,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    color: Colors.green,
+                                    size: 12,
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Text(
+                                    'Đang hoạt động',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

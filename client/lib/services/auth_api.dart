@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
@@ -48,7 +49,7 @@ Future<String> refreshAccessToken() async {
     await centerBox.put('currentCenter', null);
     // ignore: use_build_context_synchronously
     Navigator.push(navigatorKey.currentState!.context,
-        MaterialPageRoute(builder: ((context) => WelcomeScreen())));
+        MaterialPageRoute(builder: ((context) => LoginScreen())));
     notification("The login session has expired, please log in again!", false);
 
     return 'Login';

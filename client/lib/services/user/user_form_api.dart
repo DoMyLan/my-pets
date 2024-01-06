@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
@@ -42,7 +43,7 @@ Future<void> userform(
     if (response.statusCode == 201) {
       notification("Success!", false);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+          context, MaterialPageRoute(builder: (context) => LoginScreen()));
     } else {
       notification(responseData['message'], true);
     }
