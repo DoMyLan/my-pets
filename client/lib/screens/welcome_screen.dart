@@ -72,31 +72,61 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               ],
             ),
             const SizedBox(height: 100),
+            // Center(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: List.generate(
+            //       10, // Generate 10 widgets
+            //       (index) => index % 2 == 0
+            //           ? AnimatedBuilder(
+            //               animation: _animations[index ~/ 2],
+            //               builder: (context, child) => Transform.translate(
+            //                 offset:
+            //                     Offset(0, -15 * _animations[index ~/ 2].value),
+            //                 child: child,
+            //               ),
+            //               child: Container(
+            //                 width: 12,
+            //                 height: 12,
+            //                 decoration: BoxDecoration(
+            //                   color: Color.fromRGBO(48, 96, 96, 1.0),
+            //                   shape: BoxShape.circle,
+            //                 ),
+            //               ),
+            //             )
+            //           : SizedBox(
+            //               width:
+            //                   15),
+            //     ),
+            //   ),
+            // )
+
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  10, // Generate 10 widgets
-                  (index) => index % 2 == 0
-                      ? AnimatedBuilder(
-                          animation: _animations[index ~/ 2],
-                          builder: (context, child) => Transform.translate(
-                            offset:
-                                Offset(0, -15 * _animations[index ~/ 2].value),
-                            child: child,
+                  3, // Chỉ tạo 3 hình tròn
+                  (index) => Row(
+                    children: [
+                      AnimatedBuilder(
+                        animation: _animations[index],
+                        builder: (context, child) => Transform.translate(
+                          offset: Offset(0, -15 * _animations[index].value),
+                          child: child,
+                        ),
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(48, 96, 96, 1.0),
+                            shape: BoxShape.circle,
                           ),
-                          child: Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(48, 96, 96, 1.0),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        )
-                      : SizedBox(
-                          width:
-                              15), // Add a SizedBox with width 20 between dots
+                        ),
+                      ),
+                      if (index < 2)
+                        const SizedBox(width: 15), // Khoảng cách giữa các hình tròn
+                    ],
+                  ),
                 ),
               ),
             )
