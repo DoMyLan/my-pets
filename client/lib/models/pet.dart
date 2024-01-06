@@ -1,3 +1,4 @@
+
 import 'package:found_adoption_application/models/user.dart';
 import 'package:found_adoption_application/models/pet_center.dart';
 import 'package:intl/intl.dart';
@@ -50,6 +51,7 @@ class Pet {
               name: json['centerId']['name'] as String,
               avatar: json['centerId']['avatar'] as String,
               address: json['centerId']['address'] as String,
+             
               phoneNumber: json['centerId']['phoneNumber'] as String,
               aboutMe: json['centerId']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")

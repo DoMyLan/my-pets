@@ -8,7 +8,8 @@ class FilterDialog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Pets Filter'),
+        leading: Icon(Icons.arrow_back, color: Colors.white, size: 18,),
+        title: Text('Pets Filter', style: TextStyle(fontSize: 18, color: Colors.white),),
       ),
       body: FilterScreen(),
     );
@@ -121,7 +122,7 @@ class _FilterScreenState extends State<FilterScreen> {
               }catch(e){
                 print('errorr12: ${e.toString()}');
               }},
-              child: Text('Apply'),
+              child: Text('Apply', style: TextStyle(fontSize: 16, color: Colors.white),),
             ),
           ],
         ),
