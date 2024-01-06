@@ -228,7 +228,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<double> calculateDistance() async {
-    double distance = await Geolocator.distanceBetween(
+    double distance =  Geolocator.distanceBetween(
       _currentP.latitude,
       _currentP.longitude,
       widget.pDestination.latitude,
