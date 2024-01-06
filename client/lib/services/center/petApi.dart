@@ -63,8 +63,6 @@ Future<List<Pet>> getAllPet() async {
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
   return pets;
-
-
 }
 
 Future<List<Pet>> getAllPetOfCenter(centerId) async {
@@ -98,18 +96,13 @@ Future<List<Pet>> filterPet(breed, color, age) async {
   }
 
   if (age.isNotEmpty) {
-    for (var i = 0; i < age.length; i++) {
-      if (i == 0) {
-        ageSearch = age[i].toString();
-      } else {
-        ageSearch = ageSearch + '&age=' + age[i].toString();
-      }
-    }
+    ageSearch = "&age=" + age[0].toString();
+    ageSearch = ageSearch + '&age=' + age[age.length-1].toString();
   }
 
   try {
     final apiUrl =
-        "/pet/search/find?breed=$breedSearch&color=$colorSearch&age=$ageSearch";
+        "/pet/search/find?breed=$breedSearch&color=$colorSearch$ageSearch";
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
     print(e);
@@ -117,6 +110,7 @@ Future<List<Pet>> filterPet(breed, color, age) async {
   }
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  notification(pets.length.toString(), false);
   return pets;
 }
 
