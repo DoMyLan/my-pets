@@ -22,7 +22,7 @@ Future<void> addPet(
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age,
+    "age": age.toString(),
     "gender": gender,
     "color": color,
     "images": imagePaths,
@@ -96,8 +96,12 @@ Future<List<Pet>> filterPet(breed, color, age) async {
   }
 
   if (age.isNotEmpty) {
-    ageSearch = "&age=" + age[0].toString();
-    ageSearch = ageSearch + '&age=' + age[age.length-1].toString();
+    if (age.length > 1) {
+      ageSearch = "&age=" + age[0].toString();
+      ageSearch = ageSearch + '&age=' + age[age.length - 1].toString();
+    } else if (age.length == 1) {
+      ageSearch = "&age=" + age[0].toString() + ".0";
+    }
   }
 
   try {
@@ -110,7 +114,6 @@ Future<List<Pet>> filterPet(breed, color, age) async {
   }
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
-  notification(pets.length.toString(), false);
   return pets;
 }
 
@@ -155,7 +158,7 @@ Future<void> updatePet(
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age,
+    "age": age.toString(),
     "gender": gender,
     "color": color,
     "description": description,
