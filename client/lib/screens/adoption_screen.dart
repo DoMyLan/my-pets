@@ -544,7 +544,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                   Flexible(
                                     child: Text(
                                       // '  $distanceString KM',
-                                      'KM',
+                                      '     KM',
                                     
                                       style: TextStyle(
                                         fontSize: 18,
