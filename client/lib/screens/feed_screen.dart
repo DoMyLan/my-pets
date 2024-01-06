@@ -7,7 +7,6 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:found_adoption_application/utils/messageNotifi.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});

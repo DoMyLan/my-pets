@@ -445,7 +445,6 @@ class _PostCardState extends State<PostCard> {
               Expanded(
                 child: IconButton(
                   onPressed: () async {
-                    await like(context, clientPost.id);
                     if (!liked) {
                       setState(() {
                         quantityLike += 1;
@@ -457,6 +456,7 @@ class _PostCardState extends State<PostCard> {
                         liked = false;
                       });
                     }
+                    await like(context, clientPost.id);
                   },
                   icon: liked == false
                       ? const Icon(
