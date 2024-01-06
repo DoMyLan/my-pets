@@ -125,16 +125,9 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewPostScreen(),
-                ),
-              );
-            },
+            onPressed: _refresh,
             icon: const Icon(
-              Icons.add_circle,
+              Icons.refresh,
               size: 30,
               color: Color.fromRGBO(48, 96, 96, 1.0),
             ),
@@ -173,12 +166,24 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ),
       ),
+   
+
       floatingActionButton: FloatingActionButton(
-        onPressed: _refresh,
-        backgroundColor: Theme.of(context).primaryColor,
-        tooltip: 'Reload',
-        child: Icon(Icons.refresh),
-      ),
+        onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewPostScreen(),
+                ),
+              );
+            },
+            backgroundColor: Theme.of(context).primaryColor,
+            child: const Icon(
+              Icons.add,
+              size: 30,
+              color: Colors.white,
+            ),
+        ),
     );
   }
 }
