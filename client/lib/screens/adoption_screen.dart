@@ -14,6 +14,23 @@ import 'package:found_adoption_application/screens/filter_dialog.dart';
 
 import 'package:hive/hive.dart';
 
+
+
+class AgeConverter {
+  static String convertAge(double humanAge) {
+    if (humanAge * 12 < 1) {
+      // Nếu tuổi dưới 1 tháng, tính theo tuần
+      return '${(humanAge * 52).toInt()} weeks';
+    } else if (humanAge < 1) {
+      // Nếu tuổi dưới 1 năm, tính theo tháng
+      return '${(humanAge * 12).toInt()} months';
+    } else {
+      // Tuổi 1 năm trở lên, tính theo năm
+      return '${humanAge.toInt()} years';
+    }
+  }
+}
+
 class AdoptionScreen extends StatefulWidget {
   final centerId;
 
@@ -453,6 +470,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
 
   Widget buildAnimalList(List<Pet> animals, List<Pet> filteredAnimals) {
     final deviceWidth = MediaQuery.of(context).size.width;
+    String age;
 
     return ListView.builder(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -523,6 +541,9 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               const SizedBox(height: 8),
                               fieldInforPet('Breed', animal.breed),
                               const SizedBox(height: 8),
+                              
+
+                              
                               fieldInforPet('Age', '${animal.age * 12} months'),
                               const SizedBox(height: 8),
                               Row(
