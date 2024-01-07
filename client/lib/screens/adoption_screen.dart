@@ -523,7 +523,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               const SizedBox(height: 8),
                               fieldInforPet('Breed', animal.breed),
                               const SizedBox(height: 8),
-                              fieldInforPet('Age', '${animal.age * 12} months'),
+                              fieldInforPet('Age', '${(animal.age * 12).toStringAsFixed(1)} months'),
                               const SizedBox(height: 8),
                               Row(
                                
