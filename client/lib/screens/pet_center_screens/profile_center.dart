@@ -105,23 +105,30 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           color: Theme.of(context).primaryColor,
         ),
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
-            TypewriterAnimatedTextKit(
-              speed: Duration(milliseconds: 200),
-              totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
-              text: ['Profile'],
-              textStyle: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ],
+        title: Text(
+          'Profile',
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 25.0),
         ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
+        //     // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
+        //     TypewriterAnimatedTextKit(
+        //       speed: Duration(milliseconds: 200),
+        //       totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
+        //       text: ['Profile'],
+        //       textStyle: TextStyle(
+        //         color: Theme.of(context).primaryColor,
+        //         fontSize: 30.0,
+        //         fontWeight: FontWeight.bold,
+        //         letterSpacing: 2.0,
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -215,8 +222,8 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                 color: Colors.white),
                                             label: Text('Edit profile'),
                                             style: ElevatedButton.styleFrom(
-                                              primary:
-                                                  Theme.of(context).primaryColor,
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
                                               onPrimary: Colors.white,
                                             ),
                                           ),
@@ -224,30 +231,29 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                       ),
 
                                       //Update Password
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: Container(
-                                                    width: 175,
-                                                    child: ElevatedButton.icon(
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    UpdatePasswordScreen()));
-                                                      },
-                                                      icon: Icon(Icons.password,
-                                                          color: Colors.white),
-                                                      label: Text('Change Password'),
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        primary: Theme.of(context)
-                                                            .primaryColor,
-                                                        onPrimary: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Container(
+                                          width: 175,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UpdatePasswordScreen()));
+                                            },
+                                            icon: Icon(Icons.password,
+                                                color: Colors.white),
+                                            label: Text('Change Password'),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
+                                              onPrimary: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                       PopupMenuItem(
                                         value: 2,
                                         child: Container(
@@ -261,8 +267,8 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                 color: Colors.white),
                                             label: Text('Change status'),
                                             style: ElevatedButton.styleFrom(
-                                              primary:
-                                                  Theme.of(context).primaryColor,
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
                                               onPrimary: Colors.white,
                                             ),
                                           ),
@@ -319,7 +325,6 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     buildInfo(center.aboutMe),
                     SizedBox(height: 16.0),
 
-                    
                     SizedBox(height: 16.0),
 
                     Container(
@@ -422,52 +427,6 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           height: 500,
           child: Column(
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                child: Container(
-                  width: 500.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15)),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.search,
-                        color: Colors.grey,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              hintText: 'Search pet to adop'),
-                        ),
-                      ),
-                      Icon(
-                        FontAwesomeIcons.filter,
-                        color: Colors.grey,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              //ANIMATION CÁC LOẠI ĐỘNG VẬT
-              Container(
-                height: 80,
-                child: ListView.builder(
-                    padding: EdgeInsets.only(left: 24),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: animalTypes.length,
-                    itemBuilder: (context, index) {
-                      return buildAnimalIcon(index);
-                    }),
-              ),
-
               //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
               Expanded(
                 child: FutureBuilder<List<Pet>>(
@@ -478,7 +437,8 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                           child: CircularProgressIndicator(),
                         );
                       } else if (snapshot.hasError) {
-                        return const Center(child: Text('Please try again later'));
+                        return const Center(
+                            child: Text('Please try again later'));
                       } else {
                         animals = snapshot.data ?? [];
                         return ListView.builder(
@@ -524,45 +484,25 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        Text(
-                                                          animal.namePet,
-                                                          style: TextStyle(
-                                                              fontSize: 26,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                        fieldInforPet('Name',
+                                                            animal.namePet),
+                                                        Icon(
+                                                          animal.gender ==
+                                                                  "FEMALE"
+                                                              ? FontAwesomeIcons
+                                                                  .venus
+                                                              : FontAwesomeIcons
+                                                                  .mars,
                                                         ),
-                                                        Icon(animal.gender ==
-                                                                "FEMALE"
-                                                            ? FontAwesomeIcons
-                                                                .venus
-                                                            : FontAwesomeIcons
-                                                                .mars),
                                                       ],
                                                     ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      animal.breed,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      '${animal.age} years old',
-                                                      style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    const SizedBox(height: 10),
+                                                    const SizedBox(height: 8),
+                                                    fieldInforPet(
+                                                        'Breed', animal.breed),
+                                                    const SizedBox(height: 8),
+                                                    fieldInforPet('Age',
+                                                        '${animal.age * 12} months'),
+                                                    const SizedBox(height: 8),
                                                     Row(
                                                       children: [
                                                         Icon(
@@ -574,17 +514,34 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                           size: 16.0,
                                                         ),
                                                         const SizedBox(
-                                                            width: 6),
+                                                            width: 1),
                                                         Text(
                                                           'Distance: ',
                                                           style: TextStyle(
-                                                              fontSize: 15,
+                                                            fontSize: 13,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        Flexible(
+                                                          child: Text(
+                                                            // '  $distanceString KM',
+                                                            '     KM',
+
+                                                            style: TextStyle(
+                                                              fontSize: 18,
                                                               color: Theme.of(
                                                                       context)
                                                                   .primaryColor,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w400),
+                                                                      .w800,
+                                                            ),
+                                                            softWrap: true,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -625,6 +582,32 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget fieldInforPet(String infor, String inforDetail) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '$infor: ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.grey,
+            ),
+          ),
+          TextSpan(
+            text: inforDetail,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
+import 'package:found_adoption_application/screens/user_screens/form_adoption.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/loading.dart';
@@ -286,20 +287,17 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                 ],
                               ),
                               Container(
-                                  height: screenHeight * 0.15,
-                                  child: SingleChildScrollView(
-                                    child: Text(
-                                      widget.animal.description.toString(),
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14),
-                                    ),
+                                height: screenHeight * 0.15,
+                                child: SingleChildScrollView(
+                                  child: Text(
+                                    widget.animal.description.toString(),
+                                    style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
                                   ),
                                 ),
-
-
-                              
+                              ),
                             ],
                           ),
                         ),
@@ -341,8 +339,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    showInfoInputDialog(
-                                        context, widget.animal.id);
+                                    // showInfoInputDialog(
+                                    //     context, widget.animal.id);
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const FormAdopt()),
+                                    );
                                   },
                                   child: Material(
                                     borderRadius: BorderRadius.circular(20),
@@ -643,7 +647,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-
               },
               child: const Text('Delete'),
             ),
