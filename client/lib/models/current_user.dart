@@ -1,3 +1,5 @@
+import 'package:found_adoption_application/models/current_location.dart';
+
 import 'package:hive/hive.dart';
 
 // part 'hive_solUser.g.dart';
@@ -25,8 +27,10 @@ class User extends HiveObject {
   @HiveField(9)
   late String address;
   @HiveField(10)
-  late String refreshToken;
+  late CurrentLocation location;
   @HiveField(11)
+  late String refreshToken;
+  @HiveField(12)
   late String accessToken;
 }
 
@@ -48,6 +52,7 @@ class UserAdapter extends TypeAdapter<User> {
       ..phoneNumber = reader.readString()
       ..avatar = reader.readString()
       ..address = reader.readString()
+      ..location = reader.read()
       ..refreshToken = reader.readString()
       ..accessToken = reader.readString();
 
@@ -66,6 +71,7 @@ class UserAdapter extends TypeAdapter<User> {
     writer.writeString(obj.phoneNumber);
     writer.writeString(obj.avatar);
     writer.writeString(obj.address);
+    writer.write(obj.location);
     writer.writeString(obj.refreshToken);
     writer.writeString(obj.accessToken);
   }

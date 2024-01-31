@@ -1,6 +1,7 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/comments.dart';
+import 'package:found_adoption_application/models/location.dart';
 import 'package:found_adoption_application/models/pet_center.dart'
     as center_comment;
 import 'package:found_adoption_application/models/pet_center.dart';
@@ -76,6 +77,7 @@ class _CommentScreenState extends State<CommentScreen> {
             lastName: userIdData['lastName'],
             avatar: userIdData['avatar'],
             address: userIdData['address'],
+            location: userIdData['location'],
             phoneNumber: userIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -91,6 +93,7 @@ class _CommentScreenState extends State<CommentScreen> {
             name: centerIdData['name'],
             avatar: centerIdData['avatar'],
             address: centerIdData['address'],
+            location: centerIdData['location'],
             phoneNumber: centerIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -267,6 +270,7 @@ class _CommentScreenState extends State<CommentScreen> {
         lastName: '',
         avatar: '',
         address: '',
+        location: Location(latitude: '', longitude: ''),
         phoneNumber: '',
         email: '',
         status: '');
@@ -275,6 +279,7 @@ class _CommentScreenState extends State<CommentScreen> {
         name: '',
         avatar: '',
         address: '',
+        location: Location(latitude: '', longitude: ''),
         phoneNumber: '',
         email: '',
         status: '');
@@ -358,6 +363,7 @@ class _CommentScreenState extends State<CommentScreen> {
                           lastName: currentClient.lastName,
                           avatar: currentClient.avatar,
                           address: '',
+                          location: Location(latitude: '', longitude: ''),
                           phoneNumber: '',
                           email: '',
                           status: '',
@@ -368,6 +374,7 @@ class _CommentScreenState extends State<CommentScreen> {
                           name: currentClient.name,
                           avatar: currentClient.avatar,
                           address: '',
+                          location: Location(latitude: '', longitude: ''),
                           phoneNumber: '',
                           email: '',
                           status: '',
