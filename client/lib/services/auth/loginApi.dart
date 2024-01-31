@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/dialog_otp.dart';
 import 'package:found_adoption_application/models/current_center.dart';
+import 'package:found_adoption_application/models/current_location.dart';
 import 'package:found_adoption_application/models/current_user.dart';
+
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/register_form.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -44,6 +46,10 @@ Future<void> login(
           ..phoneNumber = responseData['data']['phoneNumber']
           ..avatar = responseData['data']['avatar']
           ..address = responseData['data']['address']
+          ..location = CurrentLocation(
+  latitude: responseData['data']['location']['latitude'],
+  longitude: responseData['data']['location']['longitude'],
+)
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
@@ -52,6 +58,8 @@ Future<void> login(
 
         var retrievedUser =
             userBox.get('currentUser'); // Lấy thông tin User từ Hive
+
+        print('kkkk: ${retrievedUser['location']}');
         notification("Login user success!", false);
         Navigator.pop(context);
         Navigator.push(
@@ -72,6 +80,7 @@ Future<void> login(
           ..avatar = responseData['data']['avatar']
           ..phoneNumber = responseData['data']['phoneNumber']
           ..address = responseData['data']['address']
+          ..location = responseData['data']['location']
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
@@ -80,6 +89,7 @@ Future<void> login(
 
         var retrievedCenter =
             centerBox.get('currentCenter'); // Lấy thông tin User từ Hive
+
         notification("Login center success!", false);
         Navigator.pop(context);
         Navigator.push(

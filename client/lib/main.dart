@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/models/current_location.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
@@ -16,8 +17,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(LocationAdapter());
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(CenterAdapter());
+  
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(
