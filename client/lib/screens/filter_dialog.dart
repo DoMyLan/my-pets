@@ -2,14 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 
-class FilterDialog extends StatelessWidget {
+class FilterDialog extends StatefulWidget {
+  @override
+  State<FilterDialog> createState() => _FilterDialogState();
+}
+
+class _FilterDialogState extends State<FilterDialog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        leading: Icon(Icons.arrow_back, color: Colors.white, size: 18,),
-        title: Text('Pets Filter', style: TextStyle(fontSize: 18, color: Colors.white),),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.grey.shade100,
+        title: const Text(
+          'Select Pets',
+          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        centerTitle: true,
+        actions: [
+          // const Spacer(), 
+          IconButton(
+            icon: const Icon(Icons.clear_outlined, color: Colors.black, size: 20,),
+            onPressed: () {
+              // Xử lý khi bấm nút clear
+              Navigator.pop(context);
+            },
+          ),
+        ],
       ),
       body: FilterScreen(),
     );
@@ -22,7 +41,7 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  String? selectedBreed;
+  String? selectedBreed ='Chó cỏ';
   RangeValues selectedAgeRange = RangeValues(1, 10);
   List<String> selectedColors = [];
   List<String> allColors = [
@@ -111,18 +130,21 @@ class _FilterScreenState extends State<FilterScreen> {
                 primary: Theme.of(context).primaryColor,
               ),
               onPressed: () {
-                try{
-                List<int> listAge =
-                    convertRangeValuesToListInt(selectedAgeRange);
+                try {
+                  List<int> listAge =
+                      convertRangeValuesToListInt(selectedAgeRange);
 
-                Future<List<Pet>> dataPet = filterPet(
-                    selectedBreed, selectedColors, listAge);
-                Navigator.pop<Future<List<Pet>>>(context, dataPet); 
-                
-              }catch(e){
-                print('errorr12: ${e.toString()}');
-              }},
-              child: Text('Apply', style: TextStyle(fontSize: 16, color: Colors.white),),
+                  Future<List<Pet>> dataPet =
+                      filterPet(selectedBreed, selectedColors, listAge);
+                  Navigator.pop<Future<List<Pet>>>(context, dataPet);
+                } catch (e) {
+                  print('errorr12: ${e.toString()}');
+                }
+              },
+              child: Text(
+                'Apply',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
             ),
           ],
         ),

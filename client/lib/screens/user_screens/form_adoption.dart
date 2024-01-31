@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:intl/intl.dart';
 
 class FormAdopt extends StatefulWidget {
@@ -12,6 +13,29 @@ class _FormAdoptState extends State<FormAdopt> {
   DateTime? interviewDate;
   DateTime? selectedAdoptionDate;
   bool acceptRequire = false;
+  var currentClient;
+  TextEditingController textName = TextEditingController();
+  TextEditingController textEmail= TextEditingController();
+  TextEditingController textPhone= TextEditingController();
+  TextEditingController textAddress= TextEditingController();
+  TextEditingController textNote= TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+      textName.text = '${currentClient.firstName} ${currentClient.lastName}';
+      textAddress.text = currentClient.address;
+      textEmail.text =currentClient.email;
+      textPhone.text = currentClient.phoneNumber;
+    });
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -76,11 +100,12 @@ class _FormAdoptState extends State<FormAdopt> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold)),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                 child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: textName,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                  decoration: const InputDecoration(
                     labelText: "Tên của bạn",
                     labelStyle: TextStyle(
                         fontSize: 18,
@@ -89,11 +114,12 @@ class _FormAdoptState extends State<FormAdopt> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                 child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: textEmail,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                  decoration: const InputDecoration(
                     labelText: "Email",
                     labelStyle: TextStyle(
                         fontSize: 18,
@@ -102,11 +128,12 @@ class _FormAdoptState extends State<FormAdopt> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                 child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: textPhone,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                  decoration: const InputDecoration(
                     labelText: "Số điện thoại",
                     labelStyle: TextStyle(
                         fontSize: 18,
@@ -115,16 +142,29 @@ class _FormAdoptState extends State<FormAdopt> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                 child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: textAddress,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                  decoration: const InputDecoration(
                     labelText: "Địa chỉ",
                     labelStyle: TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
                         fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                child: TextField(
+                  controller: textNote,
+                  decoration: InputDecoration(
+                    labelText: 'Ghi chú',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                   ),
                 ),
               ),

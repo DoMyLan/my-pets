@@ -1,17 +1,20 @@
-
 import 'package:found_adoption_application/models/user.dart';
 import 'package:found_adoption_application/models/pet_center.dart';
 import 'package:intl/intl.dart';
 
 class Pet {
   final String id;
+  final User? giver;
+  final User? rescue;
+  final PetCenter? linkCenter;
   final PetCenter? centerId;
   final String? centerId_id;
   final String namePet;
   final String petType;
   final String breed;
   final String gender;
-  final double age;
+  final double? age;
+  final DateTime? birthday;
   final String color;
   final String description;
   List<dynamic> images;
@@ -25,12 +28,16 @@ class Pet {
   Pet({
     required this.id,
     this.centerId,
+    this.giver,
+    this.rescue,
+    this.linkCenter,
     this.centerId_id,
     required this.namePet,
     required this.petType,
     required this.breed,
     required this.gender,
-    required this.age,
+    this.age,
+    this.birthday,
     required this.color,
     required this.description,
     required this.images,
@@ -51,15 +58,64 @@ class Pet {
               name: json['centerId']['name'] as String,
               avatar: json['centerId']['avatar'] as String,
               address: json['centerId']['address'] as String,
-             
               phoneNumber: json['centerId']['phoneNumber'] as String,
               aboutMe: json['centerId']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['centerId']['createdAt']))
-                  .add(Duration(hours: 7)),
+                  .add(const Duration(hours: 7)),
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['centerId']['createdAt']))
-                  .add(Duration(hours: 7)),
+                  .add(const Duration(hours: 7)),
+            )
+          : null,
+      giver: json['giver'] != null
+          ? User(
+              id: json['giver']['_id'] as String,
+              firstName: json['giver']['firstName'] as String,
+              lastName: json['giver']['lastName'] as String,
+              avatar: json['giver']['avatar'] as String,
+              address: json['giver']['address'] as String,
+              phoneNumber: json['giver']['phoneNumber'] as String,
+              aboutMe: json['giver']['aboutMe'] as String,
+              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['giver']['createdAt']))
+                  .add(const Duration(hours: 7)),
+              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['giver']['updatedAt']))
+                  .add(const Duration(hours: 7)),
+            )
+          : null,
+      rescue: json['rescue'] != null
+          ? User(
+              id: json['rescue']['_id'] as String,
+              firstName: json['rescue']['firstName'] as String,
+              lastName: json['rescue']['lastName'] as String,
+              avatar: json['rescue']['avatar'] as String,
+              address: json['rescue']['address'] as String,
+              phoneNumber: json['rescue']['phoneNumber'] as String,
+              aboutMe: json['rescue']['aboutMe'] as String,
+              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['rescue']['createdAt']))
+                  .add(const Duration(hours: 7)),
+              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['rescue']['updatedAt']))
+                  .add(const Duration(hours: 7)),
+            )
+          : null,
+      linkCenter: json['linkCenter'] != null
+          ? PetCenter(
+              id: json['linkCenter']['_id'] as String,
+              name: json['linkCenter']['name'] as String,
+              avatar: json['linkCenter']['avatar'] as String,
+              address: json['linkCenter']['address'] as String,
+              phoneNumber: json['linkCenter']['phoneNumber'] as String,
+              aboutMe: json['linkCenter']['aboutMe'] as String,
+              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['linkCenter']['createdAt']))
+                  .add(const Duration(hours: 7)),
+              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['linkCenter']['createdAt']))
+                  .add(const Duration(hours: 7)),
             )
           : null,
       namePet: json['namePet'],
@@ -67,6 +123,8 @@ class Pet {
       breed: json['breed'],
       gender: json['gender'],
       age: double.parse(json['age'] as String),
+      birthday: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['updatedAt']))
+          .add(const Duration(hours: 7)),
       color: json['color'],
       description: json['description'],
       images: json['images'] as List<dynamic>,
@@ -82,21 +140,21 @@ class Pet {
               aboutMe: json['foundOwner']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['foundOwner']['createdAt']))
-                  .add(Duration(hours: 7)),
+                  .add(const Duration(hours: 7)),
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['foundOwner']['updatedAt']))
-                  .add(Duration(hours: 7)),
+                  .add(const Duration(hours: 7)),
             )
           : null,
       statusAdopt: json['statusAdopt'],
-      centerId_id: json['centerId']['_id'],
-      foundOwner_id: json['statusAdopt'] == 'HAS_ONE_OWNER'
-          ? json['foundOwner']['_id']
-          : null,
+      // centerId_id: json['centerId']['_id'],
+      // foundOwner_id: json['statusAdopt'] == 'HAS_ONE_OWNER'
+      //     ? json['foundOwner']['_id']
+      //     : null,
       createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['createdAt']))
-          .add(Duration(hours: 7)),
+          .add(const Duration(hours: 7)),
       updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['updatedAt']))
-          .add(Duration(hours: 7)),
+          .add(const Duration(hours: 7)),
     );
   }
 
@@ -105,11 +163,15 @@ class Pet {
       '_id': id,
       'centerId':
           centerId?.toMap(), // Đảm bảo cũng có hàm toMap trong class User
+      'giver': giver?.toMap(),
+      'rescue': rescue?.toMap(),
+      'linkCenter': linkCenter?.toMap(),
       'namePet': namePet,
       'petType': petType,
       'breed': breed,
       'gender': gender,
       'age': age,
+      'birthday': birthday,
       'color': color,
       'description': description,
       'images': images,

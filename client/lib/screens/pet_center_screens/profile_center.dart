@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
@@ -501,7 +500,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                         'Breed', animal.breed),
                                                     const SizedBox(height: 8),
                                                     fieldInforPet('Age',
-                                                        '${animal.age * 12} months'),
+                                                        '${animal.age! * 12} months'),
                                                     const SizedBox(height: 8),
                                                     Row(
                                                       children: [

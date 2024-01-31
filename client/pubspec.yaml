@@ -65,6 +65,8 @@ dependencies:
   expandable: ^5.0.1
   jwt_decode: ^0.3.1
   flutter_expandable_text: ^1.0.0
+  flutter_rating_bar: ^4.0.1
+  readmore: ^2.2.0
 
 
  

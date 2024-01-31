@@ -240,7 +240,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                       widget.animal.statusAdopt ==
                                               'HAS_ONE_OWNER'
                                           ? widget.animal.foundOwner!.avatar
-                                          : widget.animal.centerId!.avatar,
+                                          : widget.animal.centerId == null
+                                              ? widget.animal.giver!.avatar
+                                              : widget.animal.centerId!.avatar,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -256,7 +258,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                             widget.animal.statusAdopt ==
                                                     'HAS_ONE_OWNER'
                                                 ? '${widget.animal.foundOwner!.firstName} ${widget.animal.foundOwner!.lastName}'
-                                                : widget.animal.centerId!.name,
+                                                : widget.animal.centerId == null
+                                              ? '${widget.animal.giver!.firstName} ${widget.animal.giver!.lastName}'
+                                              : widget.animal.centerId!.name,
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor,
@@ -345,7 +349,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const FormAdopt()),
+                                          builder: (context) =>
+                                              const FormAdopt()),
                                     );
                                   },
                                   child: Material(
@@ -489,7 +494,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
@@ -501,7 +506,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           ),
                           Expanded(
                             child: Text(
-                              widget.animal.centerId!.address,
+                              widget.animal.centerId==null?
+                              widget.animal.giver!.address.toString():
+                              widget.animal.centerId!.address.toString(),
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Theme.of(context).primaryColor,

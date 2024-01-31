@@ -4,7 +4,6 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/screens/user_screens/upload_avatar_screen.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
-import 'package:found_adoption_application/utils/loading.dart';
 import 'package:hive/hive.dart';
 
 class EditProfileCenterScreen extends StatefulWidget {

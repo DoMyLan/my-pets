@@ -3,33 +3,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:found_adoption_application/screens/filter_dialog.dart';
 
 import 'package:hive/hive.dart';
-
-
-
-class AgeConverter {
-  static String convertAge(double humanAge) {
-    if (humanAge * 12 < 1) {
-      // Nếu tuổi dưới 1 tháng, tính theo tuần
-      return '${(humanAge * 52).toInt()} weeks';
-    } else if (humanAge < 1) {
-      // Nếu tuổi dưới 1 năm, tính theo tháng
-      return '${(humanAge * 12).toInt()} months';
-    } else {
-      // Tuổi 1 năm trở lên, tính theo năm
-      return '${humanAge.toInt()} years';
-    }
-  }
-}
 
 class AdoptionScreen extends StatefulWidget {
   final centerId;
@@ -47,60 +28,197 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   var centerId;
   late var currentClient;
   bool isLoading = true;
-  String selectedPetType = '';
+  String selectedPetType = 'All';
 
   List<String> animalTypes = [
+    'All',
     'Cat',
     'Dog',
   ];
 
-  List<IconData> animalIcons = [
+  List<IconData?> animalIcons = [
+    null,
     FontAwesomeIcons.cat,
     FontAwesomeIcons.dog,
   ];
 
-  Widget buildAnimalIcon(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _searchController.clear();
+
+    centerId = widget.centerId;
+
+    getClient() as dynamic;
+    _searchController.addListener(_performSearch);
+    futurePets = getAllPet();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: isLoading
+          ? const CircularProgressIndicator()
+          : Builder(builder: (BuildContext context) {
+              return NestedScrollView(
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
+                  return [
+                    SliverPadding(
+                      padding: const EdgeInsets.only(top: 60),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 22),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TBackHomePage(),
+                                    TuserQuickInfor(
+                                        currentClient: currentClient),
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          NetworkImage(currentClient.avatar),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              buildSearchAndAnimalTypes(),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    )
+                  ];
+                },
+                body: IndexedStack(
+                  index: _currentIndex,
+                  children: [
+                    // Trang 1
+                    buildAnimalAdopt(),
+
+                    // Trang 2
+                    buildAnimalAdopt(),
+                  ],
+                ),
+              );
+            }),
+      bottomNavigationBar: buildBottomNavigationBar(),
+    );
+  }
+
+  Widget buildSearchAndAnimalTypes() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        color: Theme.of(context).primaryColor.withOpacity(0.06),
+      ),
       child: Column(
         children: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                _searchController.clear();
-                selectedPetType = animalTypes[index];
-                _performSearch(); // Gọi hàm tìm kiếm khi loại thú cưng được thay đổi
-              });
-            },
-            child: Material(
-              color: selectedPetType == animalTypes[index]
-                  ? Theme.of(context).primaryColor
-                  : Colors.white,
-              elevation: 8,
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Icon(
-                  animalIcons[index],
-                  size: 30,
-                  color: selectedPetType == animalTypes[index]
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
+          buildSearchBar(),
+          buildAnimalTypes(),
+        ],
+      ),
+    );
+  }
+
+  Widget buildAnimalTypes() {
+    return SizedBox(
+      height: 65,
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 24),
+        scrollDirection: Axis.horizontal,
+        itemCount: animalTypes.length,
+        itemBuilder: (context, index) {
+          return buildAnimalIcon(index);
+        },
+      ),
+    );
+  }
+
+  Widget buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      selectedItemColor:
+          Theme.of(context).primaryColor, // Màu khi mục được chọn
+      unselectedItemColor: Colors.grey, // Màu khi mục không được chọn
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(
+            FontAwesomeIcons.paw,
+          ),
+          label: 'Pet Center',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.user),
+          label: 'Personal',
+        ),
+      ],
+    );
+  }
+
+  Widget buildAnimalIcon(int index) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _searchController.clear();
+            selectedPetType = animalTypes[index];
+            _performSearch();
+          });
+        },
+        child: Material(
+          color: selectedPetType == animalTypes[index]
+              ? Theme.of(context).primaryColor
+              : Colors.white,
+          elevation: 8,
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (index != 0 && animalIcons[index] != null)
+                  Icon(
+                    animalIcons[index]!,
+                    size: 20,
+                    color: selectedPetType == animalTypes[index]
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
+                  ),
+                Text(
+                  animalTypes[index],
+                  style: TextStyle(
+                    color: selectedPetType == animalTypes[index]
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            animalTypes[index],
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w700),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -113,16 +231,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   List<Pet> _searchResults = []; // Danh sách kết quả tìm kiếm
   Future<List<Pet>>? futurePets;
 
-  @override
-  void initState() {
-    super.initState();
-    centerId = widget.centerId;
-
-    getClient() as dynamic;
-    _searchController.addListener(_performSearch);
-    futurePets = getAllPet();
-  }
-
   // @override
   // void dispose() {
   //   _searchController.dispose();
@@ -132,8 +240,13 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   void _performSearch() {
     setState(() {
       if (selectedPetType != '') {
-        _searchResults =
-            animals.where((pet) => pet.petType == selectedPetType).toList();
+        if (selectedPetType == 'All') {
+          _searchResults = List.from(animals);
+          print('aaaa: $_searchResults');
+        } else {
+          _searchResults =
+              animals.where((pet) => pet.petType == selectedPetType).toList();
+        }
       } else {
         _searchResults = animals
             .where((pet) =>
@@ -156,14 +269,11 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
         context: context,
         builder: (BuildContext context) {
           return FractionallySizedBox(
-            widthFactor: 0.8, // Chiều cao là 50% màn hình
-            alignment: Alignment.bottomRight,
-            heightFactor: 0.8,
+            widthFactor: 0.9, // Chiều cao là 50% màn hình
+            alignment: Alignment.center,
+            heightFactor: 0.7,
             child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16.0),
-                  topRight: Radius.circular(16.0),
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: FilterDialog()),
           );
         });
@@ -179,239 +289,84 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: isLoading
-            ? const CircularProgressIndicator()
-            : Builder(builder: (BuildContext context) {
-                return NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return [
-                      SliverPadding(
-                        padding: const EdgeInsets.only(top: 60),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate([
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 22),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        child: const Icon(
-                                          FontAwesomeIcons.bars,
-                                          size: 25,
-                                          color:
-                                              Color.fromRGBO(48, 96, 96, 1.0),
-                                        ),
-                                        onTap: () async {
-                                          var userBox =
-                                              await Hive.openBox('userBox');
-                                          var centerBox =
-                                              await Hive.openBox('centerBox');
-
-                                          var currentUser =
-                                              userBox.get('currentUser');
-                                          var currentCenter =
-                                              centerBox.get('currentCenter');
-
-                                          var currentClient =
-                                              currentUser != null &&
-                                                      currentUser.role == 'USER'
-                                                  ? currentUser
-                                                  : currentCenter;
-
-                                          if (currentClient != null) {
-                                            if (currentClient.role == 'USER') {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MenuFrameUser(
-                                                    userId: currentClient.id,
-                                                  ),
-                                                ),
-                                              );
-                                            } else if (currentClient.role ==
-                                                'CENTER') {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MenuFrameCenter(
-                                                    centerId: currentClient.id,
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'Location  ',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 18,
-                                                color: Theme.of(context)
-                                                    .primaryColor
-                                                    .withOpacity(0.4),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.baseline,
-                                              textBaseline:
-                                                  TextBaseline.alphabetic,
-                                              children: [
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment: Alignment.center,
-                                                    child: Text(
-                                                      currentClient.address
-                                                                  .split(',')
-                                                                  .length >
-                                                              2
-                                                          ? currentClient
-                                                              .address
-                                                              .split(',')
-                                                              .sublist(currentClient
-                                                                      .address
-                                                                      .split(
-                                                                          ',')
-                                                                      .length -
-                                                                  2)
-                                                              .join(',')
-                                                          : currentClient
-                                                              .address,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 12,
-                                                      ),
-                                                      softWrap: true,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      CircleAvatar(
-                                        radius: 20,
-                                        backgroundImage:
-                                            NetworkImage(currentClient.avatar),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                //SEARCH
-
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    ),
-                                    color: Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.06),
-                                  ),
-                                  height: 228,
-                                  child: Positioned.fill(
-                                    child: Column(
-                                      children: [
-                                        buildSearchBar(),
-                                        //ANIMATION CÁC LOẠI ĐỘNG VẬT
-                                        Container(
-                                          height: 120,
-                                          child: ListView.builder(
-                                              padding:
-                                                  EdgeInsets.only(left: 24),
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: animalTypes.length,
-                                              itemBuilder: (context, index) {
-                                                return buildAnimalIcon(index);
-                                              }),
-                                        ),
-                                        //  Expanded(child: buildAnimalAdopt()),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        ),
-                      )
-                    ];
-                  },
-                  body: buildAnimalAdopt(),
-                );
-              }));
-  }
-
   Widget buildSearchBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
-          children: [
-            Icon(
-              FontAwesomeIcons.search,
-              color: Colors.grey,
-            ),
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                style: TextStyle(fontSize: 18),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 8), // Giảm giá trị vertical để làm cho SearchBar nhỏ lại
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: 8,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    FontAwesomeIcons.search,
+                    color: Colors.grey,
+                    size: 16,
                   ),
-                  hintText: 'Search pet to adopt',
-                ),
-                onChanged: (value) {
-                  if (_searchKeyword != value) {
-                    setState(() {
-                      selectedPetType = '';
-                      _searchKeyword = value;
-                    });
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      style: TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: 'Search pet to adopt',
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical:
+                                8), // Giảm khoảng cách giữa các phần tử trong vùng nhập
+                      ),
+                      onChanged: (value) {
+                        if (_searchKeyword != value) {
+                          setState(() {
+                            selectedPetType = '';
+                            _searchKeyword = value;
+                          });
 
-                    _performSearch();
-                  }
-                },
+                          _performSearch();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            IconButton(
-              icon: Icon(Icons.filter_alt_outlined),
-              color: Colors.grey,
-              onPressed: showFilterDialog,
-            ),
-          ],
-        ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min, // Rút ngắn chiều cao của Column
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Canh giữa theo chiều ngang
+            children: [
+              IconButton(
+                icon: Icon(Icons.filter_alt_outlined),
+                color: Colors.blue,
+                onPressed: showFilterDialog,
+                iconSize: 35,
+              ),
+              Text(
+                'Filter',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -476,22 +431,22 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       itemCount: filteredAnimals.isNotEmpty
           ? filteredAnimals.length
-          : _searchKeyword.isEmpty && selectedPetType == ''
+          : _searchKeyword.isEmpty && selectedPetType == 'All'
               ? animals.length
               : _searchResults.length,
       itemBuilder: (context, index) {
         final animal = filteredAnimals.isNotEmpty
             ? filteredAnimals[index]
-            : _searchKeyword.isEmpty && selectedPetType == ''
+            : _searchKeyword.isEmpty && selectedPetType == 'All'
                 ? animals[index]
                 : _searchResults[index];
 
         String distanceString = '';
 
-        calculateDistance(currentClient.address, animal.centerId!.address)
-            .then((value) {
-          distanceString = value.toStringAsFixed(2);
-        });
+        // calculateDistance(currentClient.address, animal!.centerId!.address)
+        //     .then((value) {
+        //   distanceString = value.toStringAsFixed(2);
+        // });
 
         return GestureDetector(
           onTap: () {
@@ -508,7 +463,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 28, right: 10, left: 20),
+            padding: const EdgeInsets.only(bottom: 10, right: 8, left: 10),
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
@@ -538,14 +493,12 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 2),
                               fieldInforPet('Breed', animal.breed),
-                              const SizedBox(height: 8),
-                              fieldInforPet('Age', '${(animal.age * 12).toStringAsFixed(1)} months'),
-
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 2),
+                              fieldInforPet('Age', '${animal.age! * 12} months'),
+                              const SizedBox(height: 4),
                               Row(
-                               
                                 children: [
                                   Icon(
                                     FontAwesomeIcons.mapMarkerAlt,
@@ -565,7 +518,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                     child: Text(
                                       // '  $distanceString KM',
                                       '     KM',
-                                    
+
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Theme.of(context).primaryColor,
@@ -591,8 +544,8 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                       child: Hero(
                         tag: animal.namePet,
                         child: Image(
-                          image: NetworkImage(animal.images.first),
-                          height: 190,
+                          image: NetworkImage(animal.images!.first),
+                          height: 150,
                           width: deviceWidth * 0.4,
                           fit: BoxFit.cover,
                         ),
@@ -613,7 +566,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
       String currentAddress, String otherAddress) async {
     // LatLng currentP = await convertAddressToLatLng(currentAddress);
     // LatLng pDestination = await convertAddressToLatLng(otherAddress);
-  LatLng currentP = LatLng(10.776275, 106.695809);
+    LatLng currentP = LatLng(10.776275, 106.695809);
     LatLng pDestination = LatLng(10.756607, 106.671960);
 
     double distance = Geolocator.distanceBetween(
@@ -623,5 +576,125 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
       pDestination.longitude,
     );
     return distance / 1000;
+  }
+}
+
+class TBackHomePage extends StatelessWidget {
+  const TBackHomePage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: const Icon(
+        FontAwesomeIcons.bars,
+        size: 25,
+        color: Color.fromRGBO(48, 96, 96, 1.0),
+      ),
+      onTap: () async {
+        var userBox = await Hive.openBox('userBox');
+        var centerBox = await Hive.openBox('centerBox');
+
+        var currentUser = userBox.get('currentUser');
+        var currentCenter = centerBox.get('currentCenter');
+
+        var currentClient = currentUser != null && currentUser.role == 'USER'
+            ? currentUser
+            : currentCenter;
+
+        if (currentClient != null) {
+          if (currentClient.role == 'USER') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MenuFrameUser(
+                  userId: currentClient.id,
+                ),
+              ),
+            );
+          } else if (currentClient.role == 'CENTER') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MenuFrameCenter(
+                  centerId: currentClient.id,
+                ),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+}
+
+class TuserQuickInfor extends StatelessWidget {
+  const TuserQuickInfor({
+    super.key,
+    required this.currentClient,
+  });
+
+  final currentClient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Location  ',
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 18,
+              color: Theme.of(context).primaryColor.withOpacity(0.4),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    currentClient.address.split(',').length > 2
+                        ? currentClient.address
+                            .split(',')
+                            .sublist(
+                                currentClient.address.split(',').length - 2)
+                            .join(',')
+                        : currentClient.address,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AgeConverter {
+  static String convertAge(double humanAge) {
+    if (humanAge * 12 < 1) {
+      // Nếu tuổi dưới 1 tháng, tính theo tuần
+      return '${(humanAge * 52).toInt()} weeks';
+    } else if (humanAge < 1) {
+      // Nếu tuổi dưới 1 năm, tính theo tháng
+      return '${(humanAge * 12).toInt()} months';
+    } else {
+      // Tuổi 1 năm trở lên, tính theo năm
+      return '${humanAge.toInt()} years';
+    }
   }
 }
