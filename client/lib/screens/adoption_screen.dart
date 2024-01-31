@@ -441,12 +441,15 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                 ? animals[index]
                 : _searchResults[index];
 
-        String distanceString = '';
-
-        // calculateDistance(currentClient.address, animal!.centerId!.address)
-        //     .then((value) {
-        //   distanceString = value.toStringAsFixed(2);
-        // });
+        calculateDistance(
+                currentClient.location,
+                animal.centerId != null
+                    ? animal.centerId!.location
+                    : animal.giver!.location)
+            .then((value) {
+          String distanceString = value.toStringAsFixed(2);
+          print('khoảng cách: $distanceString');
+        });
 
         return GestureDetector(
           onTap: () {
@@ -496,7 +499,8 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               const SizedBox(height: 2),
                               fieldInforPet('Breed', animal.breed),
                               const SizedBox(height: 2),
-                              fieldInforPet('Age', '${animal.age! * 12} months'),
+                              fieldInforPet(
+                                  'Age', '${animal.age! * 12} months'),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
@@ -514,18 +518,33 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-                                  Flexible(
-                                    child: Text(
-                                      // '  $distanceString KM',
-                                      '     KM',
-
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      softWrap: true,
-                                    ),
+                                  FutureBuilder<double>(
+                                    future: calculateDistance(
+                                        currentClient.location,
+                                        animal.centerId != null
+                                            ? animal.centerId!.location
+                                            : animal.giver!.location),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Text('Calculating...');
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error');
+                                      } else {
+                                        String distanceString =
+                                            snapshot.data!.toStringAsFixed(2);
+                                        return Text(
+                                          '$distanceString km',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          softWrap: true,
+                                        );
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -563,19 +582,27 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
 
   //tính toán khoảng cách
   Future<double> calculateDistance(
-      String currentAddress, String otherAddress) async {
-    // LatLng currentP = await convertAddressToLatLng(currentAddress);
-    // LatLng pDestination = await convertAddressToLatLng(otherAddress);
-    LatLng currentP = LatLng(10.776275, 106.695809);
-    LatLng pDestination = LatLng(10.756607, 106.671960);
+    currentAddress,
+    otherAddress,
+  ) async {
+    LatLng currentP = LatLng(
+      double.parse(currentAddress.latitude),
+      double.parse(currentAddress.longitude),
+    );
 
-    double distance = Geolocator.distanceBetween(
+    LatLng pDestination = LatLng(
+      double.parse(otherAddress.latitude),
+      double.parse(otherAddress.longitude),
+    );
+
+    double distance = await Geolocator.distanceBetween(
       currentP.latitude,
       currentP.longitude,
       pDestination.latitude,
       pDestination.longitude,
     );
-    return distance / 1000;
+
+    return distance / 1000; // Chia cho 1000 để chuyển đổi sang đơn vị kilômét
   }
 }
 

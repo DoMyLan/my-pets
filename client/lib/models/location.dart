@@ -1,13 +1,29 @@
-import 'package:hive/hive.dart';
 
-@HiveType(typeId: 3)
-class LocationModel extends HiveObject {
-  @HiveField(0)
-  late String address;
 
-  @HiveField(1)
-  late double latitude;
+class Location {
+  final String latitude;
+  final String longitude;
 
-  @HiveField(2)
-  late double longitude;
+  const Location({
+    required this.latitude,
+    required this.longitude,
+
+  });
+
+  // Factory method để tạo đối tượng Location từ JSON
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      latitude: json['latitude'] as String,
+      longitude: json['longitude'] as String, 
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
+
+ 
 }
