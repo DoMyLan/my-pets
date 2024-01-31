@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
@@ -83,24 +82,30 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             color: Theme.of(context).primaryColor,
           ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
-              TypewriterAnimatedTextKit(
-                speed: Duration(milliseconds: 200),
-                totalRepeatCount:
-                    1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
-                text: ['Profile'],
-                textStyle: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2.0,
-                ),
-              ),
-            ],
+          title: Text(
+            'Profile',
+            style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 25.0),
           ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
+          //     TypewriterAnimatedTextKit(
+          //       speed: Duration(milliseconds: 200),
+          //       totalRepeatCount:
+          //           1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
+          //       text: ['Profile'],
+          //       textStyle: TextStyle(
+          //         color: Theme.of(context).primaryColor,
+          //         fontSize: 30.0,
+          //         fontWeight: FontWeight.bold,
+          //         letterSpacing: 2.0,
+          //       ),
+          //     ),
+          //   ],
         ),
         body: RefreshIndicator(
             onRefresh: _refresh,
@@ -118,14 +123,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   } else {
                     // If data is successfully fetched, display the form
                     InfoUser user = snapshot.data!;
-                    if(user.status == 'HIDDEN'){
-                      if(currentClient.id != widget.userId){
+                    if (user.status == 'HIDDEN') {
+                      if (currentClient.id != widget.userId) {
                         return Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.visibility_off, size: 100, color: Colors.grey,),
-                              Text('This user is hidden', style: TextStyle(fontSize: 20, color: Colors.grey),)
+                              Icon(
+                                Icons.visibility_off,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                'This user is hidden',
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.grey),
+                              )
                             ],
                           ),
                         );
@@ -187,16 +200,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    EditProfileScreen()));
+                                                                builder:
+                                                                    (context) =>
+                                                                        EditProfileScreen()));
                                                       },
                                                       icon: Icon(Icons.edit,
                                                           color: Colors.white),
-                                                      label: Text('Edit profile'),
+                                                      label:
+                                                          Text('Edit profile'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary: Theme.of(context)
-                                                            .primaryColor,
+                                                        primary:
+                                                            Theme.of(context)
+                                                                .primaryColor,
                                                         onPrimary: Colors.white,
                                                       ),
                                                     ),
@@ -213,16 +229,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    UpdatePasswordScreen()));
+                                                                builder:
+                                                                    (context) =>
+                                                                        UpdatePasswordScreen()));
                                                       },
                                                       icon: Icon(Icons.password,
                                                           color: Colors.white),
-                                                      label: Text('Change Password'),
+                                                      label: Text(
+                                                          'Change Password'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary: Theme.of(context)
-                                                            .primaryColor,
+                                                        primary:
+                                                            Theme.of(context)
+                                                                .primaryColor,
                                                         onPrimary: Colors.white,
                                                       ),
                                                     ),
@@ -235,7 +254,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     child: ElevatedButton.icon(
                                                       onPressed: () {
                                                         _showBottomSheet(
-                                                            user.id, user.status);
+                                                            user.id,
+                                                            user.status);
                                                       },
                                                       icon: Icon(
                                                           Icons.change_circle,
@@ -244,8 +264,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           Text('Change status'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary: Theme.of(context)
-                                                            .primaryColor,
+                                                        primary:
+                                                            Theme.of(context)
+                                                                .primaryColor,
                                                         onPrimary: Colors.white,
                                                       ),
                                                     ),
@@ -276,8 +297,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   // Status icon
-                                  Icon(user.status == 'ACTIVE'?
-                                    Icons.check_circle: Icons.visibility_off,
+                                  Icon(
+                                    user.status == 'ACTIVE'
+                                        ? Icons.check_circle
+                                        : Icons.visibility_off,
                                     color: user.status == 'ACTIVE'
                                         ? Colors.green
                                         : Colors.grey,
@@ -294,7 +317,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   user.email, Icons.email, 'email'),
                               buildContactInfo(
                                   user.address,
-                                  const IconData(0xe3ab, fontFamily: 'MaterialIcons'),
+                                  const IconData(0xe3ab,
+                                      fontFamily: 'MaterialIcons'),
                                   'address'),
                               SizedBox(height: 16.0),
 

@@ -3,11 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:found_adoption_application/screens/filter_dialog.dart';
@@ -45,8 +43,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
   ];
 
   int _currentIndex = 0;
-  
-
 
   @override
   void initState() {
@@ -277,9 +273,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             alignment: Alignment.center,
             heightFactor: 0.7,
             child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                Radius.circular(20)
-                ),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 child: FilterDialog()),
           );
         });
@@ -351,28 +345,27 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             ),
           ),
           Column(
-  mainAxisAlignment: MainAxisAlignment.start,
-  mainAxisSize: MainAxisSize.min, // Rút ngắn chiều cao của Column
-  crossAxisAlignment: CrossAxisAlignment.center, // Canh giữa theo chiều ngang
-  children: [
-    IconButton(
-      icon: Icon(Icons.filter_alt_outlined),
-      color: Colors.blue,
-      onPressed: showFilterDialog,
-      iconSize: 35,
-    ),
-  
-    Text(
-      'Filter',
-      style: TextStyle(
-        color: Theme.of(context).primaryColor,
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  ],
-),
-
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min, // Rút ngắn chiều cao của Column
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Canh giữa theo chiều ngang
+            children: [
+              IconButton(
+                icon: Icon(Icons.filter_alt_outlined),
+                color: Colors.blue,
+                onPressed: showFilterDialog,
+                iconSize: 35,
+              ),
+              Text(
+                'Filter',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -448,11 +441,13 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                 ? animals[index]
                 : _searchResults[index];
 
-      
-
-        calculateDistance(currentClient.location, animal.centerId!.location)
+        calculateDistance(
+                currentClient.location,
+                animal.centerId != null
+                    ? animal.centerId!.location
+                    : animal.giver!.location)
             .then((value) {
-         String distanceString = value.toStringAsFixed(2);
+          String distanceString = value.toStringAsFixed(2);
           print('khoảng cách: $distanceString');
         });
 
@@ -504,7 +499,8 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               const SizedBox(height: 2),
                               fieldInforPet('Breed', animal.breed),
                               const SizedBox(height: 2),
-                              fieldInforPet('Age', '${animal.age * 12} months'),
+                              fieldInforPet(
+                                  'Age', '${animal.age! * 12} months'),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
@@ -523,26 +519,33 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                     ),
                                   ),
                                   FutureBuilder<double>(
-                                  future: calculateDistance(currentClient.location, animal.centerId!.location),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return Text('Calculating...');
-                                    } else if (snapshot.hasError) {
-                                      return Text('Error');
-                                    } else {
-                                      String distanceString = snapshot.data!.toStringAsFixed(2);
-                                      return Text(
-                                        '$distanceString km',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                        softWrap: true,
-                                      );
-                                    }
-                                  },
-                                ),
+                                    future: calculateDistance(
+                                        currentClient.location,
+                                        animal.centerId != null
+                                            ? animal.centerId!.location
+                                            : animal.giver!.location),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Text('Calculating...');
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error');
+                                      } else {
+                                        String distanceString =
+                                            snapshot.data!.toStringAsFixed(2);
+                                        return Text(
+                                          '$distanceString km',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          softWrap: true,
+                                        );
+                                      }
+                                    },
+                                  ),
                                 ],
                               ),
                             ],
@@ -560,7 +563,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                       child: Hero(
                         tag: animal.namePet,
                         child: Image(
-                          image: NetworkImage(animal.images.first),
+                          image: NetworkImage(animal.images!.first),
                           height: 150,
                           width: deviceWidth * 0.4,
                           fit: BoxFit.cover,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/services/user/user_form_api.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RegistrationForm extends StatefulWidget {
   final String accountId;

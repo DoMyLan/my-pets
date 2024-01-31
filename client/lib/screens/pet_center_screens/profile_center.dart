@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
@@ -105,23 +104,30 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           color: Theme.of(context).primaryColor,
         ),
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
-            TypewriterAnimatedTextKit(
-              speed: Duration(milliseconds: 200),
-              totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
-              text: ['Profile'],
-              textStyle: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ],
+        title: Text(
+          'Profile',
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 25.0),
         ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
+        //     // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
+        //     TypewriterAnimatedTextKit(
+        //       speed: Duration(milliseconds: 200),
+        //       totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
+        //       text: ['Profile'],
+        //       textStyle: TextStyle(
+        //         color: Theme.of(context).primaryColor,
+        //         fontSize: 30.0,
+        //         fontWeight: FontWeight.bold,
+        //         letterSpacing: 2.0,
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -494,7 +500,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                         'Breed', animal.breed),
                                                     const SizedBox(height: 8),
                                                     fieldInforPet('Age',
-                                                        '${animal.age * 12} months'),
+                                                        '${animal.age! * 12} months'),
                                                     const SizedBox(height: 8),
                                                     Row(
                                                       children: [
