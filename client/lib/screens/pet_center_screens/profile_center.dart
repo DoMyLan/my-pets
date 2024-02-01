@@ -111,23 +111,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
               fontWeight: FontWeight.bold,
               fontSize: 25.0),
         ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   children: [
-        //     // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
-        //     TypewriterAnimatedTextKit(
-        //       speed: Duration(milliseconds: 200),
-        //       totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
-        //       text: ['Profile'],
-        //       textStyle: TextStyle(
-        //         color: Theme.of(context).primaryColor,
-        //         fontSize: 30.0,
-        //         fontWeight: FontWeight.bold,
-        //         letterSpacing: 2.0,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+       
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -184,6 +168,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                             ),
                           ),
                         ),
+
                         // Nút Follow và Edit Profile
                         Row(
                           children: [
@@ -337,39 +322,41 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     buildSectionHeader('Articles posted', Icons.library_books),
 
                     // Widget chứa TabBar và TabBarView
-                    DefaultTabController(
-                      length: 2,
-                      child: Column(
-                        children: [
-                          // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
-                          TabBar(
-                            labelColor: Theme.of(context).primaryColor,
-                            tabs: [
-                              Tab(text: 'Pet Stories'),
-                              Tab(text: 'Pet Adoption'),
-                            ],
-                          ),
-                          // TabBarView để hiển thị nội dung tương ứng với từng tab
-                          SizedBox(
-                            height:
-                                500, // Thay đổi kích thước này tùy theo nhu cầu của bạn
-                            child: TabBarView(
-                              children: [
-                                // Nội dung cho tab "Pet Stories"
-                                buildPostsList(petStoriesPosts!),
-                                // Nội dung cho tab "Pet Adoption"
-                                buildAdoptionList(),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
+                    // DefaultTabController(
+                    //   length: 2,
+                    //   child: Column(
+                    //     children: [
+                    //       // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
+                    //       TabBar(
+                    //         labelColor: Theme.of(context).primaryColor,
+                    //         tabs: [
+                    //           Tab(text: 'Pet Stories'),
+                    //           Tab(text: 'Pet Adoption'),
+                    //         ],
+                    //       ),
+                    //       // TabBarView để hiển thị nội dung tương ứng với từng tab
+                    //       SizedBox(
+                    //         height:
+                    //             500, // Thay đổi kích thước này tùy theo nhu cầu của bạn
+                    //         child: TabBarView(
+                    //           children: [
+                    //             // Nội dung cho tab "Pet Stories"
+                    //             buildPostsList(petStoriesPosts!),
+                    //             // Nội dung cho tab "Pet Adoption"
+                    //             buildAdoptionList(),
+                               
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // )
                   ],
                 ),
               );
             }
-          }),
+          }
+          ),
     );
   }
 

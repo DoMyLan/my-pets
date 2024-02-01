@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/models/current_location.dart';
+import 'package:found_adoption_application/models/hive/current_location.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/services/auth_api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:jwt_decode/jwt_decode.dart';
-import 'package:found_adoption_application/models/current_center.dart';
-import 'package:found_adoption_application/models/current_user.dart';
+import 'package:found_adoption_application/models/hive/current_center.dart';
+import 'package:found_adoption_application/models/hive/current_user.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;

@@ -502,6 +502,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               fieldInforPet(
                                   'Age', '${animal.age! * 12} months'),
                               const SizedBox(height: 4),
+                              if(currentClient.role == 'USER')
                               Row(
                                 children: [
                                   Icon(
