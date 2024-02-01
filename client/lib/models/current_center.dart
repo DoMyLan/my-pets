@@ -1,4 +1,4 @@
-import 'package:found_adoption_application/models/location.dart';
+import 'package:found_adoption_application/models/current_location.dart';
 import 'package:hive/hive.dart';
 
 // part 'hive_solUser.g.dart';
@@ -27,7 +27,7 @@ class CurrentCenter extends HiveObject {
   late String address;
 
   @HiveField(9)
-  late Location location;
+  late CurrentLocation location;
   @HiveField(10)
   late String refreshToken;
   @HiveField(11)

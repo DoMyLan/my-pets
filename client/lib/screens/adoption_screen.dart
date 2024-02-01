@@ -425,7 +425,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
 
   Widget buildAnimalList(List<Pet> animals, List<Pet> filteredAnimals) {
     final deviceWidth = MediaQuery.of(context).size.width;
-    String age;
 
     return ListView.builder(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -500,7 +499,10 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                               fieldInforPet('Breed', animal.breed),
                               const SizedBox(height: 2),
                               fieldInforPet(
-                                  'Age', '${animal.age! * 12} months'),
+                                  'Age',
+                                  animal.birthday != null
+                                      ? AgePet.convertAge(animal.birthday!)
+                                      : "unknown"),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
@@ -708,6 +710,33 @@ class TuserQuickInfor extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AgePet {
+  static String convertAge(DateTime birthday) {
+    String age = '';
+    DateTime now = DateTime.now();
+    int months = now.month - birthday.month + 12 * (now.year - birthday.year);
+    if (now.day < birthday.day) {
+      months--;
+    }
+
+    if (months < 1) {
+      // If age is less than 1 month, calculate in weeks
+      int weeks = (now.difference(birthday).inDays / 7).floor();
+      age = weeks.toString() + ' weeks';
+    } else if (months < 12) {
+      // If age is less than 1 year, calculate in months
+      age = months.toString() + ' months';
+    } else {
+      // If age is 1 year or more, calculate in years and months
+      int years = months ~/ 12;
+      months %= 12;
+      age = years.toString() + ' years ' + months.toString() + ' months';
+    }
+
+    return age;
   }
 }
 

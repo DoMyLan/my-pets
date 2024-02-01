@@ -59,11 +59,9 @@ class Pet {
               name: json['centerId']['name'] as String,
               avatar: json['centerId']['avatar'] as String,
               address: json['centerId']['address'] as String,
-
               location: Location(
-                latitude: json['centerId']['location']['latitude'],
-                longitude: json['centerId']['location']['longitude']
-              ),
+                  latitude: json['centerId']['location']['latitude'],
+                  longitude: json['centerId']['location']['longitude']),
               phoneNumber: json['centerId']['phoneNumber'] as String,
               aboutMe: json['centerId']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
@@ -88,9 +86,14 @@ class Pet {
                   .add(const Duration(hours: 7)),
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['giver']['updatedAt']))
-                  .add(const Duration(hours: 7)), 
-              location: json['giver']['location']!=null?
-              Location(latitude: json['giver']['location']['latitude'], longitude: json['giver']['location']['longitude']):Location(latitude: "0", longitude: "0"),):null,
+                  .add(const Duration(hours: 7)),
+              location: json['giver']['location'] != null
+                  ? Location(
+                      latitude: json['giver']['location']['latitude'],
+                      longitude: json['giver']['location']['longitude'])
+                  : Location(latitude: "0", longitude: "0"),
+            )
+          : null,
       rescue: json['rescue'] != null
           ? User(
               id: json['rescue']['_id'] as String,
@@ -106,8 +109,11 @@ class Pet {
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['rescue']['updatedAt']))
                   .add(const Duration(hours: 7)),
-                  location: json['rescue']['location']!=null?
-              Location(latitude: json['rescue']['location']['latitude'], longitude: json['rescue']['location']['longitude']): const Location(latitude: "0", longitude: "0"),
+              location: json['rescue']['location'] != null
+                  ? Location(
+                      latitude: json['rescue']['location']['latitude'],
+                      longitude: json['rescue']['location']['longitude'])
+                  : const Location(latitude: "0", longitude: "0"),
             )
           : null,
       linkCenter: json['linkCenter'] != null
@@ -124,8 +130,11 @@ class Pet {
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['linkCenter']['createdAt']))
                   .add(const Duration(hours: 7)),
-                  location: json['linkCenter']['location']!=null?
-              Location(latitude: json['linkCenter']['location']['latitude'], longitude: json['linkCenter']['location']['longitude']): const Location(latitude: "0", longitude: "0"),
+              location: json['linkCenter']['location'] != null
+                  ? Location(
+                      latitude: json['linkCenter']['location']['latitude'],
+                      longitude: json['linkCenter']['location']['longitude'])
+                  : const Location(latitude: "0", longitude: "0"),
             )
           : null,
       namePet: json['namePet'],
@@ -133,8 +142,10 @@ class Pet {
       breed: json['breed'],
       gender: json['gender'],
       age: double.parse(json['age'] as String),
-      birthday: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['updatedAt']))
-          .add(const Duration(hours: 7)),
+      birthday: json['birthday'] != null
+          ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['birthday']))
+              .add(const Duration(hours: 7))
+          : null,
       color: json['color'],
       description: json['description'],
       images: json['images'] as List<dynamic>,
@@ -147,9 +158,8 @@ class Pet {
               avatar: json['foundOwner']['avatar'] as String,
               address: json['foundOwner']['address'] as String,
               location: Location(
-                latitude: json['foundOwner']['location']['latitude'],
-                longitude: json['foundOwner']['location']['longitude']
-              ),
+                  latitude: json['foundOwner']['location']['latitude'],
+                  longitude: json['foundOwner']['location']['longitude']),
               phoneNumber: json['foundOwner']['phoneNumber'] as String,
               aboutMe: json['foundOwner']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
@@ -157,7 +167,7 @@ class Pet {
                   .add(const Duration(hours: 7)),
               updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                       .parse(json['foundOwner']['updatedAt']))
-                  .add(const Duration(hours: 7)),                  
+                  .add(const Duration(hours: 7)),
             )
           : null,
       statusAdopt: json['statusAdopt'],
