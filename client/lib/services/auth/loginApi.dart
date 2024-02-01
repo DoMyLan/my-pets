@@ -47,9 +47,9 @@ Future<void> login(
           ..avatar = responseData['data']['avatar']
           ..address = responseData['data']['address']
           ..location = CurrentLocation(
-  latitude: responseData['data']['location']['latitude'],
-  longitude: responseData['data']['location']['longitude'],
-)
+            latitude: responseData['data']['location']['latitude'],
+            longitude: responseData['data']['location']['longitude'],
+          )
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
@@ -80,7 +80,10 @@ Future<void> login(
           ..avatar = responseData['data']['avatar']
           ..phoneNumber = responseData['data']['phoneNumber']
           ..address = responseData['data']['address']
-          ..location = responseData['data']['location']
+          ..location = CurrentLocation(
+            latitude: responseData['data']['location']['latitude'],
+            longitude: responseData['data']['location']['longitude'],
+          )
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
