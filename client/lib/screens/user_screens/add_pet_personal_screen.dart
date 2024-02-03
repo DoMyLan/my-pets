@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/models/centerLoad.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
@@ -12,34 +13,36 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class EditPetScreen extends StatefulWidget {
-  final Pet pet;
-  const EditPetScreen({super.key, required this.pet});
+class AddPetScreenPersonal extends StatefulWidget {
+  const AddPetScreenPersonal({super.key});
   @override
-  // ignore: library_private_types_in_public_api
-  _EditPetScreenState createState() => _EditPetScreenState();
+  _AddPetScreenState createState() => _AddPetScreenState();
 }
 
-class _EditPetScreenState extends State<EditPetScreen> {
+class _AddPetScreenState extends State<AddPetScreenPersonal> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
   final _colorController = TextEditingController();
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime? birthday;
+  String? dropdownValue;
 
   String _selectedPetType = '';
   String _selectedGender = '';
-  // String _selectedLevel = 'NORMAL';
+  String _selectedLevel = 'NORMAL';
+  DateTime? birthday;
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
-
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
+  var currentClient;
+  List<CenterLoad>? centers = <CenterLoad>[
+    const CenterLoad(id: '1', name: 'Center 1', distance: '1km'),
+  ];
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
@@ -48,27 +51,27 @@ class _EditPetScreenState extends State<EditPetScreen> {
   void initState() {
     super.initState();
     notificationHandler.initializeNotifications();
-    _namePetController.text = widget.pet.namePet;
-    _breedController.text = widget.pet.breed;
-    _colorController.text = widget.pet.color;
-    _descriptionController.text = widget.pet.description;
-    birthday = widget.pet.birthday;
-    // _selectedLevel = widget.pet.level;
-    _selectedPetType = widget.pet.petType;
-    _selectedGender = widget.pet.gender;
-    finalResult.addAll(widget.pet.images);
+    getClient();
+    loadCenter();
   }
 
-  Future<void> selectImage() async {
-    List<dynamic> finalResult2 = [];
-    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
-    if (selectedImages.isNotEmpty) {
-      imageFileList.addAll(selectedImages);
-    }
-    if (mounted) {
-      setState(() {
-        finalResult = finalResult2;
-      });
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
+
+  Future<void> loadCenter() async {
+    var temp = await loadCenterAll();
+    setState(() {
+      List<CenterLoad> sortedCenters = temp;
+      centers = List.from(sortedCenters);
+      sortedCenters.sort((a, b) =>
+          double.parse(a.distance).compareTo(double.parse(b.distance)));
+    });
+    if (centers != null && centers!.isNotEmpty) {
+      dropdownValue = centers![0].id;
     }
   }
 
@@ -86,21 +89,63 @@ class _EditPetScreenState extends State<EditPetScreen> {
     }
   }
 
-  Future<void> handlerUpdatePet() async {
+  Future<void> selectImage() async {
+    List<dynamic> finalResult2 = [];
+
+    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
+
+    if (selectedImages.isNotEmpty) {
+      imageFileList.addAll(selectedImages);
+    }
+    Loading(context);
+    var result = await uploadMultiImage(imageFileList);
+    Navigator.of(context).pop();
+    finalResult2 = result.map((url) => url).toList();
+
+    // print('test selectedImage: $finalResult');
+
+    // Check if the widget is still mounted before calling setState
     if (mounted) {
-      await updatePet(
+      setState(() {
+        finalResult = finalResult2;
+      });
+    }
+  }
+
+  Future<void> postPet() async {
+    // print('test images here: $finalResult');
+
+    // Kiểm tra trạng thái mounted trước khi gọi setState
+    if (mounted) {
+      // Call the API to post content with image paths
+      await addPet(
+          null,
+          currentClient.id,
+          null,
+          dropdownValue,
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
-          double.parse(_ageController.text),
+          birthday!,
           _selectedGender,
           _colorController.text.toString(),
+          finalResult,
           _descriptionController.text.toString(),
-          // _selectedLevel,
-          imageFileList,
-          imageFileList.isNotEmpty ? true : false,
-          widget.pet.id);
+          _selectedLevel);
     }
+    setState(() {
+      imageFileList = [];
+      _namePetController.clear();
+      _breedController.clear();
+      _colorController.clear();
+      _ageController.clear();
+      _descriptionController.clear();
+    });
+    // Kéo giao diện lên trên cùng
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+
+    await notificationHandler.showNotification();
   }
 
   @override
@@ -111,14 +156,13 @@ class _EditPetScreenState extends State<EditPetScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Edit Pet',
+        title: const Text('Add a New Pet',
             style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0))),
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
           onPressed: () async {
             var currentClient = await getCurrentClient();
-            // ignore: use_build_context_synchronously
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -139,11 +183,16 @@ class _EditPetScreenState extends State<EditPetScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (finalResult.isNotEmpty && imageFileList.isEmpty)
-                _slider(finalResult, true)
-              else if (finalResult.isNotEmpty && imageFileList.isNotEmpty ||
-                  finalResult.isEmpty && imageFileList.isNotEmpty)
-                _slider(imageFileList, false)
+              if (imageFileList.isNotEmpty)
+                if (imageFileList.length == 1)
+                  Image.file(
+                    File(imageFileList[0].path),
+                    height: 350.0,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                else
+                  _slider(finalResult)
               else
                 Container(
                     width: double.infinity,
@@ -163,15 +212,16 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
               TextField(
                 controller: _namePetController,
-                decoration: const InputDecoration(labelText: 'Pet Name'),
+                decoration: const InputDecoration(
+                    labelText: 'Pet Name (*)', fillColor: Colors.red),
               ),
               TextField(
                 controller: _breedController,
-                decoration: const InputDecoration(labelText: 'Breed'),
+                decoration: const InputDecoration(labelText: 'Breed (*)'),
               ),
               Row(
                 children: [
-                  const Text('Type:'),
+                  const Text('Type (*)'),
                   Radio(
                     value: 'Cat',
                     groupValue: _selectedPetType,
@@ -196,7 +246,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
               ),
               TextField(
                 controller: _colorController,
-                decoration: const InputDecoration(labelText: 'Color'),
+                decoration: const InputDecoration(labelText: 'Color (*)'),
               ),
 
               Row(
@@ -216,6 +266,46 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     onPressed: () {
                       _selectDate(context);
                     },
+                  ),
+                ],
+              ),
+
+              Row(
+                children: [
+                  const Text("Select link Center (*): ",
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                  Expanded(
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const FittedBox(
+                        fit: BoxFit.contain,
+                        child: Icon(Icons.arrow_drop_down),
+                      ),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      underline: Container(
+                        height: 2,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: centers!
+                          .map<DropdownMenuItem<String>>((CenterLoad center) {
+                        return DropdownMenuItem<String>(
+                          value: center.id,
+                          child: Flexible(
+                            child: Text(
+                              '${center.name} - ${center.distance}km',
+                              softWrap: true,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ],
               ),
@@ -249,7 +339,10 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
               Row(
                 children: [
-                  const Text('Gender:'),
+                  const Text(
+                    'Gender:',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'MALE',
                     groupValue: _selectedGender,
@@ -259,7 +352,10 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Male'),
+                  const Text(
+                    'Male',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'FEMALE',
                     groupValue: _selectedGender,
@@ -269,7 +365,10 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Female'),
+                  const Text(
+                    'Female',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'ORTHER',
                     groupValue: _selectedGender,
@@ -279,7 +378,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Orther'),
+                  const Text('Unknown'),
                 ],
               ),
               const SizedBox(
@@ -302,17 +401,14 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     onPressed: () async {
                       var currentClient = await getCurrentClient();
                       // Handle cancel button press
-                      // ignore: use_build_context_synchronously
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   MenuFrameCenter(centerId: currentClient.id)));
                     },
-                    // ignore: sort_child_properties_last
                     child: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
-                      // ignore: deprecated_member_use
                       primary: const Color.fromARGB(255, 241, 189,
                           186), // Specify background color for the cancel button
                     ),
@@ -322,8 +418,9 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       if (_namePetController.text == '' ||
                           _breedController.text == '' ||
                           _colorController.text == '' ||
-                          _ageController.text == '' ||
+                          birthday == null ||
                           _descriptionController.text == '' ||
+                          imageFileList.isEmpty ||
                           _selectedPetType == '' ||
                           _selectedGender == '') {
                         notification(
@@ -332,11 +429,10 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       }
                       // Create a new Pet object with the entered information
                       Loading(context);
-                      await handlerUpdatePet();
-                      Navigator.of(context).pop();
+                      await postPet();
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Edit Pet'),
+                    child: const Text('Add Pet'),
                   ),
                 ],
               ),
@@ -347,41 +443,19 @@ class _EditPetScreenState extends State<EditPetScreen> {
     );
   }
 
-  Widget _slider(List imageList, bool isUpload) {
+  Widget _slider(List imageList) {
     return Stack(
       children: [
         CarouselSlider(
-          items: isUpload
-              ? imageList
-                  .map(
-                    (item) => Center(
-                        child: InkWell(
-                            onTap: () async {
-                              await selectImage();
-                            },
-                            child: Image.network(
-                              item,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            ))),
-                  )
-                  .toList()
-              : imageList
-                  .map(
-                    (item) => Center(
-                      child: InkWell(
-                        onTap: () async {
-                          await selectImage();
-                        },
-                        child: Image(
-                          image: FileImage(
-                            File(item.path),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+          items: imageList
+              .map(
+                (item) => Image.network(
+                  item,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
+              )
+              .toList(),
           carouselController: carouselController,
           options: CarouselOptions(
             scrollPhysics: const BouncingScrollPhysics(),

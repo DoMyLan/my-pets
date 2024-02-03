@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
-import 'package:found_adoption_application/screens/feed_screen.dart';
+import 'package:found_adoption_application/screens/adoption_screen_giver.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   final pages = const [
     AdoptionScreen(centerId: null,),
-    FeedScreen(),
+    AdoptionScreenGiver(),
   ];
 
   final pageTitle = const [
