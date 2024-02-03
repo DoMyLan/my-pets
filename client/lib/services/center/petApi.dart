@@ -1,16 +1,22 @@
 import 'dart:convert';
+import 'package:found_adoption_application/models/centerLoad.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 Future<void> addPet(
+  String? centerId,
+  String? giver,
+  String? rescue,
+  String? linkCenter,
   String namePet,
   String petType,
   String breed,
-  double age,
+  DateTime birthday,
   String gender,
   String color,
   List<dynamic> imagePaths,
@@ -19,16 +25,22 @@ Future<void> addPet(
 ) async {
   var responseData = {};
   var body = jsonEncode({
+    "centerId": centerId,
+    "giver": giver,
+    "rescue": rescue,
+    "linkCenter": linkCenter,
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age.toString(),
+    "birthday": DateFormat("MM-dd-yyyy").format(birthday),
     "gender": gender,
     "color": color,
     "images": imagePaths,
     "description": description,
     "level": level
   });
+
+  String a = DateFormat("MM-dd-yyyy").format(birthday);
 
   try {
     responseData = await api('/pet', 'POST', body);
@@ -51,7 +63,28 @@ Future<List<Pet>> getAllPet() async {
 
   try {
     if (currentClient.role == 'USER') {
-      apiUrl = "/pet/all/pets";
+      apiUrl = "/pet/all/pets/center";
+    } else {
+      apiUrl = "/pet/${currentClient.id}";
+    }
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  return pets;
+}
+
+Future<List<Pet>> getAllPetPersonal() async {
+  var currentClient = await getCurrentClient();
+  var responseData;
+  final apiUrl;
+
+  try {
+    if (currentClient.role == 'USER') {
+      apiUrl = "/pet/all/pets/personal";
     } else {
       apiUrl = "/pet/${currentClient.id}";
     }
@@ -176,4 +209,21 @@ Future<void> updatePet(
     print(e);
     //  notification(e.toString(), true);
   }
+}
+
+Future<List<CenterLoad>> loadCenterAll() async {
+  var responseData;
+  var currentClient = await getCurrentClient();
+  try {
+    const apiUrl = "/pet/centers/all";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var centerList = responseData['data'] as List<dynamic>;
+  List<CenterLoad> centers = centerList
+      .map((json) => CenterLoad.fromJson(json, currentClient.location))
+      .toList();
+  return centers;
 }

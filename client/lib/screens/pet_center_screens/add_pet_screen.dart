@@ -10,6 +10,7 @@ import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class AddPetScreen extends StatefulWidget {
   const AddPetScreen({super.key});
@@ -24,6 +25,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
+  DateTime? birthday;
 
   String _selectedPetType = '';
   String _selectedGender = '';
@@ -39,11 +41,20 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
+  var currentClient;
 
   @override
   void initState() {
     super.initState();
     notificationHandler.initializeNotifications();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   Future<void> selectImage() async {
@@ -58,10 +69,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
     var result = await uploadMultiImage(imageFileList);
     Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
-
-    // print('test selectedImage: $finalResult');
-
-    // Check if the widget is still mounted before calling setState
     if (mounted) {
       setState(() {
         finalResult = finalResult2;
@@ -69,17 +76,31 @@ class _AddPetScreenState extends State<AddPetScreen> {
     }
   }
 
-  Future<void> postPet() async {
-    // print('test images here: $finalResult');
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900), // Only allow dates after today
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        birthday = picked;
+      });
+    }
+  }
 
-    // Kiểm tra trạng thái mounted trước khi gọi setState
+  Future<void> postPet() async {
     if (mounted) {
-      // Call the API to post content with image paths
       await addPet(
+          currentClient.id,
+          null,
+          null,
+          null,
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
-          double.parse(_ageController.text),
+          birthday!,
           _selectedGender,
           _colorController.text.toString(),
           finalResult,
@@ -201,11 +222,25 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 decoration: InputDecoration(labelText: 'Color'),
               ),
 
-              TextField(
-                controller: _ageController,
-                decoration: const InputDecoration(labelText: 'Age'),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const Text("Birthday (*): ",
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                  Text(
+                      birthday != null
+                          ? DateFormat('dd-MM-yyyy').format(birthday!.toLocal())
+                          : 'Date has not been selected',
+                      style:
+                          const TextStyle(fontSize: 15, color: Colors.black)),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 20,
@@ -237,7 +272,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
               Row(
                 children: [
-                  const Text('Gender:', style: TextStyle(fontSize: 12),) ,
+                  const Text(
+                    'Gender:',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'MALE',
                     groupValue: _selectedGender,
@@ -247,7 +285,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Male', style: TextStyle(fontSize: 12),),
+                  const Text(
+                    'Male',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'FEMALE',
                     groupValue: _selectedGender,
@@ -257,7 +298,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Female', style: TextStyle(fontSize: 12),),
+                  const Text(
+                    'Female',
+                    style: TextStyle(fontSize: 12),
+                  ),
                   Radio(
                     value: 'ORTHER',
                     groupValue: _selectedGender,
@@ -307,7 +351,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       if (_namePetController.text == '' ||
                           _breedController.text == '' ||
                           _colorController.text == '' ||
-                          _ageController.text == '' ||
+                          birthday == null ||
                           _descriptionController.text == '' ||
                           imageFileList.isEmpty ||
                           _selectedPetType == '' ||
