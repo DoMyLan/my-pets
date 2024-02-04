@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/services/image/change_avatar_api.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hive/hive.dart';
 import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
@@ -30,8 +31,20 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change Avatar'),
-      ),
+          backgroundColor: Colors.white,
+          title: Text(
+            'Change Avatar',
+            style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios,
+                color: Theme.of(context).primaryColor),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -65,10 +78,11 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
             SizedBox(height: 20),
             _pickedImage != null
                 ? ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
                     onPressed: () async {
-                      
-
+                      Loading(context);
                       var url = await changeAvatar(context, _pickedImage);
+                      Navigator.pop(context);
 
                       var userBox = await Hive.openBox('userBox');
                       var centerBox = await Hive.openBox('centerBox');
@@ -85,7 +99,6 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                         if (currentClient.role == 'USER') {
                           currentUser.avatar = url.toString();
                           userBox.put("currentUser", currentUser);
-                          
 
                           Navigator.push(
                             context,
@@ -98,12 +111,18 @@ class _ImageUploadScreenState extends State<ImageUploadScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditProfileCenterScreen()),
+                                builder: (context) =>
+                                    EditProfileCenterScreen()),
                           );
                         }
                       }
                     },
-                    child: Text('Change Avatar'),
+                    child: Text(
+                      'Change Avatar',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
                   )
                 : Container(),
           ],

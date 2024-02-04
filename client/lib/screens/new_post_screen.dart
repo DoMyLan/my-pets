@@ -6,6 +6,8 @@ import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewPostScreen extends StatefulWidget {
@@ -34,8 +36,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
-
+    Loading(context);
     var result = await uploadMultiImage(imageFileList);
+    Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
     if (mounted) {
       setState(() {
@@ -46,7 +49,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   Future<void> _post() async {
     if (mounted) {
-      addPost(_captionController.text.toString(), finalResult);
+      await addPost(_captionController.text.toString(), finalResult);
       setState(() {
         _captionController.clear();
         imageFileList.clear();
@@ -115,7 +118,14 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_captionController.text.isEmpty) {
+                        notification('Please enter caption', true);
+                        return;
+                      }
+                      Loading(context);
                       await _post();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromRGBO(

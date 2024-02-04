@@ -18,7 +18,7 @@ class NotificationHandler {
       initializationSettings,
       onSelectNotification: (String? payload) async {
         // Xử lý khi thông báo được nhấp vào
-        print('Thông báo được chọn với payload: $payload');
+        // print('Thông báo được chọn với payload: $payload');
       },
     );
   }

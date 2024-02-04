@@ -6,6 +6,8 @@ import 'package:found_adoption_application/screens/pet_center_screens/test_notif
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -52,12 +54,12 @@ class _AddPetScreenState extends State<AddPetScreen> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
-
+    Loading(context);
     var result = await uploadMultiImage(imageFileList);
+    Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
 
     // print('test selectedImage: $finalResult');
-    print('test selectedImage: $finalResult2');
 
     // Check if the widget is still mounted before calling setState
     if (mounted) {
@@ -68,12 +70,12 @@ class _AddPetScreenState extends State<AddPetScreen> {
   }
 
   Future<void> postPet() async {
-    print('test images here: $finalResult');
+    // print('test images here: $finalResult');
 
     // Kiểm tra trạng thái mounted trước khi gọi setState
     if (mounted) {
       // Call the API to post content with image paths
-      addPet(
+      await addPet(
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
@@ -210,32 +212,32 @@ class _AddPetScreenState extends State<AddPetScreen> {
               ),
 
               //DropdownButtonFormField LEVEL
-              DropdownButtonFormField<String>(
-                value: _selectedLevel,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedLevel = value!;
-                  });
-                },
-                decoration: const InputDecoration(labelText: 'Level'),
-                items: ['URGENT', 'NORMAL']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 192, 77, 36)),
-                    ),
-                  );
-                }).toList(),
-              ),
+              // DropdownButtonFormField<String>(
+              //   value: _selectedLevel,
+              //   onChanged: (String? value) {
+              //     setState(() {
+              //       _selectedLevel = value!;
+              //     });
+              //   },
+              //   decoration: const InputDecoration(labelText: 'Level'),
+              //   items: ['URGENT', 'NORMAL']
+              //       .map<DropdownMenuItem<String>>((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(
+              //         value,
+              //         style: const TextStyle(
+              //             color: Color.fromARGB(255, 192, 77, 36)),
+              //       ),
+              //     );
+              //   }).toList(),
+              // ),
 
               // Your other form fields go here
 
               Row(
                 children: [
-                  const Text('Gender:'),
+                  const Text('Gender:', style: TextStyle(fontSize: 12),) ,
                   Radio(
                     value: 'MALE',
                     groupValue: _selectedGender,
@@ -245,7 +247,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Male'),
+                  const Text('Male', style: TextStyle(fontSize: 12),),
                   Radio(
                     value: 'FEMALE',
                     groupValue: _selectedGender,
@@ -255,7 +257,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Female'),
+                  const Text('Female', style: TextStyle(fontSize: 12),),
                   Radio(
                     value: 'ORTHER',
                     groupValue: _selectedGender,
@@ -265,7 +267,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Orther'),
+                  const Text('Unknown'),
                 ],
               ),
               const SizedBox(
@@ -302,8 +304,22 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_namePetController.text == '' ||
+                          _breedController.text == '' ||
+                          _colorController.text == '' ||
+                          _ageController.text == '' ||
+                          _descriptionController.text == '' ||
+                          imageFileList.isEmpty ||
+                          _selectedPetType == '' ||
+                          _selectedGender == '') {
+                        notification(
+                            'Please fill in all the information', true);
+                        return;
+                      }
                       // Create a new Pet object with the entered information
+                      Loading(context);
                       await postPet();
+                      Navigator.of(context).pop();
                     },
                     child: const Text('Add Pet'),
                   ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-Widget inputField({
-  String? label,
-  bool obscureText = false,
-  TextEditingController? controller,
-}) {
+Widget inputField(
+    {String? label,
+    bool obscureText = false,
+    TextEditingController? controller,
+    bool? isPassword,
+    bool? isLogin}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -21,7 +22,8 @@ Widget inputField({
       ),
       TextField(
         controller: controller,
-        obscureText: obscureText,
+        obscureText: isPassword! ? obscureText : false,
+        onChanged: (value) => isPassword! ? validatePassword(value) : null,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
           enabledBorder: OutlineInputBorder(
@@ -30,6 +32,9 @@ Widget inputField({
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
           ),
+          errorText: isLogin!
+              ? null
+              : (isPassword! ? validatePassword(controller!.text) : null),
         ),
       ),
       SizedBox(
@@ -37,4 +42,13 @@ Widget inputField({
       )
     ],
   );
+}
+
+String? validatePassword(String value) {
+  Pattern pattern = r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$';
+  RegExp regex = new RegExp(pattern as String);
+  if (!regex.hasMatch(value))
+    return 'Password must have at least 8 characters, include \nuppercase, lowercase and number';
+  else
+    return null;
 }

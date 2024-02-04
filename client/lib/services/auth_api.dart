@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
+import 'package:found_adoption_application/screens/welcome_screen.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> refreshAccessToken() async {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   var userBox = await Hive.openBox('userBox'); // Lấy Hive box đã mở
   var centerBox = await Hive.openBox('centerBox');
 
@@ -16,7 +21,8 @@ Future<String> refreshAccessToken() async {
 
   // final refreshToken = userBox.get('currentUser').refreshToken;
   final refreshToken = currentClient.refreshToken;
-  final apiUrl = Uri.parse("https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/refresh-token");
+  final apiUrl = Uri.parse(
+      "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/refresh-token");
 
   final response = await http.post(apiUrl, headers: {
     'Authorization': 'Bearer ${refreshToken}',
@@ -30,12 +36,22 @@ Future<String> refreshAccessToken() async {
     if (currentClient.role == 'USER') {
       currentUser.accessToken = newAccessToken;
       userBox.put('currentUser', currentUser);
-    }else{
+    } else {
       currentCenter.accessToken = newAccessToken;
-      centerBox.put('curentCenter', currentCenter);
+      centerBox.put('currentCenter', currentCenter);
     }
     return newAccessToken;
   } else {
-    throw Exception('Lỗi làm mới AccessToken');
+    var userBox = await Hive.openBox('userBox');
+    await userBox.put('currentUser', null);
+
+    var centerBox = await Hive.openBox('centerBox');
+    await centerBox.put('currentCenter', null);
+    // ignore: use_build_context_synchronously
+    Navigator.push(navigatorKey.currentState!.context,
+        MaterialPageRoute(builder: ((context) => LoginScreen())));
+    notification("The login session has expired, please log in again!", false);
+
+    return 'Login';
   }
 }

@@ -16,111 +16,211 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  Future<List<Post>>? posts;
+  List<Post> allPosts = [];
+  List<Post> visiblePosts = [];
+
+  int itemsPerPage = 10;
+  int currentPage = 1;
+  int countScroll = 0;
+  int totalPages = 1;
+
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    posts = getAllPost();
+    _loadPosts();
+  }
+
+  Future<void> _loadPosts() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      setState(() {
+        _loadVisiblePosts();
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadVisiblePosts() async {
+    PostResult postReturn = await getAllPost(currentPage, itemsPerPage);
+    List<Post> newPosts = postReturn.posts;
+    totalPages = postReturn.totalPages;
+    setState(() {
+      visiblePosts.addAll(newPosts);
+      countScroll = 0;
+    });
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> _refresh() async {
+    setState(() {
+      visiblePosts.clear();
+      currentPage = 1;
+      _loadPosts();
+    });
+  }
+
+  Future<void> _loadMoreItems() async {
+    if (!isLoading) {
+      setState(() {
+        currentPage++;
+        _loadVisiblePosts();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text(
-            'Pet stories',
-            style:
-                TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0), fontSize: 23),
-          ),
-          leading: IconButton(
-            onPressed: () async {
-              var currentClient = await getCurrentClient();
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Pet stories',
+          style: TextStyle(
+              color: Color.fromRGBO(48, 96, 96, 1.0),
+              fontWeight: FontWeight.bold,
+              fontSize: 26),
+        ),
+        leading: IconButton(
+          onPressed: () async {
+            var currentClient = await getCurrentClient();
 
-              if (currentClient != null) {
-                if (currentClient.role == 'USER') {
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MenuFrameUser(
-                              userId: currentClient.id,
-                            )),
-                  );
-                } else if (currentClient.role == 'CENTER') {
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            MenuFrameCenter(centerId: currentClient.id)),
-                  );
-                }
+            if (currentClient != null) {
+              if (currentClient.role == 'USER') {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MenuFrameUser(
+                      userId: currentClient.id,
+                    ),
+                  ),
+                );
+              } else if (currentClient.role == 'CENTER') {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MenuFrameCenter(centerId: currentClient.id),
+                  ),
+                );
               }
-            },
+            }
+          },
+          icon: const Icon(
+            FontAwesomeIcons.bars,
+            size: 25,
+            color: Color.fromRGBO(48, 96, 96, 1.0),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: _refresh,
             icon: const Icon(
-              FontAwesomeIcons.bars,
-              size: 25,
+              Icons.refresh,
+              size: 30,
               color: Color.fromRGBO(48, 96, 96, 1.0),
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NewPostScreen()));
-              },
-              icon: const Icon(
-                Icons.add_circle,
-                size: 30,
-                color: Color.fromRGBO(48, 96, 96, 1.0),
-              ),
-            ),
-          ],
-        ),
-        body: RefreshIndicator(
-          onRefresh: _refresh,
-          child: FutureBuilder<List<Post>>(
-            future: posts,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo is ScrollEndNotification &&
+                scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent) {
+              countScroll++;
+              if (countScroll == 1) {
+                if (currentPage <= totalPages) {
+                  _loadMoreItems();
+                }
+              }
+            }
+            return true;
+          },
+          child: ListView.builder(
+            itemCount: visiblePosts.length + (isLoading ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (!isLoading) {
+                return PostCard(snap: visiblePosts[index]);
+              } else if (isLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
               } else {
-                List<Post>? postList = snapshot.data;
-
-                if (postList != null) {
-                  return ListView.builder(
-                    itemCount: postList.length,
-                    itemBuilder: (context, index) =>
-                        PostCard(snap: postList[index]),
-                  );
-                } else {
-                  // Xử lý trường hợp postList là null
-                  return const Scaffold(
-                    body: Center(
-                      child: Icon(
-                        Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
-                        size: 48.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-                }
+                return Container(); // Hiển thị một widget trống khi không có thêm dữ liệu
               }
             },
           ),
-        ));
-  }
+        ),
+      ),
+   
 
-  Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      posts = getAllPost();
-    });
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewPostScreen(),
+                ),
+              );
+            },
+            backgroundColor: Theme.of(context).primaryColor,
+            child: const Icon(
+              Icons.add,
+              size: 30,
+              color: Colors.white,
+            ),
+        ),
+    );
   }
 }
+
+// RefreshIndicator(
+//           onRefresh: _refresh,
+//           child: FutureBuilder<PostResult>(
+//             future: getAllPost(1, 10),
+//             builder: (context, snapshot) {
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return const Center(
+//                   child: CircularProgressIndicator(),
+//                 );
+//               } else if (snapshot.hasError) {
+//                 return const Center(child: Text('Please try again later'));
+//               } else {
+//                 List<Post>? postList = snapshot.data!.posts;
+
+//                 if (postList != null) {
+//                   return ListView.builder(
+//                     itemCount: postList.length,
+//                     itemBuilder: (context, index) =>
+//                         PostCard(snap: postList[index]),
+//                   );
+//                 } else {
+//                   // Xử lý trường hợp postList là null
+//                   return const Scaffold(
+//                     body: Center(
+//                       child: Icon(
+//                         Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
+//                         size: 48.0,
+//                         color: Colors.grey,
+//                       ),
+//                     ),
+//                   );
+//                 }
+//               }
+//             },
+//           ),
+//         ));

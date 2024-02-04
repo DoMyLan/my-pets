@@ -1,6 +1,7 @@
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/comments.dart';
+import 'package:found_adoption_application/models/location.dart';
 import 'package:found_adoption_application/models/pet_center.dart'
     as center_comment;
 import 'package:found_adoption_application/models/pet_center.dart';
@@ -10,6 +11,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/profile_ce
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/post/comment.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -75,6 +77,7 @@ class _CommentScreenState extends State<CommentScreen> {
             lastName: userIdData['lastName'],
             avatar: userIdData['avatar'],
             address: userIdData['address'],
+            location: userIdData['location'],
             phoneNumber: userIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -90,6 +93,7 @@ class _CommentScreenState extends State<CommentScreen> {
             name: centerIdData['name'],
             avatar: centerIdData['avatar'],
             address: centerIdData['address'],
+            location: centerIdData['location'],
             phoneNumber: centerIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -133,13 +137,13 @@ class _CommentScreenState extends State<CommentScreen> {
             return const Center(child: Text('Post not found.')
                 // Text('Error: ${snapshot.error}'),
                 );
-          } else if (snapshot.hasData) {  
+          } else if (snapshot.hasData) {
             comments = snapshot.data as List<Comment>;
             return ListView.builder(
                 itemCount: comments.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 4.0, 2.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(10.0, 4.0, 2.0, 0.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -187,7 +191,8 @@ class _CommentScreenState extends State<CommentScreen> {
                             ),
                           ),
                           title: Container(
-                            padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
+                            padding:
+                                const EdgeInsets.fromLTRB(8.0, 10.0, 4.0, 4.0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.grey.shade200),
@@ -239,12 +244,12 @@ class _CommentScreenState extends State<CommentScreen> {
                               ],
                             ),
                           ),
-                          trailing: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )),
+                          // trailing: IconButton(
+                          //     onPressed: () {},
+                          //     icon: const Icon(
+                          //       Icons.favorite,
+                          //       color: Colors.red,
+                          //     )),
                         ),
                       ],
                     ),
@@ -265,6 +270,7 @@ class _CommentScreenState extends State<CommentScreen> {
         lastName: '',
         avatar: '',
         address: '',
+        location: Location(latitude: '', longitude: ''),
         phoneNumber: '',
         email: '',
         status: '');
@@ -273,6 +279,7 @@ class _CommentScreenState extends State<CommentScreen> {
         name: '',
         avatar: '',
         address: '',
+        location: Location(latitude: '', longitude: ''),
         phoneNumber: '',
         email: '',
         status: '');
@@ -340,10 +347,12 @@ class _CommentScreenState extends State<CommentScreen> {
                 withBorder: false,
                 sendButtonMethod: () async {
                   if (formKey.currentState!.validate()) {
-                    print(commentController.text);
+                    String commentText = commentController.text.toString();
 
-                    var id = await postComment(
-                        widget.postId, commentController.text.toString());
+                    FocusScope.of(context).unfocus();
+                    commentController.clear();
+
+                    var id = await postComment(widget.postId, commentText);
                     if (id != '') {
                       var currentClient = await getCurrentClient();
 
@@ -354,6 +363,7 @@ class _CommentScreenState extends State<CommentScreen> {
                           lastName: currentClient.lastName,
                           avatar: currentClient.avatar,
                           address: '',
+                          location: Location(latitude: '', longitude: ''),
                           phoneNumber: '',
                           email: '',
                           status: '',
@@ -364,6 +374,7 @@ class _CommentScreenState extends State<CommentScreen> {
                           name: currentClient.name,
                           avatar: currentClient.avatar,
                           address: '',
+                          location: Location(latitude: '', longitude: ''),
                           phoneNumber: '',
                           email: '',
                           status: '',
@@ -374,15 +385,12 @@ class _CommentScreenState extends State<CommentScreen> {
                         id: id.toString(),
                         userId: userCmt,
                         centerId: centerCmt,
-                        content: commentController.text,
+                        content: commentText,
                       );
 
                       // Gửi comment thông qua Socket.IO
                       socket.emit('comment', newComment.toMap());
                     }
-
-                    commentController.clear();
-                    FocusScope.of(context).unfocus();
                   } else {
                     print("Not validated");
                   }
@@ -425,11 +433,14 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
             TextButton(
               onPressed: () async {
+                Loading(context);
                 // Gọi hàm xóa comment khi người dùng xác nhận
                 var message = await deleteComment(postId, commentId);
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
+
                 String commentId2 = extractCommentId(message);
-                if (commentId != '') {
+                if (commentId2 != '') {
                   setState(() {
                     commentsFuture.then((comments) {
                       comments
@@ -437,8 +448,9 @@ class _CommentScreenState extends State<CommentScreen> {
                       return comments;
                     });
                   });
-                }
-                notification(message, false);
+                  notification('The comment has been deleted', false);
+                } else
+                  notification(message, true);
               },
               child: Text('Delete'),
             ),

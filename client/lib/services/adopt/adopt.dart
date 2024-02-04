@@ -8,7 +8,6 @@ Future<String> createAdopt(String petId, String descriptionAdoption) async {
     var body = jsonEncode(
         {'petId': petId, 'descriptionAdoption': descriptionAdoption});
     var responseData = await api('/adopt', 'POST', body);
-    print(responseData);
 
     if (responseData['success']) {
       notification(responseData['message'], false);
@@ -17,7 +16,7 @@ Future<String> createAdopt(String petId, String descriptionAdoption) async {
       notification(responseData['message'], true);
     }
   } catch (e) {
-    print(e.toString());
+    // print(e.toString());
     notification("Adopt: ${e.toString()}", true);
   }
   return '';
@@ -35,8 +34,8 @@ Future<List<Adopt>> getStatusAdoptCenter(String status) async {
       return adopts;
     }
   } catch (e) {
-    print(e);
-    notification(e.toString(), true);
+    // print(e);
+    // notification(e.toString(), true);
   }
   // ignore: cast_from_null_always_fails
   return null as List<Adopt>;
@@ -54,8 +53,8 @@ Future<List<Adopt>> getStatusAdoptUser(String status) async {
       return adopts;
     }
   } catch (e) {
-    print(e);
-    notification(e.toString(), true);
+    // print(e);
+    // notification(e.toString(), true);
   }
   // ignore: cast_from_null_always_fails
   return null as List<Adopt>;
@@ -71,8 +70,8 @@ Future<void> changeStatusAdoptCenter(String adoptId, String statusAdopt) async {
       notification(responseData['message'], false);
     }
   } catch (e) {
-    print(e);
-    notification(e.toString(), true);
+    // print(e);
+    // notification(e.toString(), true);
   }
 }
 
@@ -86,23 +85,8 @@ Future<void> changeStatusAdoptUser(String adoptId, String statusAdopt) async {
       notification(responseData['message'], false);
     }
   } catch (e) {
-    print(e);
-    notification(e.toString(), true);
+    // print(e);
+    // notification(e.toString(), true);
   }
 }
 
-// Future<dynamic> createAdopt(String content) async {
-//   try {
-//     var body = jsonEncode({});
-//   } catch (e) {
-//     Fluttertoast.showToast(
-//       msg: e.toString(),
-//       toastLength: Toast.LENGTH_SHORT, // Thời gian hiển thị
-//       gravity: ToastGravity.BOTTOM, // Vị trí hiển thị
-//       timeInSecForIosWeb: 1, // Thời gian hiển thị cho iOS và web
-//       backgroundColor: Colors.red[20], // Màu nền của toast
-//       textColor: Colors.white, // Màu chữ của toast
-//       fontSize: 16.0,
-//     ); // Kích thước chữ của toast
-//   }
-// }

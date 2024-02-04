@@ -52,11 +52,8 @@ class NotificationPage extends StatelessWidget {
         backgroundColor: Colors.white,
         title: const Row(
           children: [
-            Icon(
-              Icons.notifications_active_sharp,
-              color: Color.fromRGBO(48, 96, 96, 1.0),
-            ),
-            SizedBox(width: 12.0),
+         
+            SizedBox(width: 8.0),
             Text(
               'Notification',
               style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0)),

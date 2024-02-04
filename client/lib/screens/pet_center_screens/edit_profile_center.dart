@@ -90,7 +90,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
               );
             } else if (snapshot.hasError) {
               // If there is an error fetching data, show an error message
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return const Center(child: Text('Please try again later'));
             } else {
               // If data is successfully fetched, display the form
               InfoCenter center = snapshot.data!;
@@ -212,16 +212,18 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                               var centerBox = await Hive.openBox('centerBox');
                               var currentCenter =
                                   centerBox.get('currentCenter');
-                              currentCenter.firstName =
+                              currentCenter.name =
                                   textName.text.toString() == ""
-                                      ? currentCenter.firstName
+                                      ? currentCenter.name
                                       : textName.text.toString();
                               centerBox.put('currentCenter', currentCenter);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          EditProfileCenterScreen()));
+
+                              setState(() {
+                                centerFuture = getProfileCenter(context, null);
+                                textName.text = '';
+                                textPhoneNumber.text = '';
+                                textAddress.text = '';
+                              });
                             },
                             child: Text(
                               'SAVE',

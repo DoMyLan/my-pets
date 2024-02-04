@@ -15,24 +15,25 @@ Widget bannerCard() {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          SizedBox(height: 30),
           Text(
             'Welcome',
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 27, color: Colors.white),
+                fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 15),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Text(
               'Find the best pet near you and adopt your favorite one',
               style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontSize: 18,
                   color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 58),
+          SizedBox(height: 47),
         ],
       ),
     ),

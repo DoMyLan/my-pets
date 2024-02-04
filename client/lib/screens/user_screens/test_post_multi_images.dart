@@ -242,7 +242,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   void _post() async {
     // Example: Print the caption and reset the state
-    print('Caption: ${_captionController.text}');
 
     // Upload each image and get their paths
     List<String> imagePaths = [];
@@ -268,7 +267,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
     var currentCenter = centerBox.get('currentCenter');
 
     avatar = currentUser != null ? currentUser.avatar : currentCenter.avatar;
-    print('test avatar: $avatar');
   }
 
   @override

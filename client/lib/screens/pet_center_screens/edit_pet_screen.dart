@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
-import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -28,7 +29,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   String _selectedPetType = '';
   String _selectedGender = '';
-  String _selectedLevel = 'NORMAL';
+  // String _selectedLevel = 'NORMAL';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
@@ -50,7 +51,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
     _colorController.text = widget.pet.color;
     _ageController.text = widget.pet.age.toString();
     _descriptionController.text = widget.pet.description;
-    _selectedLevel = widget.pet.level;
+    // _selectedLevel = widget.pet.level;
     _selectedPetType = widget.pet.petType;
     _selectedGender = widget.pet.gender;
     finalResult.addAll(widget.pet.images);
@@ -71,7 +72,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   Future<void> handlerUpdatePet() async {
     if (mounted) {
-      updatePet(
+      await updatePet(
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
@@ -79,7 +80,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
           _selectedGender,
           _colorController.text.toString(),
           _descriptionController.text.toString(),
-          _selectedLevel,
+          // _selectedLevel,
           imageFileList,
           imageFileList.isNotEmpty ? true : false,
           widget.pet.id);
@@ -94,7 +95,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Add a New Pet',
+        title: const Text('Edit Pet',
             style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0))),
         centerTitle: true,
         elevation: 0,
@@ -193,26 +194,26 @@ class _EditPetScreenState extends State<EditPetScreen> {
               ),
 
               //DropdownButtonFormField LEVEL
-              DropdownButtonFormField<String>(
-                value: _selectedLevel,
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedLevel = value!;
-                  });
-                },
-                decoration: const InputDecoration(labelText: 'Level'),
-                items: ['URGENT', 'NORMAL']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 192, 77, 36)),
-                    ),
-                  );
-                }).toList(),
-              ),
+              // DropdownButtonFormField<String>(
+              //   value: _selectedLevel,
+              //   onChanged: (String? value) {
+              //     setState(() {
+              //       _selectedLevel = value!;
+              //     });
+              //   },
+              //   decoration: const InputDecoration(labelText: 'Level'),
+              //   items: ['URGENT', 'NORMAL']
+              //       .map<DropdownMenuItem<String>>((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(
+              //         value,
+              //         style: const TextStyle(
+              //             color: Color.fromARGB(255, 192, 77, 36)),
+              //       ),
+              //     );
+              //   }).toList(),
+              // ),
 
               // Your other form fields go here
 
@@ -288,9 +289,21 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_namePetController.text == '' ||
+                          _breedController.text == '' ||
+                          _colorController.text == '' ||
+                          _ageController.text == '' ||
+                          _descriptionController.text == '' ||
+                          _selectedPetType == '' ||
+                          _selectedGender == '') {
+                        notification(
+                            'Please fill in all the information', true);
+                        return;
+                      }
                       // Create a new Pet object with the entered information
+                      Loading(context);
                       await handlerUpdatePet();
-                      // ignore: use_build_context_synchronously
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
                     child: const Text('Edit Pet'),

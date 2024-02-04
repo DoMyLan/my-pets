@@ -5,17 +5,34 @@ import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:image_picker/image_picker.dart';
 
-Future<List<Post>> getAllPost() async {
+class PostResult {
+  final List<Post> posts;
+  final int totalPages;
+  final int totalPost;
+  final int page;
+
+  PostResult(
+      {required this.posts,
+      required this.totalPages,
+      required this.totalPost,
+      required this.page});
+}
+
+Future<PostResult> getAllPost(page, limit) async {
   var responseData = {};
   try {
-    responseData = await api('/post', 'GET', '');
+    responseData = await api('/post/?limit=$limit&page=$page', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
   }
   var postList = responseData['data'] as List<dynamic>;
   List<Post> posts = postList.map((json) => Post.fromJson(json)).toList();
-  return posts;
+  return PostResult(
+      posts: posts,
+      totalPages: responseData['totalPages'],
+      totalPost: responseData['totalPost'],
+      page: responseData['page']);
 }
 
 Future<Post> getOnePost(String postId) async {
@@ -96,7 +113,7 @@ Future<void> updatePost(String content, List<XFile> imagePaths,
 
   var body = jsonEncode({
     "content": content,
-    if(isNewUpload) "images" : finalResult,
+    if (isNewUpload) "images": finalResult,
   });
   try {
     responseData = await api('/post/$postId', 'PUT', body);

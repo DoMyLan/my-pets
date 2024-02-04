@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/dialog_otp.dart';
-import 'package:found_adoption_application/models/current_center.dart';
-import 'package:found_adoption_application/models/current_user.dart';
+import 'package:found_adoption_application/models/hive/current_center.dart';
+import 'package:found_adoption_application/models/hive/current_location.dart';
+import 'package:found_adoption_application/models/hive/current_user.dart';
+
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/register_form.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -44,6 +46,10 @@ Future<void> login(
           ..phoneNumber = responseData['data']['phoneNumber']
           ..avatar = responseData['data']['avatar']
           ..address = responseData['data']['address']
+          ..location = CurrentLocation(
+            latitude: responseData['data']['location']['latitude'],
+            longitude: responseData['data']['location']['longitude'],
+          )
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
@@ -52,7 +58,10 @@ Future<void> login(
 
         var retrievedUser =
             userBox.get('currentUser'); // Lấy thông tin User từ Hive
+
+       
         notification("Login user success!", false);
+        Navigator.pop(context);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -60,6 +69,7 @@ Future<void> login(
                       userId: retrievedUser.id,
                     )));
       } else if (responseData['data']['role'] == 'CENTER') {
+        print('jekobject');
         var centerBox = await Hive.openBox('centerBox'); // Lấy Hive box đã mở
         var currentCenter = CurrentCenter()
           ..id = responseData['data']['_id']
@@ -71,6 +81,10 @@ Future<void> login(
           ..avatar = responseData['data']['avatar']
           ..phoneNumber = responseData['data']['phoneNumber']
           ..address = responseData['data']['address']
+          ..location = CurrentLocation(
+            latitude: responseData['data']['location']['latitude'],
+            longitude: responseData['data']['location']['longitude'],
+          )
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
 
@@ -79,32 +93,37 @@ Future<void> login(
 
         var retrievedCenter =
             centerBox.get('currentCenter'); // Lấy thông tin User từ Hive
+
         notification("Login center success!", false);
+        Navigator.pop(context);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     MenuFrameCenter(centerId: retrievedCenter.id)));
       } else if (responseData['data']['role'] == 'ADMIN') {
+        Navigator.pop(context);
         notification('You is ADMIN!', true);
       }
     } else if (responseData['message'] == 'Account is not active!') {
+      Navigator.pop(context);
       notification(responseData['message'], true);
       _showLogoutDialog(context, email);
     } else if (responseData['message'] == 'User information not found!') {
-      print(responseData['message']);
+      Navigator.pop(context);
       // ignore: use_build_context_synchronously
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   RegistrationForm(accountId: responseData['id'])));
-      
+
       notification(responseData['message'], true);
     } else if (responseData['message'] == 'Center information not found!') {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => RegistrationCenterForm()));
     } else {
+      Navigator.pop(context);
       notification(responseData['message'], true);
       print(responseData);
     }
@@ -113,8 +132,37 @@ Future<void> login(
 
     if (e.toString() ==
         "ClientException with SocketException: Failed host lookup: 'found-and-adoption-pet-api-be.vercel.app' (OS Error: No address associated with hostname, errno = 7), uri=https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-in") {
+      Navigator.pop(context);
       notification("Check your Network and Try again.", true);
     }
+  }
+}
+
+Future<bool> forgotPassword(String email) async {
+  try {
+    final apiUrl = Uri.parse(
+        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/forgot-password");
+
+    final response = await http.post(
+      apiUrl,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'email': email}),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      notification(responseData['message'], false);
+      return true;
+    } else {
+      final responseData = json.decode(response.body);
+      notification(responseData['message'], true);
+      return false;
+    }
+  } catch (e) {
+    print(e);
+    return false;
   }
 }
 

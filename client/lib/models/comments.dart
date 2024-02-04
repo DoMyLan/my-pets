@@ -2,6 +2,8 @@ import 'package:found_adoption_application/models/pet_center.dart';
 import 'package:found_adoption_application/models/user.dart';
 import 'package:intl/intl.dart';
 
+import 'location.dart';
+
 class Comment {
   final String id;
   User? userId;
@@ -30,10 +32,17 @@ class Comment {
                 address: json['userId']['address'] as String,
                 phoneNumber: json['userId']['phoneNumber'] as String,
                 aboutMe: json['userId']['aboutMe'] as String,
-                createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['userId']['createdAt']))
-          .add(Duration(hours: 7)),
-                updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['userId']['updatedAt']))
-          .add(Duration(hours: 7)),
+                createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                        .parse(json['userId']['createdAt']))
+                    .add(Duration(hours: 7)),
+                updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                        .parse(json['userId']['updatedAt']))
+                    .add(Duration(hours: 7)),
+                location: json['userId']['location'] != null
+                    ? Location(
+                        latitude: json['userId']['location']['latitude'],
+                        longitude: json['userId']['location']['longitude'])
+                    : const Location(latitude: "0", longitude: "0"),
               )
             : null,
         centerId: json['centerId'] != null
@@ -44,16 +53,23 @@ class Comment {
                 address: json['centerId']['address'] as String,
                 phoneNumber: json['centerId']['phoneNumber'] as String,
                 aboutMe: json['centerId']['aboutMe'] as String,
-                createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['centerId']['createdAt']))
-          .add(Duration(hours: 7)),
-              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['centerId']['createdAt']))
-          .add(Duration(hours: 7))
+                createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                        .parse(json['centerId']['createdAt']))
+                    .add(Duration(hours: 7)),
+                updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                        .parse(json['centerId']['createdAt']))
+                    .add(Duration(hours: 7)),
+                location: json['centerId']['location'] != null
+                    ? Location(
+                        latitude: json['centerId']['location']['latitude'],
+                        longitude: json['centerId']['location']['longitude'])
+                    : const Location(latitude: "0", longitude: "0"),
               )
             : null,
         commentId: json['commentId'] ?? null,
         content: json['content'] ?? '',
         createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['createdAt']))
-          .add(Duration(hours: 7)));
+            .add(Duration(hours: 7)));
   }
 
   Map<String, dynamic> toMap() {

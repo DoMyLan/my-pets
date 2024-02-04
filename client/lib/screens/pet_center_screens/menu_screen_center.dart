@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/main.dart';
-import 'package:found_adoption_application/screens/welcome_screen.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:hive/hive.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -72,83 +73,145 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [startingColor, mainColor],
-        )),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 24.0,
-                      backgroundColor: Colors.orange,
-                    ),
-                    SizedBox(width: 16),
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Ryan',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20),
-                          ),
-                          Text(
-                            'Active Status',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ])
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: menuItems
-                      .asMap()
-                      .entries
-                      .map((MapEntry) => buildMenuRow(MapEntry.key))
-                      .toList(),
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.gear,
-                      color: Colors.white.withOpacity(0.5),
-                    ),
-                    SizedBox(width: 16),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Settings      |',
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    TextButton(
-                        onPressed: () async {
-                          _showLogoutDialog(context);
+    return WillPopScope(
+      onWillPop: () async {
+        // Show a confirmation dialog when the user tries to exit the app
+        final shouldExit = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure you want to exit the application?'),
+            actions: [
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: Text('Exit'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        );
+
+        return shouldExit ?? false; // Return false if shouldExit is null
+      },
+      child: Material(
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [startingColor, mainColor],
+          )),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      FutureBuilder(
+                        // Trả về một Future có kiểu dữ liệu là String (URL của avatar)
+                        future: getCurrentClient()
+                            .then((currentClient) => currentClient.avatar),
+                        builder: (context, snapshotAvatar) {
+                          if (snapshotAvatar.connectionState ==
+                              ConnectionState.waiting) {
+                            // Hiển thị một vòng tròn chờ nếu đang tải dữ liệu
+                            return const CircleAvatar(
+                              radius: 24.0,
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshotAvatar.hasError) {
+                            // Xử lý lỗi nếu có
+                            return Text('Error: ${snapshotAvatar.error}');
+                          } else {
+                            // Hiển thị CircleAvatar khi dữ liệu avatar sẵn sàng
+                            return CircleAvatar(
+                              radius: 24.0,
+                              backgroundImage:
+                                  NetworkImage(snapshotAvatar.data!),
+                            );
+                          }
                         },
-                        child: Text(
-                          '   Log out',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
-                        ))
-                  ],
-                ),
-              ],
+                      ),
+                      const SizedBox(width: 8),
+                      FutureBuilder(
+                        // Trả về một Future có kiểu dữ liệu là String (tên trung tâm)
+                        future: getCurrentClient()
+                            .then((currentClient) => currentClient.name),
+                        builder: (context, snapshotName) {
+                          if (snapshotName.connectionState ==
+                              ConnectionState.waiting) {
+                            // Hiển thị một vòng tròn chờ nếu đang tải dữ liệu
+                            return const CircularProgressIndicator();
+                          } else if (snapshotName.hasError) {
+                            // Xử lý lỗi nếu có
+                            return Text('Error: ${snapshotName.error}');
+                          } else {
+                            // Hiển thị tên trung tâm khi dữ liệu tên sẵn sàng
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshotName.data!,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.circle,
+                                      color: Colors.green,
+                                      size: 12,
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    Text(
+                                      'Đang hoạt động',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: menuItems
+                        .asMap()
+                        .entries
+                        .map((MapEntry) => buildMenuRow(MapEntry.key))
+                        .toList(),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.logout_rounded,
+                          color: Colors.white.withOpacity(0.5)),
+                      TextButton(
+                          onPressed: () async {
+                            _showLogoutDialog(context);
+                          },
+                          child: Text(
+                            '   Log out',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600),
+                          ))
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -183,7 +246,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                 Navigator.of(context).pop();
                 //Navigate
                 Navigator.push(context,
-                    MaterialPageRoute(builder: ((context) => WelcomeScreen())));
+                    MaterialPageRoute(builder: ((context) => LoginScreen())));
 
                 var userBox = await Hive.openBox('userBox');
                 await userBox.put('currentUser', null);

@@ -4,7 +4,7 @@ import 'package:found_adoption_application/services/auth_api.dart';
 import 'package:http/http.dart' as http;
 
 Future<dynamic> callBackApi(apiUrl, method, body) async {
-  var newAccessToken = refreshAccessToken().toString();
+  var newAccessToken = await refreshAccessToken();
   var response;
   if (method == "POST") {
     response = await http.post(apiUrl,

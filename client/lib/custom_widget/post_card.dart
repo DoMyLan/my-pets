@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/like_model.dart';
 import 'package:found_adoption_application/screens/comment_screen.dart';
 import 'package:found_adoption_application/screens/edit_post_screen.dart';
@@ -9,9 +11,11 @@ import 'package:found_adoption_application/screens/user_screens/profile_user.dar
 import 'package:found_adoption_application/services/post/like_post_api.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -26,11 +30,30 @@ class _PostCardState extends State<PostCard> {
   late int quantityLike = 0;
   late bool liked = false;
   late String selectedOption = '';
+  late io.Socket socket;
+  bool isOnline = false;
+
   @override
   void initState() {
     super.initState();
     clientPost = widget.snap!;
     getLiked();
+
+    // Khởi tạo kết nối Socket.IO
+    socket = io.io(
+        'http://socket-found-adoption-dangvantuan.koyeb.app', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+
+    socket.on("getOnlineUsers", (data) {
+      if (data['userId'] == clientPost.userId?.id ||
+          data['userId'] == clientPost.petCenterId?.id) {
+        setState(() {
+          isOnline = true;
+        });
+      }
+    });
   }
 
   Future<void> getLiked() async {
@@ -55,9 +78,11 @@ class _PostCardState extends State<PostCard> {
 
   final CarouselController carouselController = CarouselController();
   int currentIndex = 0;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
+    // final int maxLines = 3;
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -96,14 +121,32 @@ class _PostCardState extends State<PostCard> {
                       );
                     }
                   },
-                  child: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(
-                      clientPost.userId != null
-                          ? '${clientPost.userId!.avatar}'
-                          : '${clientPost.petCenterId.avatar}',
-                    ),
+                  child: Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(
+                          clientPost.userId != null
+                              ? '${clientPost.userId!.avatar}'
+                              : '${clientPost.petCenterId.avatar}',
+                        ),
+                      ),
+                      isOnline
+                          ? Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                width: 10.0,
+                                height: 10.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.green, // Green color
+                                  shape: BoxShape.circle, // Circular shape
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
                   ),
                 ),
 
@@ -132,12 +175,24 @@ class _PostCardState extends State<PostCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            clientPost.userId != null
-                                ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
-                                : clientPost.petCenterId.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                          Row(
+                            children: [
+                              Text(
+                                clientPost.userId != null
+                                    ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
+                                    : clientPost.petCenterId.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              clientPost.userId == null
+                                  ? Icon(FontAwesomeIcons.paw,
+                                      size: 12, color: Colors.grey)
+                                  : Icon(FontAwesomeIcons.user,
+                                      size: 12, color: Colors.grey)
+                            ],
                           ),
 
                           //Thời gian đăng bài
@@ -170,7 +225,7 @@ class _PostCardState extends State<PostCard> {
                         context: context,
                         builder: (context) => Dialog(
                           child: ListView(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             shrinkWrap: true,
                             children: ((currentClient.id ==
                                             clientPost.userId?.id ||
@@ -219,12 +274,14 @@ class _PostCardState extends State<PostCard> {
                                                   title: const Text(
                                                       'Violates community standards'),
                                                   onTap: () async {
+                                                    Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
                                                         'Violates community standards');
                                                     Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
+                                                    Navigator.pop(context);
                                                   },
                                                 ),
                                                 ListTile(
@@ -233,10 +290,12 @@ class _PostCardState extends State<PostCard> {
                                                   title: const Text(
                                                       'Misleading language'),
                                                   onTap: () async {
+                                                    Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
                                                         'Misleading language');
+                                                    Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                   },
@@ -246,10 +305,12 @@ class _PostCardState extends State<PostCard> {
                                                       const Icon(Icons.warning),
                                                   title: const Text('Violence'),
                                                   onTap: () async {
+                                                    Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
                                                         'Violence');
+                                                    Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                   },
@@ -260,10 +321,12 @@ class _PostCardState extends State<PostCard> {
                                                   title: const Text(
                                                       'Inappropriate content'),
                                                   onTap: () async {
+                                                    Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
                                                         'Inappropriate content');
+                                                    Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                     Navigator.of(context).pop();
                                                   },
@@ -297,6 +360,9 @@ class _PostCardState extends State<PostCard> {
                                                                   'Submit'),
                                                               onPressed:
                                                                   () async {
+                                                                Loading(
+                                                                    context);
+
                                                                 await reportPost(
                                                                     clientPost
                                                                         .id,
@@ -304,6 +370,9 @@ class _PostCardState extends State<PostCard> {
                                                                     reasonController
                                                                         .text
                                                                         .toString());
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
@@ -325,14 +394,18 @@ class _PostCardState extends State<PostCard> {
                                       }
                                       // Add other logic for handling other options
                                     },
-                                    child: ListTile(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        vertical: 16,
-                                        horizontal: 12,
+                                    child: Container(
+                                      height: 70,
+                                      child: ListTile(
+                                        title: Text(
+                                          item['text'] as String,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        leading: Icon(
+                                          item['icon'] as IconData?,
+                                          size: 20,
+                                        ),
                                       ),
-                                      title: Text(item['text'] as String),
-                                      leading: Icon(item['icon'] as IconData?),
                                     ),
                                   ),
                                 )
@@ -351,18 +424,27 @@ class _PostCardState extends State<PostCard> {
 
           if (clientPost.images != null && clientPost.images.isNotEmpty)
             clientPost.images.length == 1
-                ? Image.network(clientPost.images.first)
+                ? Image.network(
+                    clientPost.images.first,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) {
+                      // Return an Icon widget when there's an error
+                      return Icon(Icons.image_not_supported, color: Colors.red);
+                    },
+                  )
                 : _slider(clientPost.images)
           else
             const SizedBox(),
 
           //LIKE+COMMENT SECTION
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: IconButton(
                   onPressed: () async {
-                    await like(context, clientPost.id);
                     if (!liked) {
                       setState(() {
                         quantityLike += 1;
@@ -374,6 +456,7 @@ class _PostCardState extends State<PostCard> {
                         liked = false;
                       });
                     }
+                    await like(context, clientPost.id);
                   },
                   icon: liked == false
                       ? const Icon(
@@ -387,19 +470,16 @@ class _PostCardState extends State<PostCard> {
                   iconSize: 29.0,
                 ),
               ),
-              Expanded(
-                child: IconButton(
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CommentScreen(postId: clientPost.id)));
-                  },
-                  icon:
-                      const Icon(Icons.chat_bubble_outline, color: Colors.red),
-                  iconSize: 29.0,
-                ),
+              IconButton(
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CommentScreen(postId: clientPost.id)));
+                },
+                icon: const Icon(Icons.chat_bubble_outline, color: Colors.red),
+                iconSize: 29.0,
               ),
               Expanded(
                 child: IconButton(
@@ -421,39 +501,21 @@ class _PostCardState extends State<PostCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  LikeScreen(postId: clientPost.id)));
-                    },
-                    child: Container(
-                        child: Text(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                LikeScreen(postId: clientPost.id)));
+                  },
+                  child: Container(
+                    child: Text(
                       '${quantityLike} likes',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ))),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8),
-                  child: RichText(
-                      text: TextSpan(
-                          style: const TextStyle(color: Colors.black),
-                          children: [
-                        TextSpan(
-                          // text: clientPost.petCenterId!.name,
-                          text: clientPost.userId != null
-                              ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
-                              : clientPost.petCenterId
-                                  .name, // Xử lý trường hợp khác nếu cần thiết
-                          // '${snapshot.data!.userId.firstName} ${snapshot.data!.userId.lastName}    ',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: '  ${clientPost.content}',
-                          style: const TextStyle(fontWeight: FontWeight.normal),
-                        )
-                      ])),
+                      style: const TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Color.fromARGB(255, 146, 144, 144)),
+                    ),
+                  ),
                 ),
                 InkWell(
                   onTap: () {
@@ -463,11 +525,60 @@ class _PostCardState extends State<PostCard> {
                             builder: (context) =>
                                 CommentScreen(postId: clientPost.id)));
                   },
-                  child: Container(
-                    child: Text(
-                      'View all ${clientPost.comments.length} comments',
-                      style: const TextStyle(fontSize: 15, color: Colors.black),
-                    ),
+                  child: Text(
+                    'View all ${clientPost.comments.length} comments',
+                    style: const TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 146, 144, 144),
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                          text: TextSpan(
+                        style: const TextStyle(color: Colors.black),
+                        children: [
+                          TextSpan(
+                            text: clientPost.userId != null
+                                ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
+                                : clientPost.petCenterId.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          // TextSpan(
+                          //   text: '  ${clientPost.content}',
+                          //   style:
+                          //       const TextStyle(fontWeight: FontWeight.normal),
+                          // )
+
+                          TextSpan(
+                            text: isExpanded
+                                ? '  ${clientPost.content}'
+                                : '  ${clientPost.content.substring(0, clientPost.content.length < 100 ? clientPost.content.length : 100)}',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.normal),
+                          ),
+                          if (clientPost.content.length > 100)
+                            TextSpan(
+                              text: isExpanded ? ' Show less' : '... See more',
+                              style: TextStyle(
+                                color: Colors.grey.shade700,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  setState(() {
+                                    isExpanded = !isExpanded;
+                                  });
+                                },
+                            ),
+                        ],
+                      ))
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -491,6 +602,10 @@ class _PostCardState extends State<PostCard> {
                   item,
                   fit: BoxFit.cover,
                   width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) {
+                    // Return an Icon widget when there's an error
+                    return Icon(Icons.image_not_supported, color: Colors.red);
+                  },
                 ),
               )
               .toList(),
@@ -554,9 +669,12 @@ class _PostCardState extends State<PostCard> {
                       leading: const Icon(Icons.check_circle),
                       title: const Text('Active'),
                       onTap: () async {
+                        Loading(context);
                         var message = await changeStatusPost(postId, 'ACTIVE');
+
                         setState(() {
                           notification(message, false);
+                          Navigator.pop(context);
                           Navigator.pop(context);
                           Navigator.pop(context);
                         });
@@ -566,9 +684,11 @@ class _PostCardState extends State<PostCard> {
                       leading: const Icon(Icons.visibility_off),
                       title: const Text('Hidden'),
                       onTap: () async {
+                        Loading(context);
                         var message = await changeStatusPost(postId, 'HIDDEN');
                         setState(() {
                           notification(message, false);
+                          Navigator.pop(context);
                           Navigator.pop(context);
                           Navigator.pop(context);
                         });
@@ -597,8 +717,10 @@ class _PostCardState extends State<PostCard> {
             ),
             TextButton(
               onPressed: () async {
+                Loading(context);
                 var message = await deleteOnePost(postId);
                 // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 notification(message, false);

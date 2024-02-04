@@ -75,20 +75,7 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
                 height: 24,
               ),
 
-              //ĐỊA CHỈ
-              // TextFormField(
-              //   controller: addressController,
-              //   keyboardType: TextInputType.streetAddress,
-              //   decoration: InputDecoration(
-              //       border: UnderlineInputBorder(),
-              //       filled: true,
-              //       icon: Icon(
-              //         Icons.location_on,
-              //         color: const Color.fromRGBO(48, 96, 96, 1.0),
-              //       ),
-              //       hintText: 'Your Address',
-              //       labelText: 'Address'),
-              // ),
+              
 
               //ĐỊA CHỈ
               placesAutoCompleteTextField(addressController),

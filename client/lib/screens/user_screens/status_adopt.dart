@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/adopt.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
-import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StatusAdoptUser extends StatefulWidget {
   const StatusAdoptUser({super.key});
@@ -135,14 +138,14 @@ class AdoptionTabView extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage(
-                                  userId: adopt.userId!
+                              builder: (context) => ProfileCenterPage(
+                                  centerId: adopt.centerId!
                                       .id) // Thay thế bằng tên lớp tương ứng
                               ));
                     },
                     child: CircleAvatar(
                       radius: 30.0,
-                      backgroundImage: NetworkImage(adopt.userId!.avatar),
+                      backgroundImage: NetworkImage(adopt.centerId!.avatar),
                     )),
                 const SizedBox(width: 8.0),
                 Expanded(
@@ -155,13 +158,13 @@ class AdoptionTabView extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ProfilePage(
-                                        userId: adopt.userId!
+                                    builder: (context) => ProfileCenterPage(
+                                        centerId: adopt.centerId!
                                             .id) // Thay thế bằng tên lớp tương ứng
                                     ));
                           },
                           child: Text(
-                            adopt.userId!.lastName,
+                            '${adopt.centerId!.name}',
                             style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -199,7 +202,7 @@ class AdoptionTabView extends StatelessWidget {
                           ),
                           Expanded(
                             child: Text(
-                              '${adopt.userId!.address}',
+                              '${adopt.centerId!.address}',
                               style: TextStyle(
                                   fontSize: 14.0, fontStyle: FontStyle.italic),
                               softWrap: true,
@@ -243,13 +246,28 @@ class AdoptionTabView extends StatelessWidget {
                             color: Color.fromRGBO(48, 96, 96, 1.0),
                           ),
                           const SizedBox(width: 4.0),
-                          Text(
-                            '${adopt.userId!.phoneNumber}', // Thay đổi bằng biến chứa số điện thoại của người dùng
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: Color.fromRGBO(48, 96, 96, 1.0),
+                          InkWell(
+                            onLongPress: () {
+                              _copyToClipboard('${adopt.centerId!.phoneNumber}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Copied to Clipboard: ${adopt.centerId!.phoneNumber}'),
+                                ),
+                              );
+                            },
+                            onTap: () {
+                              makePhoneCall(
+                                  'tel:${adopt.centerId!.phoneNumber}');
+                            },
+                            child: Text(
+                              '${adopt.centerId!.phoneNumber}', // Thay đổi bằng biến chứa số điện thoại của người dùng
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: Color.fromRGBO(48, 96, 96, 1.0),
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -332,7 +350,8 @@ class AdoptionTabView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Express Adoption Interest:',
+                      textAlign: TextAlign.center,
+                      'Express interest in adoption',
                       style: TextStyle(
                         fontSize: 15.0,
                         fontStyle: FontStyle.italic, // Đặt chữ nghiêng
@@ -434,14 +453,8 @@ class AdoptionTabView extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
-                      await changeStatusAdoptUser(adopt.id, "CANCELLED");
+                      await _showDeleteConfirmationDialog(context, adopt.id);
                       // ignore: use_build_context_synchronously
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const StatusAdoptUser() // Thay thế bằng tên lớp tương ứng
-                              ));
                     },
                     icon: const Icon(Icons.cancel, color: Colors.white),
                     label: const Text(
@@ -478,9 +491,7 @@ class AdoptionTabView extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            return const Center(child: Text('Please try again later'));
           } else if (snapshot.hasData) {
             adopt = snapshot.data;
             if (adopt!.isNotEmpty) {
@@ -502,5 +513,55 @@ class AdoptionTabView extends StatelessWidget {
           }
           return const Center();
         });
+  }
+
+  Future<void> _showDeleteConfirmationDialog(context, String petId) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm cancel'),
+          content: const Text('Are you sure you want to cancel this request?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Loading(context);
+                await changeStatusAdoptUser(petId, "CANCELLED");
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const StatusAdoptUser() // Thay thế bằng tên lớp tương ứng
+                        ));
+              },
+              child: const Text('Done'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+  }
+
+  void makePhoneCall(String phoneNumber) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(phoneNumber)) {
+      // ignore: deprecated_member_use
+      await launch(phoneNumber);
+    } else {
+      throw 'Không thể gọi điện thoại';
+    }
   }
 }

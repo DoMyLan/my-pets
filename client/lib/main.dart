@@ -1,30 +1,45 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-import 'package:found_adoption_application/models/current_center.dart';
-import 'package:found_adoption_application/models/current_user.dart';
+import 'package:flutter/material.dart';
+import 'package:found_adoption_application/models/hive/current_location.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
+import 'package:found_adoption_application/screens/review_rating_screen.dart';
+import 'package:found_adoption_application/screens/welcome_screen.dart';
+import 'package:found_adoption_application/services/auth_api.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'package:found_adoption_application/models/hive/current_center.dart';
+import 'package:found_adoption_application/models/hive/current_user.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
-import 'package:found_adoption_application/screens/user_screens/welcome_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(LocationAdapter());
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(CenterAdapter());
-  // HttpOverrides.global = MyHttpOverrides();
+  
+  HttpOverrides.global = MyHttpOverrides();
 
-  runApp(MyApp());
+  runApp(
+    Directionality(
+      textDirection: TextDirection
+          .ltr, // Change this to TextDirection.rtl for RTL languages
+      child: MyApp(),
+    ),
+  );
 }
 
-// class MyHttpOverrides extends HttpOverrides {
-//   @override
-//   HttpClient createHttpClient(SecurityContext? context) {
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback =
-//           (X509Certificate cert, String host, int port) => true;
-//   }
-// }
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 Color mainColor = const Color.fromRGBO(48, 96, 96, 1.0);
 Color startingColor = const Color.fromRGBO(70, 112, 112, 1.0);
@@ -39,7 +54,7 @@ Color startingColor = const Color.fromRGBO(70, 112, 112, 1.0);
 //       theme: ThemeData(
 //         primaryColor: mainColor,
 //       ),
-//       home: NotificationPage(),
+//       home: ReviewProfileScreen(),
 //     );
 //   }
 // }
@@ -53,13 +68,19 @@ class _MyAppState extends State<MyApp> {
   Future<bool> hasValidRefreshToken = checkRefreshToken();
 
   late io.Socket socket;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   var serverUrl = 'http://socket-found-adoption-dangvantuan.koyeb.app';
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: hasValidRefreshToken,
+      // future: hasValidRefreshToken, 
+      future: Future.delayed(Duration(seconds: 4), () => hasValidRefreshToken),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final refreshTokenIsValid = snapshot.data;
@@ -83,6 +104,28 @@ class _MyAppState extends State<MyApp> {
                             currentUser != null && currentUser.role == 'USER'
                                 ? currentUser
                                 : currentCenter;
+
+                        Map<String, dynamic> decodedToken =
+                            Jwt.parseJwt(currentClient.refreshToken);
+                        DateTime expirationTime =
+                            DateTime.fromMillisecondsSinceEpoch(
+                                decodedToken['exp'] * 1000);
+                        DateTime now = DateTime.now();
+
+                        bool isTokenExpired = now.isAfter(expirationTime);
+                        if (!isTokenExpired) {
+                          refreshAccessToken();
+                          
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                       LoginScreen())));
+                          notification(
+                              "The login session has expired, please log in again!",
+                              false);
+                        }
 
                         if (currentClient != null) {
                           //connect socket server
@@ -118,31 +161,24 @@ class _MyAppState extends State<MyApp> {
                           }
                         }
                       }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const  CircularProgressIndicator();
                     },
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const  CircularProgressIndicator();
               },
             );
           } else {
             return MaterialApp(
-              title: 'Flutter Demo',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primaryColor: mainColor,
               ),
-              home: WelcomeScreen(),
+              home: LoginScreen(),
             );
           }
         }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return  WelcomeScreen();
       },
     );
   }
@@ -181,9 +217,6 @@ Future<bool> checkRefreshToken() async {
       final expirationTime = refreshTokenTimestamp.add(
         Duration(days: refreshTokenValidityDays),
       );
-      print('The current client is Logged in at: ${refreshTokenTimestamp}');
-      print('The RefreshToken is expired at: ${expirationTime}');
-      print('The currentClient is $name with role: ${currentClient!.role}');
 
       if (now.isBefore(expirationTime)) {
         return true;

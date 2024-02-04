@@ -1,6 +1,5 @@
 import 'package:found_adoption_application/models/notify.dart';
 import 'package:found_adoption_application/services/api.dart';
-import 'package:found_adoption_application/utils/messageNotifi.dart';
 
 Future<List<Notify>> getNotify() async {
   var responseData;
@@ -16,7 +15,7 @@ Future<List<Notify>> getNotify() async {
     }
   } catch (e) {
     print(e);
-    notification(e.toString(), true);
+    // notification(e.toString(), true);
   }
   return adopts;
 }

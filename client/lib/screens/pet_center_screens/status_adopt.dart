@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/adopt.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
@@ -6,6 +7,8 @@ import 'package:found_adoption_application/screens/user_screens/menu_frame_user.
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StatusAdopt extends StatefulWidget {
   @override
@@ -221,13 +224,27 @@ class AdoptionTabView extends StatelessWidget {
                             color: Color.fromRGBO(48, 96, 96, 1.0),
                           ),
                           const SizedBox(width: 4.0),
-                          Text(
-                            '${adopt.userId!.phoneNumber}', // Thay đổi bằng biến chứa số điện thoại của người dùng
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: Color.fromRGBO(48, 96, 96, 1.0),
+                          InkWell(
+                            onLongPress: () {
+                              _copyToClipboard('${adopt.userId!.phoneNumber}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Copied to Clipboard: ${adopt.userId!.phoneNumber}'),
+                                ),
+                              );
+                            },
+                            onTap: () {
+                              makePhoneCall('tel:${adopt.userId!.phoneNumber}');
+                            },
+                            child: Text(
+                              '${adopt.centerId!.phoneNumber}', // Thay đổi bằng biến chứa số điện thoại của người dùng
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                color: Color.fromRGBO(48, 96, 96, 1.0),
+                              ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -413,14 +430,9 @@ class AdoptionTabView extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () async {
-                      await changeStatusAdoptCenter(adopt.id, "ACCEPTED");
+                      await _showDeleteConfirmationDialog(
+                          context, adopt.id, "ACCEPTED");
                       // ignore: use_build_context_synchronously
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  StatusAdopt() // Thay thế bằng tên lớp tương ứng
-                              ));
                     },
                     icon: const Icon(Icons.check, color: Colors.white),
                     label: const Text('Accept', style: TextStyle(fontSize: 17)),
@@ -440,14 +452,9 @@ class AdoptionTabView extends StatelessWidget {
                   ),
                   ElevatedButton.icon(
                     onPressed: () async {
-                      await changeStatusAdoptCenter(adopt.id, "CANCELLED");
+                      await _showDeleteConfirmationDialog(
+                          context, adopt.id, "CANCELLED");
                       // ignore: use_build_context_synchronously
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  StatusAdopt() // Thay thế bằng tên lớp tương ứng
-                              ));
                     },
                     icon: const Icon(Icons.cancel, color: Colors.white),
                     label: const Text(
@@ -484,16 +491,17 @@ class AdoptionTabView extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            return const Center(child: Text('Please try again later'));
           } else if (snapshot.hasData) {
             adopt = snapshot.data;
             if (adopt!.isNotEmpty) {
               return ListView.builder(
                 itemCount: adopt!.length,
                 itemBuilder: (context, index) {
-                  return _buildAdoptionRequestCard(context, adopt![index]);
+                  if (adopt![index].petId != null) {
+                    return _buildAdoptionRequestCard(context, adopt![index]);
+                  }
+                  return null;
                 },
               );
             } else {
@@ -508,5 +516,57 @@ class AdoptionTabView extends StatelessWidget {
           }
           return const Center();
         });
+  }
+
+  Future<void> _showDeleteConfirmationDialog(
+      context, String adoptId, status) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm cancel'),
+          content: Text(
+              'Are you sure you want to ${status == 'ACCEPTED' ? 'accept' : 'cancel'} this request?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Loading(context);
+                await changeStatusAdoptUser(adoptId, status);
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            StatusAdopt() // Thay thế bằng tên lớp tương ứng
+                        ));
+              },
+              child: const Text('Done'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+  }
+
+  void makePhoneCall(String phoneNumber) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(phoneNumber)) {
+      // ignore: deprecated_member_use
+      await launch(phoneNumber);
+    } else {
+      throw 'Không thể gọi điện thoại';
+    }
   }
 }

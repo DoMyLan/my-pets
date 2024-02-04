@@ -18,7 +18,7 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = callBackApi(apiUrl, method, '') as Map;
+        responseData = await callBackApi(apiUrl, method, '') as Map;
       return responseData;
     } else if(method == "POST"){
       var response = await http.post(apiUrl, headers: {
@@ -28,7 +28,7 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) as Map;
       return responseData;
     } else if(method == "DELETE"){
       var response = await http.delete(apiUrl, headers: {
@@ -38,7 +38,7 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) as Map;
       return responseData;
     }
     else if(method == "PUT"){
@@ -49,7 +49,7 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) as Map;
       return responseData;
     }
   } catch (e) {

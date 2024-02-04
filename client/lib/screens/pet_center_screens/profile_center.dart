@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
-import 'package:found_adoption_application/screens/animal_detail_screen.dart';
+import 'package:found_adoption_application/screens/adoption_screen.dart';
+
+
 import 'package:found_adoption_application/screens/map_page.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
@@ -19,6 +20,7 @@ import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:found_adoption_application/screens/change_password.dart';
 
 class ProfileCenterPage extends StatefulWidget {
   final centerId;
@@ -28,7 +30,7 @@ class ProfileCenterPage extends StatefulWidget {
   State<ProfileCenterPage> createState() => _ProfileCenterPageState();
 }
 
-class _ProfileCenterPageState extends State<ProfileCenterPage> {
+class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCenterPage> {
   int selectedAnimalIconIndex = 0;
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoCenter> centerFuture;
@@ -36,6 +38,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
   late List<Pet> animals = [];
   var currentClient;
   late bool isLoading = true;
+ 
   List<String> animalTypes = [
     'Cats',
     'Dogs',
@@ -51,10 +54,15 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
     FontAwesomeIcons.fish,
     FontAwesomeIcons.fish
   ];
+  late AdoptionScreen adoptionScreen;
 
   @override
   void initState() {
     super.initState();
+    adoptionScreen = AdoptionScreen(centerId: widget.centerId);
+   
+
+
     petStoriesPosts = getAllPostPersonal(widget.centerId);
     centerFuture = getProfileCenter(context, widget.centerId);
     petsFuture = getAllPetOfCenter(widget.centerId);
@@ -68,6 +76,8 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
       isLoading = false;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,23 +114,14 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           color: Theme.of(context).primaryColor,
         ),
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Sử dụng TypewriterAnimatedTextKit để tạo hiệu ứng chữ chạy
-            TypewriterAnimatedTextKit(
-              speed: Duration(milliseconds: 200),
-              totalRepeatCount: 1, // Số lần lặp (1 lần để chạy từ đầu đến cuối)
-              text: ['Profile'],
-              textStyle: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0,
-              ),
-            ),
-          ],
+        title: Text(
+          'Profile',
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 25.0),
         ),
+       
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -177,6 +178,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                             ),
                           ),
                         ),
+
                         // Nút Follow và Edit Profile
                         Row(
                           children: [
@@ -200,38 +202,69 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                     itemBuilder: (context) => [
                                       PopupMenuItem(
                                         value: 1,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditProfileCenterScreen()));
-                                          },
-                                          icon: Icon(Icons.edit,
-                                              color: Colors.white),
-                                          label: Text('Edit profile'),
-                                          style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Theme.of(context).primaryColor,
-                                            onPrimary: Colors.white,
+                                        child: Container(
+                                          width: 175,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditProfileCenterScreen()));
+                                            },
+                                            icon: Icon(Icons.edit,
+                                                color: Colors.white),
+                                            label: Text('Edit profile'),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
+                                              onPrimary: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      //Update Password
+                                      PopupMenuItem(
+                                        value: 1,
+                                        child: Container(
+                                          width: 175,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UpdatePasswordScreen()));
+                                            },
+                                            icon: Icon(Icons.password,
+                                                color: Colors.white),
+                                            label: Text('Change Password'),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
+                                              onPrimary: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
                                       PopupMenuItem(
                                         value: 2,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            _showBottomSheet(
-                                                center.id, center.status);
-                                          },
-                                          icon: Icon(Icons.change_circle,
-                                              color: Colors.white),
-                                          label: Text('Change status'),
-                                          style: ElevatedButton.styleFrom(
-                                            primary:
-                                                Theme.of(context).primaryColor,
-                                            onPrimary: Colors.white,
+                                        child: Container(
+                                          width: 175,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              _showBottomSheet(
+                                                  center.id, center.status);
+                                            },
+                                            icon: Icon(Icons.change_circle,
+                                                color: Colors.white),
+                                            label: Text('Change status'),
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Theme.of(context)
+                                                  .primaryColor,
+                                              onPrimary: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -277,7 +310,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     buildContactInfo(center.email, Icons.email, 'email'),
                     buildContactInfo(
                         center.address,
-                        IconData(0xe3ab, fontFamily: 'MaterialIcons'),
+                        const IconData(0xe3ab, fontFamily: 'MaterialIcons'),
                         'address'),
                     SizedBox(height: 16.0),
 
@@ -286,10 +319,6 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     buildInfo(center.aboutMe),
                     SizedBox(height: 16.0),
 
-                    // Experience
-                    // buildSectionHeader('Experience', Icons.work),
-                    // buildInfo(
-                    //     'Y tế rất nà xịn xò nhé. Khó khăn cứ alo trung tâm...hí hí'),
                     SizedBox(height: 16.0),
 
                     Container(
@@ -324,7 +353,10 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                 // Nội dung cho tab "Pet Stories"
                                 buildPostsList(petStoriesPosts!),
                                 // Nội dung cho tab "Pet Adoption"
-                                buildAdoptionList(),
+                                // buildAdoptionList(),
+                                 buildPostsList(petStoriesPosts!),
+                                              
+                               
                               ],
                             ),
                           ),
@@ -335,9 +367,11 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                 ),
               );
             }
-          }),
+          }
+          ),
     );
   }
+  
 
   // Widget hiển thị danh sách bài đăng
   Widget buildPostsList(Future<List<Post>>? posts) {
@@ -349,7 +383,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return const Center(child: Text('Please try again later'));
           } else {
             List<Post>? postList = snapshot.data;
             if (postList != null) {
@@ -376,225 +410,204 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           }
         });
   }
+  
+  //hiển thị danh sách PetAdopt
+  // Widget buildAdoptionList() {
+  //   final deviceWidth = MediaQuery.of(context).size.width;
+  //   return Expanded(
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(top: 24),
+  //       child: Container(
+  //         decoration: BoxDecoration(
+  //             borderRadius: const BorderRadius.only(
+  //               topLeft: Radius.circular(25),
+  //               topRight: Radius.circular(25),
+  //             ),
+  //             color: Theme.of(context).primaryColor.withOpacity(0.06)),
+  //         height: 500,
+  //         child: Column(
+  //           children: [
+  //             //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
+  //             Expanded(
+  //               child: FutureBuilder<List<Pet>>(
+  //                   future: petsFuture,
+  //                   builder: (context, snapshot) {
+  //                     if (snapshot.connectionState == ConnectionState.waiting) {
+  //                       return const Center(
+  //                         child: CircularProgressIndicator(),
+  //                       );
+  //                     } else if (snapshot.hasError) {
+  //                       return const Center(
+  //                           child: Text('Please try again later'));
+  //                     } else {
+  //                       animals = snapshot.data ?? [];
+  //                       return ListView.builder(
+  //                           itemCount: animals.length,
+  //                           itemBuilder: (context, index) {
+  //                             final animal = animals[index];
 
-  Widget buildAdoptionList() {
-    final deviceWidth = MediaQuery.of(context).size.width;
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 24),
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-              color: Theme.of(context).primaryColor.withOpacity(0.06)),
-          height: 500,
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                child: Container(
-                  width: 500.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15)),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.search,
-                        color: Colors.grey,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          style: TextStyle(fontSize: 14),
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              hintText: 'Search pet to adop'),
-                        ),
-                      ),
-                      Icon(
-                        FontAwesomeIcons.filter,
-                        color: Colors.grey,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+  //                             return GestureDetector(
+  //                               onTap: () {
+  //                                 Navigator.push(context,
+  //                                     MaterialPageRoute(builder: (context) {
+  //                                   return AnimalDetailScreen(
+  //                                     animal: animal,
+  //                                     currentId: currentClient,
+  //                                   );
+  //                                 }));
+  //                               },
+  //                               child: Padding(
+  //                                 padding: const EdgeInsets.only(
+  //                                     bottom: 23, right: 7, left: 16),
+  //                                 child: Stack(
+  //                                   alignment: Alignment.centerLeft,
+  //                                   children: [
+  //                                     Material(
+  //                                       borderRadius: BorderRadius.circular(20),
+  //                                       elevation: 4.0,
+  //                                       child: Padding(
+  //                                         padding: const EdgeInsets.symmetric(
+  //                                             horizontal: 15, vertical: 15),
+  //                                         child: Row(
+  //                                           mainAxisAlignment:
+  //                                               MainAxisAlignment.spaceBetween,
+  //                                           children: [
+  //                                             SizedBox(
+  //                                                 width: deviceWidth * 0.4),
+  //                                             Flexible(
+  //                                               child: Column(
+  //                                                 crossAxisAlignment:
+  //                                                     CrossAxisAlignment.start,
+  //                                                 children: [
+  //                                                   Row(
+  //                                                     mainAxisAlignment:
+  //                                                         MainAxisAlignment
+  //                                                             .spaceBetween,
+  //                                                     children: [
+  //                                                       fieldInforPet('Name',
+  //                                                           animal.namePet),
+  //                                                       Icon(
+  //                                                         animal.gender ==
+  //                                                                 "FEMALE"
+  //                                                             ? FontAwesomeIcons
+  //                                                                 .venus
+  //                                                             : FontAwesomeIcons
+  //                                                                 .mars,
+  //                                                       ),
+  //                                                     ],
+  //                                                   ),
+  //                                                   const SizedBox(height: 8),
+  //                                                   fieldInforPet(
+  //                                                       'Breed', animal.breed),
+  //                                                   const SizedBox(height: 8),
+  //                                                   fieldInforPet('Age',
+  //                                                       '${animal.age! * 12} months'),
+  //                                                   const SizedBox(height: 8),
+  //                                                   Row(
+  //                                                     children: [
+  //                                                       Icon(
+  //                                                         FontAwesomeIcons
+  //                                                             .mapMarkerAlt,
+  //                                                         color:
+  //                                                             Theme.of(context)
+  //                                                                 .primaryColor,
+  //                                                         size: 16.0,
+  //                                                       ),
+  //                                                       const SizedBox(
+  //                                                           width: 1),
+  //                                                       Text(
+  //                                                         'Distance: ',
+  //                                                         style: TextStyle(
+  //                                                           fontSize: 13,
+  //                                                           color: Theme.of(
+  //                                                                   context)
+  //                                                               .primaryColor,
+  //                                                           fontWeight:
+  //                                                               FontWeight.w400,
+  //                                                         ),
+  //                                                       ),
+  //                                                       Flexible(
+  //                                                         child: Text(
+  //                                                           // '  $distanceString KM',
+  //                                                           '     KM',
 
-              //ANIMATION CÁC LOẠI ĐỘNG VẬT
-              Container(
-                height: 80,
-                child: ListView.builder(
-                    padding: EdgeInsets.only(left: 24),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: animalTypes.length,
-                    itemBuilder: (context, index) {
-                      return buildAnimalIcon(index);
-                    }),
-              ),
+  //                                                           style: TextStyle(
+  //                                                             fontSize: 18,
+  //                                                             color: Theme.of(
+  //                                                                     context)
+  //                                                                 .primaryColor,
+  //                                                             fontWeight:
+  //                                                                 FontWeight
+  //                                                                     .w800,
+  //                                                           ),
+  //                                                           softWrap: true,
+  //                                                         ),
+  //                                                       ),
+  //                                                     ],
+  //                                                   ),
+  //                                                 ],
+  //                                               ),
+  //                                             ),
+  //                                           ],
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                                     Stack(
+  //                                       alignment: Alignment.centerLeft,
+  //                                       children: [
+  //                                         ClipRRect(
+  //                                           borderRadius:
+  //                                               BorderRadius.circular(20),
+  //                                           child: Hero(
+  //                                             tag: animal.namePet,
+  //                                             child: Image(
+  //                                               image: NetworkImage(
+  //                                                   animal.images.first),
+  //                                               height: 190,
+  //                                               width: deviceWidth * 0.4,
+  //                                               fit: BoxFit.cover,
+  //                                             ),
+  //                                           ),
+  //                                         )
+  //                                       ],
+  //                                     )
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           });
+  //                     }
+  //                   }),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-              //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
-              Expanded(
-                child: FutureBuilder<List<Pet>>(
-                    future: petsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        animals = snapshot.data ?? [];
-                        return ListView.builder(
-                            itemCount: animals.length,
-                            itemBuilder: (context, index) {
-                              final animal = animals[index];
-
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return AnimalDetailScreen(
-                                      animal: animal,
-                                      currentId: currentClient,
-                                    );
-                                  }));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 23, right: 7, left: 16),
-                                  child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      Material(
-                                        borderRadius: BorderRadius.circular(20),
-                                        elevation: 4.0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 15),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                  width: deviceWidth * 0.4),
-                                              Flexible(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          animal.namePet,
-                                                          style: TextStyle(
-                                                              fontSize: 26,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        Icon(animal.gender ==
-                                                                "FEMALE"
-                                                            ? FontAwesomeIcons
-                                                                .venus
-                                                            : FontAwesomeIcons
-                                                                .mars),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      animal.breed,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Text(
-                                                      '${animal.age} years old',
-                                                      style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    Row(
-                                                      children: [
-                                                        Icon(
-                                                          FontAwesomeIcons
-                                                              .mapMarkerAlt,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          size: 16.0,
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 6),
-                                                        Text(
-                                                          'Distance: ',
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Stack(
-                                        alignment: Alignment.centerLeft,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Hero(
-                                              tag: animal.namePet,
-                                              child: Image(
-                                                image: NetworkImage(
-                                                    animal.images.first),
-                                                height: 190,
-                                                width: deviceWidth * 0.4,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      }
-                    }),
-              ),
-            ],
+  Widget fieldInforPet(String infor, String inforDetail) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '$infor: ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: Colors.grey,
+            ),
           ),
-        ),
+          TextSpan(
+            text: inforDetail,
+            style: TextStyle(
+              fontStyle: FontStyle.italic,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -708,49 +721,51 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
     Clipboard.setData(ClipboardData(text: text));
   }
 
-  Widget buildAnimalIcon(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                selectedAnimalIconIndex = index;
-              });
-            },
-            child: Material(
-              color: selectedAnimalIconIndex == index
-                  ? Theme.of(context).primaryColor
-                  : Colors.white,
-              elevation: 8,
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(13),
-                child: Icon(
-                  animalIcons[index],
-                  size: 20,
-                  color: selectedAnimalIconIndex == index
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            animalTypes[index],
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w700),
-          ),
-        ],
-      ),
-    );
-  }
+
+  //lấy từ adop qua->kh code lại nữa
+  // Widget buildAnimalIcon(int index) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(right: 30),
+  //     child: Column(
+  //       children: [
+  //         InkWell(
+  //           onTap: () {
+  //             setState(() {
+  //               selectedAnimalIconIndex = index;
+  //             });
+  //           },
+  //           child: Material(
+  //             color: selectedAnimalIconIndex == index
+  //                 ? Theme.of(context).primaryColor
+  //                 : Colors.white,
+  //             elevation: 8,
+  //             borderRadius: BorderRadius.circular(20),
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(13),
+  //               child: Icon(
+  //                 animalIcons[index],
+  //                 size: 20,
+  //                 color: selectedAnimalIconIndex == index
+  //                     ? Colors.white
+  //                     : Theme.of(context).primaryColor,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         const SizedBox(
+  //           height: 12,
+  //         ),
+  //         Text(
+  //           animalTypes[index],
+  //           style: TextStyle(
+  //               color: Theme.of(context).primaryColor,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.w700),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _showBottomSheet(String centerId, status) {
     showModalBottomSheet<void>(

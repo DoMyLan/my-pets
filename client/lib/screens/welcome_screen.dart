@@ -1,18 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:found_adoption_application/main.dart';
-import 'package:found_adoption_application/screens/login_screen.dart';
-import 'package:found_adoption_application/screens/signUp_screen.dart';
 import 'package:found_adoption_application/custom_widget/banner_card_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with TickerProviderStateMixin {
+  List<AnimationController> _controllers = [];
+  List<Animation<double>> _animations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < 5; i++) {
+      _controllers.add(AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+      ));
+      _animations.add(CurvedAnimation(
+        parent: _controllers[i],
+        curve: Curves.easeInOut,
+      ));
+      Future.delayed(Duration(milliseconds: 400 * (5 - i)), () {
+        _controllers[i]
+            .forward()
+            .then((value) => _controllers[i].repeat(reverse: true));
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -23,75 +52,86 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       body: SafeArea(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                children: [
-                  Center(
-                    child: Container(
-                        height: 470,
-                        alignment: Alignment.bottomCenter,
-                        child: bannerCard()),
-                  ),
-                  Center(child: _imgBanner()),
-                ],
-              ),
-              SizedBox(height: 30),
-              Column(children: [
-                // the login button
-                MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
-                  },
-                  // defining the shape
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Text(
-                    "Login",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                Center(
+                  child: Container(
+                      height: 470,
+                      alignment: Alignment.bottomCenter,
+                      child: bannerCard()),
+                ),
+                Center(
+                  child: Container(
+                    height: 350,
+                    child: Image.asset('assets/images/dog_banner.png'),
                   ),
                 ),
-                // creating the signup button
-                SizedBox(height: 20),
-                MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SignUpScreen()));
-                  },
-                  color: startingColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Text(
-                    "Sign up",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: Colors.white),
-                  ),
-                ),
-              ])
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+              ],
+            ),
+            const SizedBox(height: 100),
+            // Center(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: List.generate(
+            //       10, // Generate 10 widgets
+            //       (index) => index % 2 == 0
+            //           ? AnimatedBuilder(
+            //               animation: _animations[index ~/ 2],
+            //               builder: (context, child) => Transform.translate(
+            //                 offset:
+            //                     Offset(0, -15 * _animations[index ~/ 2].value),
+            //                 child: child,
+            //               ),
+            //               child: Container(
+            //                 width: 12,
+            //                 height: 12,
+            //                 decoration: BoxDecoration(
+            //                   color: Color.fromRGBO(48, 96, 96, 1.0),
+            //                   shape: BoxShape.circle,
+            //                 ),
+            //               ),
+            //             )
+            //           : SizedBox(
+            //               width:
+            //                   15),
+            //     ),
+            //   ),
+            // )
 
-  Widget _imgBanner() {
-    return Container(
-      height: 350,
-      child: Image(
-        image: AssetImage('assets/images/dog_banner.png'),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  3, // Chỉ tạo 3 hình tròn
+                  (index) => Row(
+                    children: [
+                      AnimatedBuilder(
+                        animation: _animations[index],
+                        builder: (context, child) => Transform.translate(
+                          offset: Offset(0, -15 * _animations[index].value),
+                          child: child,
+                        ),
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(48, 96, 96, 1.0),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      if (index < 2)
+                        const SizedBox(width: 15), // Khoảng cách giữa các hình tròn
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

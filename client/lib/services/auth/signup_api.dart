@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 Future<void> signup(BuildContext context, String email, String password,
     String signupType) async {
   try {
-    final apiUrl = Uri.parse("https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-up");
+    final apiUrl = Uri.parse(
+        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-up");
 
     final response = await http.post(
       apiUrl,
@@ -24,6 +25,9 @@ Future<void> signup(BuildContext context, String email, String password,
     );
 
     if (response.statusCode == 201) {
+      final emailRegisterBox = await Hive.openBox('emailRegisterBox');
+      emailRegisterBox.put('email', email);
+      emailRegisterBox.put('role', signupType);
       // Xử lý thành công
       final responseData = json.decode(response.body);
       final accountRegisterBox = await Hive.openBox('accountRegisterBox');
@@ -36,14 +40,14 @@ Future<void> signup(BuildContext context, String email, String password,
     }
   } catch (e) {
     print(e);
-  //  notification(e.toString(), true);
+    //  notification(e.toString(), true);
   }
 }
 
-
 Future<bool> verifycode(String email, String code) async {
   try {
-    final apiUrl = Uri.parse("https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/verify-code");
+    final apiUrl = Uri.parse(
+        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/verify-code");
 
     final response = await http.post(
       apiUrl,
@@ -61,20 +65,21 @@ Future<bool> verifycode(String email, String code) async {
       notification(responseData['message'], false);
       return true;
     } else {
-     final responseData = json.decode(response.body);
+      final responseData = json.decode(response.body);
       notification(responseData['message'], true);
       return false;
     }
   } catch (e) {
     print(e);
-  //  notification(e.toString(), true);
+    //  notification(e.toString(), true);
     return false;
   }
 }
 
 Future<void> resendcode(String email) async {
   try {
-    final apiUrl = Uri.parse('https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/send-code');
+    final apiUrl = Uri.parse(
+        'https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/send-code');
 
     final response = await http.post(apiUrl,
         headers: {

@@ -1,3 +1,4 @@
+import 'package:found_adoption_application/models/location.dart';
 import 'package:intl/intl.dart';
 
 class InfoCenter {
@@ -10,6 +11,7 @@ class InfoCenter {
   final String avatar;
   final String phoneNumber;
   final String address;
+
   final String aboutMe;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -24,6 +26,7 @@ class InfoCenter {
     required this.avatar,
     required this.phoneNumber,
     required this.address,
+
     required this.aboutMe,
     this.createdAt,
     this.updatedAt,

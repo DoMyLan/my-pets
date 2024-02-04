@@ -37,6 +37,7 @@ class Adopt {
               lastName: json['userId']['lastName'] as String,
               avatar: json['userId']['avatar'] as String,
               address: json['userId']['address'] as String,
+              location: json['userId']['location'],
               phoneNumber: json['userId']['phoneNumber'] as String,
               aboutMe: json['userId']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
@@ -53,6 +54,7 @@ class Adopt {
               name: json['centerId']['name'] as String,
               avatar: json['centerId']['avatar'] as String,
               address: json['centerId']['address'] as String,
+              location: json['centerId']['location'],
               phoneNumber: json['centerId']['phoneNumber'] as String,
               aboutMe: json['centerId']['aboutMe'] as String,
               createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['centerId']['createdAt']))
@@ -69,7 +71,7 @@ class Adopt {
               petType: json['petId']['petType'],
               breed: json['petId']['breed'],
               gender: json['petId']['gender'],
-              age: json['petId']['age'] as int,
+              age: double.parse(json['petId']['age'] as String),
               color: json['petId']['color'],
               description: json['petId']['description'],
               images: json['petId']['images'] as List<dynamic>,

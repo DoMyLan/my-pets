@@ -3,8 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:found_adoption_application/services/auth/loginApi.dart';
 import 'package:found_adoption_application/screens/signUp_screen.dart';
-import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/custom_widget/input_widget.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -22,22 +22,16 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(
-          'Back to Home',
+          'Login',
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0,
         // brightness: Brightness.light,
         backgroundColor: Color.fromRGBO(48, 96, 96, 1.0),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => WelcomeScreen()));
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.white,
-          ),
+        leading: const Icon(
+          Icons.arrow_back_ios,
+          size: 20,
+          color: Color.fromRGBO(48, 96, 96, 1.0),
         ),
       ),
       body: Container(
@@ -50,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Column(
@@ -76,11 +70,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: [
-                      inputField(label: "Email", controller: emailController),
+                      inputField(
+                          label: "Email",
+                          controller: emailController,
+                          isPassword: false,
+                          isLogin: true),
                       inputField(
                           label: "Password",
                           obscureText: true,
-                          controller: passwordController)
+                          controller: passwordController,
+                          isPassword: true,
+                          isLogin: true)
                     ],
                   ),
                 ),
@@ -130,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 16.0, // Kích thước chữ của toast
                           );
                         } else {
+                          Loading(context);
                           await login(
                             context,
                             emailController.text.toString(),
@@ -142,16 +143,73 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Text(
-                          "Login",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
+                        "Login",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              TextEditingController _controller =
+                                  TextEditingController();
+                              return AlertDialog(
+                                title: const Text('Forgot Password'),
+                                content: TextField(
+                                  controller: _controller,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter your email',
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text('Forgot Password'),
+                                    onPressed: () async {
+                                      String email = _controller
+                                          .text; // Get value from text field
+
+                                      Loading(context);
+                                      await forgotPassword(
+                                          email); // Call the forgotPassword function
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                          "Forgot password?",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 1, 64, 93),
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              fontStyle: FontStyle.italic),
+                        )),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[

@@ -78,7 +78,7 @@ Future<void> updateProfileCenter(
       return;
     }
     responseData = await api('/center/${id}', 'PUT', body);
-    notification(responseData['message'], false);
+    notification('Updated successfully!', false);
   } catch (e) {
     // notification(e.toString(), true);
   }

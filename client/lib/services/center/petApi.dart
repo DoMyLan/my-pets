@@ -22,7 +22,7 @@ Future<void> addPet(
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age,
+    "age": age.toString(),
     "gender": gender,
     "color": color,
     "images": imagePaths,
@@ -79,6 +79,60 @@ Future<List<Pet>> getAllPetOfCenter(centerId) async {
   return pets;
 }
 
+Future<List<Pet>> filterPet(breed, color, age) async {
+  var responseData;
+  var colorSearch = '';
+  var ageSearch = '';
+  var breedSearch = breed != null ? breed : '';
+
+  if (color.isNotEmpty) {
+    for (var i = 0; i < color.length; i++) {
+      if (i == 0) {
+        colorSearch = color[i];
+      } else {
+        colorSearch = colorSearch + '&color=' + color[i];
+      }
+    }
+  }
+
+  if (age.isNotEmpty) {
+    if (age.length > 1) {
+      ageSearch = "&age=" + age[0].toString();
+      ageSearch = ageSearch + '&age=' + age[age.length - 1].toString();
+    } else if (age.length == 1) {
+      ageSearch = "&age=" + age[0].toString() + ".0";
+    }
+  }
+
+  try {
+    final apiUrl =
+        "/pet/search/find?breed=$breedSearch&color=$colorSearch$ageSearch";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  return pets;
+}
+
+Future<void> deletePet(petId) async {
+  var responseData;
+  try {
+    final apiUrl = "/pet/${petId}";
+    responseData = await api(apiUrl, "DELETE", '');
+    if (!responseData['success']) {
+      notification(responseData['message'], true);
+      return;
+    }
+    notification(responseData['message'], false);
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+}
+
 Future<void> updatePet(
     String namePet,
     String petType,
@@ -87,7 +141,7 @@ Future<void> updatePet(
     String gender,
     String color,
     String description,
-    String level,
+    // String level,
     List<XFile> imagePaths,
     bool isNewUpload,
     String petId) async {
@@ -104,11 +158,11 @@ Future<void> updatePet(
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age,
+    "age": age.toString(),
     "gender": gender,
     "color": color,
     "description": description,
-    "level": level,
+    // "level": level,
     if (isNewUpload) "images": finalResult,
   });
   try {

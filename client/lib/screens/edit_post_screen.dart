@@ -6,6 +6,8 @@ import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
+import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditPostScreen extends StatefulWidget {
@@ -46,7 +48,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   Future<void> _post() async {
     if (mounted) {
-      updatePost(_captionController.text.toString(), imageFileList,
+      await updatePost(_captionController.text.toString(), imageFileList,
           imageFileList.isNotEmpty ? true : false, widget.onePost.id);
       setState(() {
         _captionController.clear();
@@ -118,7 +120,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_captionController.text.isEmpty) {
+                        notification('Please enter caption', true);
+                        return;
+                      }
+                      Loading(context);
                       await _post();
+
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       primary: const Color.fromRGBO(

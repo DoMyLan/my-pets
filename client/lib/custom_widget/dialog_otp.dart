@@ -166,8 +166,6 @@ class _ShowOTPInputDialogState extends State<ShowOTPInputDialog> {
                   if (filledCount == 6) {
                     String otp =
                         controllers.map((controller) => controller.text).join();
-                    print("Entered OTP: $otp");
-                    print(widget.storedEmail);
 
                     bool verificationResult =
                         await verifycode(widget.storedEmail, otp);

@@ -90,7 +90,7 @@ class _PostScreenState extends State<PostScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                return const Center(child: Text('Please try again later'));
               } else {
                 Post? post = snapshot.data;
 
