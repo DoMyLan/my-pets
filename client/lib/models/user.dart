@@ -1,5 +1,4 @@
 import 'package:found_adoption_application/models/location.dart';
-import 'package:found_adoption_application/models/pet_center.dart';
 
 class User {
   final String id;

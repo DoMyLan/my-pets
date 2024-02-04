@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/models/centerLoad.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
@@ -12,45 +13,49 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-class AddPetScreen extends StatefulWidget {
-  const AddPetScreen({super.key});
+class AddPetScreenPersonal extends StatefulWidget {
+  const AddPetScreenPersonal({super.key});
   @override
   _AddPetScreenState createState() => _AddPetScreenState();
 }
 
-class _AddPetScreenState extends State<AddPetScreen> {
+class _AddPetScreenState extends State<AddPetScreenPersonal> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
   final _colorController = TextEditingController();
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
-  DateTime? birthday;
+  String? dropdownValue;
 
   String _selectedPetType = '';
   String _selectedGender = '';
   String _selectedLevel = 'NORMAL';
+  DateTime? birthday;
+
+  bool isFreeOptionSelected = true;
+  String price = '';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
-
   ScrollController _scrollController = ScrollController();
+  var currentClient;
+  List<CenterLoad>? centers = <CenterLoad>[
+    const CenterLoad(id: '1', name: 'Center 1', distance: '1km'),
+  ];
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
-  var currentClient;
-
-  bool isFreeOptionSelected = true;
-  String price = '';
 
   @override
   void initState() {
     super.initState();
     notificationHandler.initializeNotifications();
     getClient();
+    loadCenter();
   }
 
   Future<void> getClient() async {
@@ -60,22 +65,16 @@ class _AddPetScreenState extends State<AddPetScreen> {
     });
   }
 
-  Future<void> selectImage() async {
-    List<dynamic> finalResult2 = [];
-
-    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
-
-    if (selectedImages.isNotEmpty) {
-      imageFileList.addAll(selectedImages);
-    }
-    Loading(context);
-    var result = await uploadMultiImage(imageFileList);
-    Navigator.of(context).pop();
-    finalResult2 = result.map((url) => url).toList();
-    if (mounted) {
-      setState(() {
-        finalResult = finalResult2;
-      });
+  Future<void> loadCenter() async {
+    var temp = await loadCenterAll();
+    setState(() {
+      List<CenterLoad> sortedCenters = temp;
+      centers = List.from(sortedCenters);
+      sortedCenters.sort((a, b) =>
+          double.parse(a.distance).compareTo(double.parse(b.distance)));
+    });
+    if (centers != null && centers!.isNotEmpty) {
+      dropdownValue = centers![0].id;
     }
   }
 
@@ -93,13 +92,40 @@ class _AddPetScreenState extends State<AddPetScreen> {
     }
   }
 
-  Future<void> postPet() async {
+  Future<void> selectImage() async {
+    List<dynamic> finalResult2 = [];
+
+    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
+
+    if (selectedImages.isNotEmpty) {
+      imageFileList.addAll(selectedImages);
+    }
+    Loading(context);
+    var result = await uploadMultiImage(imageFileList);
+    Navigator.of(context).pop();
+    finalResult2 = result.map((url) => url).toList();
+
+    // print('test selectedImage: $finalResult');
+
+    // Check if the widget is still mounted before calling setState
     if (mounted) {
+      setState(() {
+        finalResult = finalResult2;
+      });
+    }
+  }
+
+  Future<void> postPet() async {
+    // print('test images here: $finalResult');
+
+    // Kiểm tra trạng thái mounted trước khi gọi setState
+    if (mounted) {
+      // Call the API to post content with image paths
       await addPet(
+          null,
           currentClient.id,
           null,
-          null,
-          null,
+          dropdownValue,
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
@@ -190,7 +216,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       ),
                     )),
 
-              //THÔNG TIN GIÁ
+
+
+                    //THÔNG TIN GIÁ
               SizedBox(
                 height: 12,
               ),
@@ -268,8 +296,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           style: TextStyle(fontSize: 18),
                           onChanged: (value) {
                             setState(() {
-                              price = value.toString();
+                              price = value;
                             });
+                            print('price: $price');
                           },
                   
                           decoration: InputDecoration(
@@ -288,16 +317,16 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
               TextField(
                 controller: _namePetController,
-                decoration: const InputDecoration(labelText: 'Pet Name'),
+                decoration: const InputDecoration(
+                    labelText: 'Pet Name (*)', fillColor: Colors.red),
               ),
               TextField(
                 controller: _breedController,
-                decoration: const InputDecoration(labelText: 'Breed'),
+                decoration: const InputDecoration(labelText: 'Breed (*)'),
               ),
-
               Row(
                 children: [
-                  const Text('Type:'),
+                  const Text('Type (*)'),
                   Radio(
                     value: 'Cat',
                     groupValue: _selectedPetType,
@@ -317,12 +346,12 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  Text('Dog'),
+                  const Text('Dog'),
                 ],
               ),
               TextField(
                 controller: _colorController,
-                decoration: InputDecoration(labelText: 'Color'),
+                decoration: const InputDecoration(labelText: 'Color (*)'),
               ),
 
               Row(
@@ -342,6 +371,46 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     onPressed: () {
                       _selectDate(context);
                     },
+                  ),
+                ],
+              ),
+
+              Row(
+                children: [
+                  const Text("Select link Center (*): ",
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                  Expanded(
+                    child: DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const FittedBox(
+                        fit: BoxFit.contain,
+                        child: Icon(Icons.arrow_drop_down),
+                      ),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      underline: Container(
+                        height: 2,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
+                      },
+                      items: centers!
+                          .map<DropdownMenuItem<String>>((CenterLoad center) {
+                        return DropdownMenuItem<String>(
+                          value: center.id,
+                          child: Flexible(
+                            child: Text(
+                              '${center.name} - ${center.distance}km',
+                              softWrap: true,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ],
               ),

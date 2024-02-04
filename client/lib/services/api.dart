@@ -9,7 +9,7 @@ Future<dynamic> api(path, method, body) async {
   var responseData = {};
 
   try {
-    final apiUrl = Uri.parse("https://found-and-adoption-pet-api-be.vercel.app/api/v1${path}");
+    final apiUrl = Uri.parse("https://my-pets-api.vercel.app/api/v1${path}");
     if (method == "GET") {
       var response = await http.get(apiUrl, headers: {
         'Authorization': 'Bearer ${accessToken}',

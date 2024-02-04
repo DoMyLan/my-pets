@@ -59,7 +59,6 @@ Future<void> login(
         var retrievedUser =
             userBox.get('currentUser'); // Lấy thông tin User từ Hive
 
-       
         notification("Login user success!", false);
         Navigator.pop(context);
         Navigator.push(
