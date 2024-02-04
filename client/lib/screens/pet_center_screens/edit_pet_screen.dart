@@ -10,6 +10,7 @@ import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class EditPetScreen extends StatefulWidget {
   final Pet pet;
@@ -26,6 +27,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
+  DateTime? birthday;
 
   String _selectedPetType = '';
   String _selectedGender = '';
@@ -49,8 +51,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
     _namePetController.text = widget.pet.namePet;
     _breedController.text = widget.pet.breed;
     _colorController.text = widget.pet.color;
-    _ageController.text = widget.pet.age.toString();
     _descriptionController.text = widget.pet.description;
+    birthday = widget.pet.birthday;
     // _selectedLevel = widget.pet.level;
     _selectedPetType = widget.pet.petType;
     _selectedGender = widget.pet.gender;
@@ -66,6 +68,20 @@ class _EditPetScreenState extends State<EditPetScreen> {
     if (mounted) {
       setState(() {
         finalResult = finalResult2;
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900), // Only allow dates after today
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        birthday = picked;
       });
     }
   }
@@ -183,11 +199,25 @@ class _EditPetScreenState extends State<EditPetScreen> {
                 decoration: const InputDecoration(labelText: 'Color'),
               ),
 
-              TextField(
-                controller: _ageController,
-                decoration: const InputDecoration(labelText: 'Age'),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const Text("Birthday (*): ",
+                      style: TextStyle(fontSize: 14, color: Colors.black)),
+                  Text(
+                      birthday != null
+                          ? DateFormat('dd-MM-yyyy').format(birthday!.toLocal())
+                          : 'Date has not been selected',
+                      style:
+                          const TextStyle(fontSize: 15, color: Colors.black)),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_today),
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 20,

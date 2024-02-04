@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/user_screens/add_pet_personal_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -13,20 +13,16 @@ import 'package:found_adoption_application/screens/filter_dialog.dart';
 
 import 'package:hive/hive.dart';
 
-class AdoptionScreen extends StatefulWidget {
-  final centerId;
-
-  const AdoptionScreen({super.key, required this.centerId});
+class AdoptionScreenGiver extends StatefulWidget {
+  const AdoptionScreenGiver({super.key});
 
   @override
-  State<AdoptionScreen> createState() => _AdoptionScreenState();
+  State<AdoptionScreenGiver> createState() => _AdoptionScreenGiverState();
 }
 
-class _AdoptionScreenState extends State<AdoptionScreen> {
+class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
   late List<Pet> animals = [];
   List<Pet> filteredAnimals = [];
-
-  var centerId;
   late var currentClient;
   bool isLoading = true;
   String selectedPetType = 'All';
@@ -45,19 +41,15 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
 
   int _currentIndex = 0;
 
-
-
   @override
   void initState() {
     super.initState();
 
     _searchController.clear();
 
-    centerId = widget.centerId;
-
     getClient() as dynamic;
     _searchController.addListener(_performSearch);
-    futurePets = getAllPet();
+    futurePets = getAllPetPersonal();
   }
 
   @override
@@ -96,7 +88,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                 ),
                               ),
                               buildSearchAndAnimalTypes(),
-                            //  SearchAndAnimalTypesWidget(),
                             ],
                           ),
                         ]),
@@ -109,13 +100,26 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                   children: [
                     // Trang 1
                     buildAnimalAdopt(),
-
-                    // Trang 2
-                    buildAnimalAdopt(),
                   ],
                 ),
               );
             }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddPetScreenPersonal(),
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(
+          Icons.add,
+          size: 30,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -507,7 +511,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                       ? AgePet.convertAge(animal.birthday!)
                                       : "unknown"),
                               const SizedBox(height: 4),
-                              if(currentClient.role == 'USER')
                               Row(
                                 children: [
                                   Icon(
