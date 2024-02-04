@@ -73,6 +73,8 @@ class Adopt {
               gender: json['petId']['gender'],
               age: double.parse(json['petId']['age'] as String),
               color: json['petId']['color'],
+              price: json['petId']['price'],
+              free: json['petId']['free'],
               description: json['petId']['description'],
               images: json['petId']['images'] as List<dynamic>,
               level: json['petId']['level'],

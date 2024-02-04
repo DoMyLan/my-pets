@@ -259,8 +259,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                     'HAS_ONE_OWNER'
                                                 ? '${widget.animal.foundOwner!.firstName} ${widget.animal.foundOwner!.lastName}'
                                                 : widget.animal.centerId == null
-                                              ? '${widget.animal.giver!.firstName} ${widget.animal.giver!.lastName}'
-                                              : widget.animal.centerId!.name,
+                                                    ? '${widget.animal.giver!.firstName} ${widget.animal.giver!.lastName}'
+                                                    : widget
+                                                        .animal.centerId!.name,
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .primaryColor,
@@ -360,7 +361,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     child: const Padding(
                                       padding: EdgeInsets.all(20.0),
                                       child: Text(
-                                        'Adoption',
+                                        'Buy Pets',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -445,7 +446,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.badge, color: Colors.grey),
+                              Icon(
+                                Icons.badge,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 widget.animal.namePet,
@@ -469,7 +474,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.pets, color: Colors.grey),
+                              Icon(
+                                Icons.pets,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
                               SizedBox(width: 8),
                               Text(
                                 widget.animal.breed,
@@ -491,6 +500,25 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                       const SizedBox(height: 2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                           Icon(
+                                    FontAwesomeIcons.handHoldingDollar,
+                                    color: Colors.grey,
+                                    size: 16.0,
+                                  ),
+                          SizedBox(width: 8),
+                          Text(
+                            '${widget.animal.price}.vnd',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
@@ -500,15 +528,16 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                               Icon(
                                 FontAwesomeIcons.mapMarkerAlt,
                                 color: Colors.grey,
+                                size: 16,
                               ),
                               SizedBox(width: 8),
                             ],
                           ),
                           Expanded(
                             child: Text(
-                              widget.animal.centerId==null?
-                              widget.animal.giver!.address.toString():
-                              widget.animal.centerId!.address.toString(),
+                              widget.animal.centerId == null
+                                  ? widget.animal.giver!.address.toString()
+                                  : widget.animal.centerId!.address.toString(),
                               style: TextStyle(
                                 fontSize: 15,
                                 color: Theme.of(context).primaryColor,

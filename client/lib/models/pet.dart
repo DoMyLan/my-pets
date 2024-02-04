@@ -17,6 +17,9 @@ class Pet {
   final double? age;
   final DateTime? birthday;
   final String color;
+  final String price;
+  final bool free;
+
   final String description;
   List<dynamic> images;
   final String level;
@@ -40,6 +43,9 @@ class Pet {
     this.age,
     this.birthday,
     required this.color,
+    required this.price,
+    required this.free,
+
     required this.description,
     required this.images,
     required this.level,
@@ -147,6 +153,8 @@ class Pet {
               .add(const Duration(hours: 7))
           : null,
       color: json['color'],
+      price: json['price'],
+      free: json['free'],
       description: json['description'],
       images: json['images'] as List<dynamic>,
       level: json['level'],

@@ -472,7 +472,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10, right: 8, left: 10),
+            padding: const EdgeInsets.only(bottom: 8, right: 8, left: 10),
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
@@ -481,7 +481,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                   elevation: 4.0,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
+                        horizontal: 10, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -510,6 +510,27 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                                   animal.birthday != null
                                       ? AgePet.convertAge(animal.birthday!)
                                       : "unknown"),
+                              const SizedBox(height: 2),
+                              Row(
+                                children: [
+                                  Icon(
+                                    FontAwesomeIcons.handHoldingDollar,
+                                    color: Colors.grey,
+                                    size: 16.0,
+                                  ),
+                                  const SizedBox(width: 1),
+                                  Text(
+                                    '       ${animal.price}.vnd',
+                                    // '      2350000.vnd',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
@@ -573,7 +594,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                         tag: animal.namePet,
                         child: Image(
                           image: NetworkImage(animal.images.first),
-                          height: 150,
+                          height: 170,
                           width: deviceWidth * 0.4,
                           fit: BoxFit.cover,
                         ),

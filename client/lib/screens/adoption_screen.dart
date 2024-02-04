@@ -45,8 +45,6 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
 
   int _currentIndex = 0;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -96,7 +94,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                 ),
                               ),
                               buildSearchAndAnimalTypes(),
-                            //  SearchAndAnimalTypesWidget(),
+                              //  SearchAndAnimalTypesWidget(),
                             ],
                           ),
                         ]),
@@ -468,7 +466,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10, right: 8, left: 10),
+            padding: const EdgeInsets.only(bottom: 8, right: 8, left: 10),
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
@@ -477,7 +475,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                   elevation: 4.0,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
+                        horizontal: 10, vertical: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -506,54 +504,75 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                                   animal.birthday != null
                                       ? AgePet.convertAge(animal.birthday!)
                                       : "unknown"),
-                              const SizedBox(height: 4),
-                              if(currentClient.role == 'USER')
+                              const SizedBox(height: 2),
                               Row(
                                 children: [
                                   Icon(
-                                    FontAwesomeIcons.mapMarkerAlt,
-                                    color: Theme.of(context).primaryColor,
+                                    FontAwesomeIcons.handHoldingDollar,
+                                    color: Colors.grey,
                                     size: 16.0,
                                   ),
                                   const SizedBox(width: 1),
                                   Text(
-                                    'Distance: ',
+                                    '       ${animal.price}.vnd',
+                                    // '      2350000.vnd',
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
                                       color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.w400,
                                     ),
-                                  ),
-                                  FutureBuilder<double>(
-                                    future: calculateDistance(
-                                        currentClient.location,
-                                        animal.centerId != null
-                                            ? animal.centerId!.location
-                                            : animal.giver!.location),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return Text('Calculating...');
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error');
-                                      } else {
-                                        String distanceString =
-                                            snapshot.data!.toStringAsFixed(2);
-                                        return Text(
-                                          '$distanceString km',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                          softWrap: true,
-                                        );
-                                      }
-                                    },
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 4),
+                              if (currentClient.role == 'USER')
+                                Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.mapMarkerAlt,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 16.0,
+                                    ),
+                                    const SizedBox(width: 1),
+                                    Text(
+                                      'Distance: ',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    FutureBuilder<double>(
+                                      future: calculateDistance(
+                                          currentClient.location,
+                                          animal.centerId != null
+                                              ? animal.centerId!.location
+                                              : animal.giver!.location),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Text('Calculating...');
+                                        } else if (snapshot.hasError) {
+                                          return Text('Error');
+                                        } else {
+                                          String distanceString =
+                                              snapshot.data!.toStringAsFixed(2);
+                                          return Text(
+                                            '$distanceString km',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                            softWrap: true,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ),
@@ -570,7 +589,7 @@ class _AdoptionScreenState extends State<AdoptionScreen> {
                         tag: animal.namePet,
                         child: Image(
                           image: NetworkImage(animal.images.first),
-                          height: 150,
+                          height: 170,
                           width: deviceWidth * 0.4,
                           fit: BoxFit.cover,
                         ),

@@ -34,7 +34,7 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
   DateTime? birthday;
 
   bool isFreeOptionSelected = true;
-  String price = '';
+  String price = '0';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();

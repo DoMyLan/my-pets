@@ -44,7 +44,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
   var currentClient;
 
   bool isFreeOptionSelected = true;
-  String price = '';
+  String price = '0';
 
   @override
   void initState() {
