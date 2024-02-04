@@ -5,7 +5,9 @@ import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
-import 'package:found_adoption_application/screens/animal_detail_screen.dart';
+import 'package:found_adoption_application/screens/adoption_screen.dart';
+
+
 import 'package:found_adoption_application/screens/map_page.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
@@ -28,7 +30,7 @@ class ProfileCenterPage extends StatefulWidget {
   State<ProfileCenterPage> createState() => _ProfileCenterPageState();
 }
 
-class _ProfileCenterPageState extends State<ProfileCenterPage> {
+class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCenterPage> {
   int selectedAnimalIconIndex = 0;
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoCenter> centerFuture;
@@ -36,6 +38,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
   late List<Pet> animals = [];
   var currentClient;
   late bool isLoading = true;
+ 
   List<String> animalTypes = [
     'Cats',
     'Dogs',
@@ -51,10 +54,15 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
     FontAwesomeIcons.fish,
     FontAwesomeIcons.fish
   ];
+  late AdoptionScreen adoptionScreen;
 
   @override
   void initState() {
     super.initState();
+    adoptionScreen = AdoptionScreen(centerId: widget.centerId);
+   
+
+
     petStoriesPosts = getAllPostPersonal(widget.centerId);
     centerFuture = getProfileCenter(context, widget.centerId);
     petsFuture = getAllPetOfCenter(widget.centerId);
@@ -68,6 +76,8 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
       isLoading = false;
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -322,35 +332,37 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     buildSectionHeader('Articles posted', Icons.library_books),
 
                     // Widget chứa TabBar và TabBarView
-                    // DefaultTabController(
-                    //   length: 2,
-                    //   child: Column(
-                    //     children: [
-                    //       // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
-                    //       TabBar(
-                    //         labelColor: Theme.of(context).primaryColor,
-                    //         tabs: [
-                    //           Tab(text: 'Pet Stories'),
-                    //           Tab(text: 'Pet Adoption'),
-                    //         ],
-                    //       ),
-                    //       // TabBarView để hiển thị nội dung tương ứng với từng tab
-                    //       SizedBox(
-                    //         height:
-                    //             500, // Thay đổi kích thước này tùy theo nhu cầu của bạn
-                    //         child: TabBarView(
-                    //           children: [
-                    //             // Nội dung cho tab "Pet Stories"
-                    //             buildPostsList(petStoriesPosts!),
-                    //             // Nội dung cho tab "Pet Adoption"
-                    //             buildAdoptionList(),
+                    DefaultTabController(
+                      length: 2,
+                      child: Column(
+                        children: [
+                          // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
+                          TabBar(
+                            labelColor: Theme.of(context).primaryColor,
+                            tabs: [
+                              Tab(text: 'Pet Stories'),
+                              Tab(text: 'Pet Adoption'),
+                            ],
+                          ),
+                          // TabBarView để hiển thị nội dung tương ứng với từng tab
+                          SizedBox(
+                            height:
+                                500, // Thay đổi kích thước này tùy theo nhu cầu của bạn
+                            child: TabBarView(
+                              children: [
+                                // Nội dung cho tab "Pet Stories"
+                                buildPostsList(petStoriesPosts!),
+                                // Nội dung cho tab "Pet Adoption"
+                                // buildAdoptionList(),
+                                 buildPostsList(petStoriesPosts!),
+                                              
                                
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               );
@@ -359,6 +371,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           ),
     );
   }
+  
 
   // Widget hiển thị danh sách bài đăng
   Widget buildPostsList(Future<List<Post>>? posts) {
@@ -397,180 +410,181 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
           }
         });
   }
+  
+  //hiển thị danh sách PetAdopt
+  // Widget buildAdoptionList() {
+  //   final deviceWidth = MediaQuery.of(context).size.width;
+  //   return Expanded(
+  //     child: Padding(
+  //       padding: const EdgeInsets.only(top: 24),
+  //       child: Container(
+  //         decoration: BoxDecoration(
+  //             borderRadius: const BorderRadius.only(
+  //               topLeft: Radius.circular(25),
+  //               topRight: Radius.circular(25),
+  //             ),
+  //             color: Theme.of(context).primaryColor.withOpacity(0.06)),
+  //         height: 500,
+  //         child: Column(
+  //           children: [
+  //             //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
+  //             Expanded(
+  //               child: FutureBuilder<List<Pet>>(
+  //                   future: petsFuture,
+  //                   builder: (context, snapshot) {
+  //                     if (snapshot.connectionState == ConnectionState.waiting) {
+  //                       return const Center(
+  //                         child: CircularProgressIndicator(),
+  //                       );
+  //                     } else if (snapshot.hasError) {
+  //                       return const Center(
+  //                           child: Text('Please try again later'));
+  //                     } else {
+  //                       animals = snapshot.data ?? [];
+  //                       return ListView.builder(
+  //                           itemCount: animals.length,
+  //                           itemBuilder: (context, index) {
+  //                             final animal = animals[index];
 
-  Widget buildAdoptionList() {
-    final deviceWidth = MediaQuery.of(context).size.width;
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 24),
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
-              ),
-              color: Theme.of(context).primaryColor.withOpacity(0.06)),
-          height: 500,
-          child: Column(
-            children: [
-              //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
-              Expanded(
-                child: FutureBuilder<List<Pet>>(
-                    future: petsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return const Center(
-                            child: Text('Please try again later'));
-                      } else {
-                        animals = snapshot.data ?? [];
-                        return ListView.builder(
-                            itemCount: animals.length,
-                            itemBuilder: (context, index) {
-                              final animal = animals[index];
+  //                             return GestureDetector(
+  //                               onTap: () {
+  //                                 Navigator.push(context,
+  //                                     MaterialPageRoute(builder: (context) {
+  //                                   return AnimalDetailScreen(
+  //                                     animal: animal,
+  //                                     currentId: currentClient,
+  //                                   );
+  //                                 }));
+  //                               },
+  //                               child: Padding(
+  //                                 padding: const EdgeInsets.only(
+  //                                     bottom: 23, right: 7, left: 16),
+  //                                 child: Stack(
+  //                                   alignment: Alignment.centerLeft,
+  //                                   children: [
+  //                                     Material(
+  //                                       borderRadius: BorderRadius.circular(20),
+  //                                       elevation: 4.0,
+  //                                       child: Padding(
+  //                                         padding: const EdgeInsets.symmetric(
+  //                                             horizontal: 15, vertical: 15),
+  //                                         child: Row(
+  //                                           mainAxisAlignment:
+  //                                               MainAxisAlignment.spaceBetween,
+  //                                           children: [
+  //                                             SizedBox(
+  //                                                 width: deviceWidth * 0.4),
+  //                                             Flexible(
+  //                                               child: Column(
+  //                                                 crossAxisAlignment:
+  //                                                     CrossAxisAlignment.start,
+  //                                                 children: [
+  //                                                   Row(
+  //                                                     mainAxisAlignment:
+  //                                                         MainAxisAlignment
+  //                                                             .spaceBetween,
+  //                                                     children: [
+  //                                                       fieldInforPet('Name',
+  //                                                           animal.namePet),
+  //                                                       Icon(
+  //                                                         animal.gender ==
+  //                                                                 "FEMALE"
+  //                                                             ? FontAwesomeIcons
+  //                                                                 .venus
+  //                                                             : FontAwesomeIcons
+  //                                                                 .mars,
+  //                                                       ),
+  //                                                     ],
+  //                                                   ),
+  //                                                   const SizedBox(height: 8),
+  //                                                   fieldInforPet(
+  //                                                       'Breed', animal.breed),
+  //                                                   const SizedBox(height: 8),
+  //                                                   fieldInforPet('Age',
+  //                                                       '${animal.age! * 12} months'),
+  //                                                   const SizedBox(height: 8),
+  //                                                   Row(
+  //                                                     children: [
+  //                                                       Icon(
+  //                                                         FontAwesomeIcons
+  //                                                             .mapMarkerAlt,
+  //                                                         color:
+  //                                                             Theme.of(context)
+  //                                                                 .primaryColor,
+  //                                                         size: 16.0,
+  //                                                       ),
+  //                                                       const SizedBox(
+  //                                                           width: 1),
+  //                                                       Text(
+  //                                                         'Distance: ',
+  //                                                         style: TextStyle(
+  //                                                           fontSize: 13,
+  //                                                           color: Theme.of(
+  //                                                                   context)
+  //                                                               .primaryColor,
+  //                                                           fontWeight:
+  //                                                               FontWeight.w400,
+  //                                                         ),
+  //                                                       ),
+  //                                                       Flexible(
+  //                                                         child: Text(
+  //                                                           // '  $distanceString KM',
+  //                                                           '     KM',
 
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return AnimalDetailScreen(
-                                      animal: animal,
-                                      currentId: currentClient,
-                                    );
-                                  }));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 23, right: 7, left: 16),
-                                  child: Stack(
-                                    alignment: Alignment.centerLeft,
-                                    children: [
-                                      Material(
-                                        borderRadius: BorderRadius.circular(20),
-                                        elevation: 4.0,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 15),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              SizedBox(
-                                                  width: deviceWidth * 0.4),
-                                              Flexible(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        fieldInforPet('Name',
-                                                            animal.namePet),
-                                                        Icon(
-                                                          animal.gender ==
-                                                                  "FEMALE"
-                                                              ? FontAwesomeIcons
-                                                                  .venus
-                                                              : FontAwesomeIcons
-                                                                  .mars,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    fieldInforPet(
-                                                        'Breed', animal.breed),
-                                                    const SizedBox(height: 8),
-                                                    fieldInforPet('Age',
-                                                        '${animal.age! * 12} months'),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: [
-                                                        Icon(
-                                                          FontAwesomeIcons
-                                                              .mapMarkerAlt,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          size: 16.0,
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 1),
-                                                        Text(
-                                                          'Distance: ',
-                                                          style: TextStyle(
-                                                            fontSize: 13,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                        Flexible(
-                                                          child: Text(
-                                                            // '  $distanceString KM',
-                                                            '     KM',
-
-                                                            style: TextStyle(
-                                                              fontSize: 18,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                            ),
-                                                            softWrap: true,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Stack(
-                                        alignment: Alignment.centerLeft,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Hero(
-                                              tag: animal.namePet,
-                                              child: Image(
-                                                image: NetworkImage(
-                                                    animal.images.first),
-                                                height: 190,
-                                                width: deviceWidth * 0.4,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      }
-                    }),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //                                                           style: TextStyle(
+  //                                                             fontSize: 18,
+  //                                                             color: Theme.of(
+  //                                                                     context)
+  //                                                                 .primaryColor,
+  //                                                             fontWeight:
+  //                                                                 FontWeight
+  //                                                                     .w800,
+  //                                                           ),
+  //                                                           softWrap: true,
+  //                                                         ),
+  //                                                       ),
+  //                                                     ],
+  //                                                   ),
+  //                                                 ],
+  //                                               ),
+  //                                             ),
+  //                                           ],
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                                     Stack(
+  //                                       alignment: Alignment.centerLeft,
+  //                                       children: [
+  //                                         ClipRRect(
+  //                                           borderRadius:
+  //                                               BorderRadius.circular(20),
+  //                                           child: Hero(
+  //                                             tag: animal.namePet,
+  //                                             child: Image(
+  //                                               image: NetworkImage(
+  //                                                   animal.images.first),
+  //                                               height: 190,
+  //                                               width: deviceWidth * 0.4,
+  //                                               fit: BoxFit.cover,
+  //                                             ),
+  //                                           ),
+  //                                         )
+  //                                       ],
+  //                                     )
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           });
+  //                     }
+  //                   }),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget fieldInforPet(String infor, String inforDetail) {
     return Text.rich(
@@ -707,49 +721,51 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
     Clipboard.setData(ClipboardData(text: text));
   }
 
-  Widget buildAnimalIcon(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              setState(() {
-                selectedAnimalIconIndex = index;
-              });
-            },
-            child: Material(
-              color: selectedAnimalIconIndex == index
-                  ? Theme.of(context).primaryColor
-                  : Colors.white,
-              elevation: 8,
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(13),
-                child: Icon(
-                  animalIcons[index],
-                  size: 20,
-                  color: selectedAnimalIconIndex == index
-                      ? Colors.white
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          Text(
-            animalTypes[index],
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w700),
-          ),
-        ],
-      ),
-    );
-  }
+
+  //lấy từ adop qua->kh code lại nữa
+  // Widget buildAnimalIcon(int index) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(right: 30),
+  //     child: Column(
+  //       children: [
+  //         InkWell(
+  //           onTap: () {
+  //             setState(() {
+  //               selectedAnimalIconIndex = index;
+  //             });
+  //           },
+  //           child: Material(
+  //             color: selectedAnimalIconIndex == index
+  //                 ? Theme.of(context).primaryColor
+  //                 : Colors.white,
+  //             elevation: 8,
+  //             borderRadius: BorderRadius.circular(20),
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(13),
+  //               child: Icon(
+  //                 animalIcons[index],
+  //                 size: 20,
+  //                 color: selectedAnimalIconIndex == index
+  //                     ? Colors.white
+  //                     : Theme.of(context).primaryColor,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         const SizedBox(
+  //           height: 12,
+  //         ),
+  //         Text(
+  //           animalTypes[index],
+  //           style: TextStyle(
+  //               color: Theme.of(context).primaryColor,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.w700),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _showBottomSheet(String centerId, status) {
     showModalBottomSheet<void>(

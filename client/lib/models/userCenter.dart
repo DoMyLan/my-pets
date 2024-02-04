@@ -11,7 +11,7 @@ class InfoCenter {
   final String avatar;
   final String phoneNumber;
   final String address;
-  final Location location;
+
   final String aboutMe;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -26,7 +26,7 @@ class InfoCenter {
     required this.avatar,
     required this.phoneNumber,
     required this.address,
-    required this.location,
+
     required this.aboutMe,
     this.createdAt,
     this.updatedAt,
@@ -44,10 +44,6 @@ class InfoCenter {
       avatar: json['avatar'] as String,
       phoneNumber: json['phoneNumber'] as String,
       address: json['address'] as String,
-      location: Location(
-                latitude: json['centerId']['location']['latitude'],
-                longitude: json['centerId']['location']['latitude']
-              ),
       aboutMe: json['aboutMe'] as String,
       createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['createdAt']))
           .add(Duration(hours: 7)),
