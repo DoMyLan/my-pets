@@ -379,8 +379,9 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                 children: [
                   const Text("Select link Center (*): ",
                       style: TextStyle(fontSize: 14, color: Colors.black)),
-                  Expanded(
+                  Flexible(
                     child: DropdownButton<String>(
+                      isExpanded: true,
                       value: dropdownValue,
                       icon: const FittedBox(
                         fit: BoxFit.contain,
