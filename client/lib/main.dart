@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/hive/current_location.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
+import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/services/auth_api.dart';
@@ -54,7 +55,7 @@ Color startingColor = const Color.fromRGBO(70, 112, 112, 1.0);
 //       theme: ThemeData(
 //         primaryColor: mainColor,
 //       ),
-//       home: ReviewProfileScreen(),
+//       home: PaymentScreen(),
 //     );
 //   }
 // }
