@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/dialog_otp.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ Future<void> signup(BuildContext context, String email, String password,
     String signupType) async {
   try {
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-up");
+        "$BASE_URL/auth/sign-up");
 
     final response = await http.post(
       apiUrl,
@@ -47,7 +48,7 @@ Future<void> signup(BuildContext context, String email, String password,
 Future<bool> verifycode(String email, String code) async {
   try {
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/verify-code");
+        "$BASE_URL/auth/verify-code");
 
     final response = await http.post(
       apiUrl,
@@ -79,7 +80,7 @@ Future<bool> verifycode(String email, String code) async {
 Future<void> resendcode(String email) async {
   try {
     final apiUrl = Uri.parse(
-        'https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/send-code');
+        '$BASE_URL/auth/send-code');
 
     final response = await http.post(apiUrl,
         headers: {

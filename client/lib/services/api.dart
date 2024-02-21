@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:found_adoption_application/services/callBackApi.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +10,7 @@ Future<dynamic> api(path, method, body) async {
   var responseData = {};
 
   try {
-    final apiUrl = Uri.parse("https://my-pets-api.vercel.app/api/v1${path}");
+    final apiUrl = Uri.parse("$BASE_URL/$path");
     if (method == "GET") {
       var response = await http.get(apiUrl, headers: {
         'Authorization': 'Bearer ${accessToken}',

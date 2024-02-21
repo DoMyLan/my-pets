@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';

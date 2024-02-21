@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/services/auth_api.dart';
 import 'package:found_adoption_application/services/callBackApi.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
@@ -23,7 +24,7 @@ Future<String> changeAvatar(BuildContext context, imageFile) async {
     var responseData;
 
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/upload/single");
+        "$BASE_URL/upload/single");
 
     var request = http.MultipartRequest('POST', apiUrl)
       ..files.add(await http.MultipartFile.fromPath('file', imageFile!.path));
@@ -68,10 +69,10 @@ Future<String> changeAvatar(BuildContext context, imageFile) async {
       final apiUrl2;
       if (currentClient.role == 'USER') {
         apiUrl2 = Uri.parse(
-            "https://found-and-adoption-pet-api-be.vercel.app/api/v1/user/${currentClient.id}");
+            "$BASE_URL/user/${currentClient.id}");
       } else {
         apiUrl2 = Uri.parse(
-            "https://found-and-adoption-pet-api-be.vercel.app/api/v1/center/${currentClient.id}");
+            "$BASE_URL/center/${currentClient.id}");
       }
       var body = jsonEncode(<String, String>{
         'avatar': url,

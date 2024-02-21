@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
-import 'package:found_adoption_application/screens/welcome_screen.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +22,7 @@ Future<String> refreshAccessToken() async {
   // final refreshToken = userBox.get('currentUser').refreshToken;
   final refreshToken = currentClient.refreshToken;
   final apiUrl = Uri.parse(
-      "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/refresh-token");
+      "$BASE_URL/auth/refresh-token");
 
   final response = await http.post(apiUrl, headers: {
     'Authorization': 'Bearer ${refreshToken}',
