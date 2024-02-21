@@ -11,6 +11,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/register_f
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/screens/user_screens/registration_form.dart';
 import 'package:found_adoption_application/services/auth/signup_api.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +25,7 @@ Future<void> login(
   var body = jsonEncode(<String, String>{'email': email, 'password': password});
   try {
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-in");
+        "$BASE_URL/auth/sign-in");
     var response = await http.post(apiUrl,
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +131,7 @@ Future<void> login(
     print(e);
 
     if (e.toString() ==
-        "ClientException with SocketException: Failed host lookup: 'found-and-adoption-pet-api-be.vercel.app' (OS Error: No address associated with hostname, errno = 7), uri=https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/sign-in") {
+        "ClientException with SocketException: Failed host lookup: 'found-and-adoption-pet-api-be.vercel.app' (OS Error: No address associated with hostname, errno = 7), uri=$BASE_URL/auth/sign-in") {
       Navigator.pop(context);
       notification("Check your Network and Try again.", true);
     }
@@ -140,7 +141,7 @@ Future<void> login(
 Future<bool> forgotPassword(String email) async {
   try {
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/auth/forgot-password");
+        "$BASE_URL/auth/forgot-password");
 
     final response = await http.post(
       apiUrl,

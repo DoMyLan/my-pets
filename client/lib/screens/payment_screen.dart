@@ -1,28 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+// ignore: must_be_immutable
 class PaymentScreen extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
+  var pet;
+  var currentClient;
+  PaymentScreen({super.key, required this.pet, required this.currentClient});
+
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  // ignore: prefer_typing_uninitialized_variables
+  var currentClient;
+  var transportFee = 0;
+  var totalFee = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getClient();
+    currentClient = widget.currentClient;
+    transportFee = calculateShippingCost(calculateDistance(
+        widget.currentClient.location,
+        widget.pet.centerId != null
+            ? widget.pet.centerId!.location
+            : widget.pet.giver!.location));
+    totalFee = int.parse(widget.pet.price) + transportFee;
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool success;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: Text('Thanh toán'),
+        title: const Text('Thanh toán'),
       ),
       body: SafeArea(
         child: Stack(children: [
           SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 60),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -32,7 +69,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
+                        const Row(
                           children: [
                             Icon(
                               Icons.location_on,
@@ -49,13 +86,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 28.0),
-                          child: Container(
+                          padding: const EdgeInsets.only(left: 28.0),
+                          child: SizedBox(
                             width: MediaQuery.of(context).size.width *
                                 0.7, // Chiều rộng tối đa
                             child: Text(
-                              '143/11 đường số 11, khu phố 9, phường Trường Thọ, Tp. Thủ Đức, Tp. Hồ Chí Minh',
-                              style: TextStyle(
+                              currentClient.address,
+                              style: const TextStyle(
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -68,10 +105,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ],
                 ),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         horizontal:
                             0), // Điều chỉnh lề bên trái và bên phải của Divider
                     child: Divider(
@@ -81,38 +118,61 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'Trung tâm thú cưng Miami',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
+                GestureDetector(
+                  onTap: () {
+                    widget.pet.centerId != null
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileCenterPage(
+                                  centerId: widget.pet.centerId!.id),
+                            ),
+                          )
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfilePage(userId: widget.pet.giver!.id),
+                            ),
+                          );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          widget.pet.centerId != null
+                              ? widget.pet.centerId!.name
+                              : widget.pet.giver!.firstName +
+                                  ' ' +
+                                  widget.pet.giver!.lastName,
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text('View Center'),
-                    SizedBox(
-                      width: 4,
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    )
-                  ],
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      const Text('View'),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 12,
+                      )
+                    ],
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Container(
-                  padding: EdgeInsets.all(4),
-                  color: Color.fromARGB(255, 248, 245, 245),
+                  padding: const EdgeInsets.all(4),
+                  color: const Color.fromARGB(255, 248, 245, 245),
                   child: Row(
                     children: [
                       Container(
@@ -123,39 +183,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           color: Colors.grey[300],
                         ),
                         // Placeholder for pet image
-                        child: Image.asset('assets/images/Lan.jpg'),
+                        child: Image.network(
+                          widget.pet.images[0],
+                        ),
                       ),
-                      SizedBox(width: 20.0),
+                      const SizedBox(width: 20.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Sữa VinaMilk',
-                            style: TextStyle(
+                            '${widget.pet.namePet}',
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Text(
-                            'Breed: Mèo Anh lông ngắn',
-                            style: TextStyle(fontSize: 14.0),
+                            'Breed: ${widget.pet.breed}',
+                            style: const TextStyle(fontSize: 14.0),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Text(
-                            'Price: 235000 đ',
-                            style: TextStyle(fontSize: 14.0),
+                            'Price: ${widget.pet.price} đ',
+                            style: const TextStyle(fontSize: 14.0),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Divider(
@@ -163,8 +225,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   thickness: 1,
                   height: 1,
                 ),
-                SizedBox(height: 15.0),
-                Row(
+                const SizedBox(height: 15.0),
+                const Row(
                   children: [
                     Icon(Icons.wallet_giftcard,
                         color: Color.fromARGB(255, 209, 191, 28)),
@@ -184,33 +246,37 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Nhập mã voucher',
                         ),
                       ),
                     ),
-                    SizedBox(width: 10.0),
+                    const SizedBox(width: 10.0),
                     ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).primaryColor),
                       ),
                       onPressed: () {},
-                      child: Text('Áp dụng', style: TextStyle(fontSize: 13, color: Colors.white),),
+                      child: const Text(
+                        'Áp dụng',
+                        style: TextStyle(fontSize: 13, color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Tin nhắn: ',
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                     ),
                     Expanded(
@@ -224,14 +290,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Divider(
                   color: Colors.grey.shade300,
                   thickness: 10,
                   height: 1,
                 ),
-                SizedBox(height: 20.0),
-                Row(
+                const SizedBox(height: 20.0),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
@@ -250,16 +316,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Divider(
                   color: Colors.grey.shade300,
                   thickness: 1,
                   height: 1,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
@@ -282,7 +348,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Tổng tiền hàng',
                         style: TextStyle(
                           color: Colors.grey,
@@ -290,8 +356,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        '235000 đ',
-                        style: TextStyle(
+                        '${widget.pet.price} đ',
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
                         ),
@@ -301,7 +367,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Tổng tiền phí vận chuyển',
                         style: TextStyle(
                           color: Colors.grey,
@@ -309,8 +375,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        '40000 đ',
-                        style: TextStyle(
+                        '$transportFee đ',
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
                         ),
@@ -320,15 +386,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Tổng tiền hàng',
+                      const Text(
+                        'Tổng tiền hóa đơn',
                         style: TextStyle(
                           fontSize: 14.0,
                         ),
                       ),
                       Text(
-                        '275000 đ',
-                        style: TextStyle(
+                        '$totalFee đ',
+                        style: const TextStyle(
                           color: Colors.red,
                           fontSize: 13.0,
                         ),
@@ -336,7 +402,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ],
                   ),
                 ]),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 // Divider(
@@ -358,7 +424,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     color: Colors.grey.shade100,
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0,
+                    offset: const Offset(0,
                         3), // Thay đổi offset để điều chỉnh vị trí của bóng đổ
                   ),
                 ],
@@ -368,15 +434,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   Column(
                     children: [
-                      Text(
+                      const Text(
                         'Tổng thanh toán',
                         style: TextStyle(
                           fontSize: 13.0,
                         ),
                       ),
                       Text(
-                        '275000 đ',
-                        style: TextStyle(
+                        '$totalFee đ',
+                        style: const TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
@@ -384,7 +450,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
                       // Xử lý sự kiện khi nhấn vào nút Đặt hàng
@@ -392,17 +458,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Container(
                       color: Colors.red,
                       height: 50,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Center(
                         child: TextButton(
-                          child: Text(
+                          child: const Text(
                             'Đặt hàng',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            success = await createOrder(
+                                currentClient.id,
+                                currentClient.role == 'CENTER' ? true : false,
+                                currentClient.role == 'CENTER'
+                                    ? widget.pet.centerId.id
+                                    : widget.pet.giver.id,
+                                widget.pet,
+                                currentClient.address,
+                                transportFee,
+                                totalFee);
+                          },
                         ),
                       ),
                     ),
@@ -415,4 +492,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+}
+
+int calculateShippingCost(double distance) {
+  const double baseCostPerKm = 5000;
+  const double additionalCostPerKm = 1000;
+  const double baseDistance = 10;
+
+  double cost;
+  if (distance <= baseDistance) {
+    cost = baseCostPerKm * distance;
+  } else {
+    cost = baseCostPerKm * baseDistance +
+        additionalCostPerKm * (distance - baseDistance);
+  }
+
+  return cost.round();
+}
+
+//tính toán khoảng cách
+double calculateDistance(
+  currentAddress,
+  otherAddress,
+) {
+  LatLng currentP = LatLng(
+    double.parse(currentAddress.latitude),
+    double.parse(currentAddress.longitude),
+  );
+
+  LatLng pDestination = LatLng(
+    double.parse(otherAddress.latitude),
+    double.parse(otherAddress.longitude),
+  );
+
+  double distance = Geolocator.distanceBetween(
+    currentP.latitude,
+    currentP.longitude,
+    pDestination.latitude,
+    pDestination.longitude,
+  );
+
+  return distance / 1000; // Chia cho 1000 để chuyển đổi sang đơn vị kilômét
 }

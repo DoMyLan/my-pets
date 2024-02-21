@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
@@ -7,7 +8,7 @@ Future<List<String>> uploadMultiImage(List<XFile> images) async {
 
   try {
     final apiUrl = Uri.parse(
-        "https://found-and-adoption-pet-api-be.vercel.app/api/v1/upload/multi-image");
+        "$BASE_URL/upload/multi-image");
 
     var request = http.MultipartRequest('POST', apiUrl);
     request.headers.addAll({

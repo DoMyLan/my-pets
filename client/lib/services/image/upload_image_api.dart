@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:found_adoption_application/services/auth_api.dart';
+import 'package:found_adoption_application/utils/consts.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,7 @@ Future<String> uploadImage(File image) async {
   var responseData = {};
 
   try {
-    final apiUrl = Uri.parse("https://found-and-adoption-pet-api-be.vercel.app/api/v1/upload/single");
+    final apiUrl = Uri.parse("$BASE_URL/upload/single");
 
     var request = http.MultipartRequest('POST', apiUrl)
       ..headers['Authorization'] = 'Bearer $accessToken'
