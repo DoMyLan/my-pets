@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/screens/orders_screen.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
@@ -353,14 +354,19 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     //           const FormAdopt()),
                                     // );
 
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => PaymentScreen(
+                                    //           pet: widget.animal,
+                                    //           currentClient: currentClient)),
+                                    // );
+
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                               PaymentScreen(pet: widget.animal, currentClient: currentClient)),
-                                    );
-
-
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ProductPage()));
                                   },
                                   child: Material(
                                     borderRadius: BorderRadius.circular(20),
@@ -509,11 +515,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                           Icon(
-                                    FontAwesomeIcons.handHoldingDollar,
-                                    color: Colors.grey,
-                                    size: 16.0,
-                                  ),
+                          Icon(
+                            FontAwesomeIcons.handHoldingDollar,
+                            color: Colors.grey,
+                            size: 16.0,
+                          ),
                           SizedBox(width: 8),
                           Text(
                             '${widget.animal.price}.vnd',
