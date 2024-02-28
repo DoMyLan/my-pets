@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';
+import 'package:found_adoption_application/screens/pet_favorites.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/screens/user_screens/status_adopt.dart';
@@ -34,6 +35,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
       Tween<double>(begin: 1.0, end: 0.5).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -47,10 +49,11 @@ class _MenuFrameUserState extends State<MenuFrameUser>
   //Map chứa cặp key-value (int - widget)
   Map<int, Widget> screens = {
     0: HomeScreen(),
-    1: FeedScreen(),
-    2: ProfilePage(userId: null),
-    3: StatusAdoptUser(),
-    4: NotificationPage()
+    1: PetFavorites(),
+    2: FeedScreen(),
+    3: ProfilePage(userId: null),
+    4: StatusAdoptUser(),
+    5: NotificationPage()
   };
 
   late List<Widget> screenSnapshot;
@@ -65,8 +68,8 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
           //chèn screen được chọn lên vtri đầu tiên
           screenSnapshot.insert(0, selectedWidget);
-        menuOpen = false;
-    _animationController.reverse();
+          menuOpen = false;
+          _animationController.reverse();
         });
       },
     ));

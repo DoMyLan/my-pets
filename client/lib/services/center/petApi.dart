@@ -234,3 +234,37 @@ Future<List<CenterLoad>> loadCenterAll() async {
       .toList();
   return centers;
 }
+
+Future<void> favoritePet(petId) async {
+  var responseData;
+  var body = jsonEncode({
+    "petId": petId,
+  });
+  try {
+    const apiUrl = "pet/favorite/pet";
+    responseData = await api(apiUrl, "PUT", body);
+    if (!responseData['success']) {
+      notification(responseData['message'], true);
+      return;
+    }
+    notification(responseData['message'], false);
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+}
+
+Future<List<Pet>> getPetFavorite() async {
+  var responseData;
+
+  try {
+    final apiUrl = "pet/favorite/pet";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  return pets;
+}

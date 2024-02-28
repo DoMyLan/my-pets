@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/orders_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
@@ -479,6 +480,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 currentClient.address,
                                 transportFee,
                                 totalFee);
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Orders()));
                           },
                         ),
                       ),
@@ -492,6 +498,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+}
+
+class _ProductPageState {
 }
 
 int calculateShippingCost(double distance) {

@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/screens/orders_screen.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
@@ -26,6 +27,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   dynamic currentClient;
   bool _isExpanded = false;
   int maxlines = 5;
+  bool isFavorite = false;
 
   final CarouselController carouselController = CarouselController();
 
@@ -33,6 +35,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   void initState() {
     super.initState();
     currentClient = widget.currentId;
+
+    for (var element in widget.animal.favorites!) {
+      if (element == currentClient.id) {
+        setState(() {
+          isFavorite = true;
+        });
+      }
+    }
   }
 
   @override
@@ -655,7 +665,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   ),
                 ),
 
-          const Spacer(),
+          Spacer(),
           if (currentClient.role == "USER" && widget.animal.foundOwner == null)
             Padding(
               padding: const EdgeInsets.all(2.0),
@@ -673,15 +683,25 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Material(
-                        borderRadius: BorderRadius.circular(20),
-                        elevation: 4,
-                        color: Theme.of(context).primaryColor,
-                        child: const Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Icon(
-                            FontAwesomeIcons.heart,
-                            color: Colors.white,
+                      GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            isFavorite = !isFavorite;
+                          });
+                          await favoritePet(widget.animal.id);
+                        },
+                        child: Material(
+                          borderRadius: BorderRadius.circular(20),
+                          elevation: 4,
+                          color: Theme.of(context).primaryColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Icon(
+                              isFavorite
+                                  ? FontAwesomeIcons.solidHeart
+                                  : FontAwesomeIcons.heart,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
                       ),
@@ -708,6 +728,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                       pet: widget.animal,
                                       currentClient: currentClient)),
                             );
+
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => const Orders()));
                           },
                           child: Material(
                             borderRadius: BorderRadius.circular(20),
