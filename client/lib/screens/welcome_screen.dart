@@ -26,6 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         parent: _controllers[i],
         curve: Curves.easeInOut,
       ));
+      
       Future.delayed(Duration(milliseconds: 400 * (5 - i)), () {
         _controllers[i]
             .forward()

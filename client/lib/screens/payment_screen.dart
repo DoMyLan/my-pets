@@ -484,7 +484,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const ProductPage()));
+                                    builder: (context) => const Orders()));
                           },
                         ),
                       ),

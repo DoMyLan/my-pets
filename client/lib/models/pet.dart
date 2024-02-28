@@ -23,6 +23,7 @@ class Pet {
   final String description;
   List<dynamic> images;
   final String level;
+  List<dynamic>? favorites;
   final User? foundOwner;
   final String? foundOwner_id;
   final String statusAdopt;
@@ -42,10 +43,10 @@ class Pet {
     required this.gender,
     this.age,
     this.birthday,
+    this.favorites,
     required this.color,
     required this.price,
     required this.free,
-
     required this.description,
     required this.images,
     required this.level,
@@ -158,6 +159,8 @@ class Pet {
       description: json['description'],
       images: json['images'] as List<dynamic>,
       level: json['level'],
+      favorites:
+          json['favorites'] != null ? json['favorites'] as List<dynamic> : [],
       foundOwner: json['foundOwner'] != null
           ? User(
               id: json['foundOwner']['_id'] as String,
