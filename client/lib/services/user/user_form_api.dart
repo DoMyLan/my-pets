@@ -24,7 +24,7 @@ Future<void> userform(
   print(storedAccount);
   try {
     final apiUrl = Uri.parse(
-        "$BASE_URL/$storedAccount");
+        "$BASE_URL/user/$storedAccount");
 
     final response = await http.post(
       apiUrl,

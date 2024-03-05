@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/orders_screen.dart';
+import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
@@ -298,24 +299,44 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 20.0),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.monetization_on_outlined,
                       color: Colors.red,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
-                    Text(
-                      'Phương thức thanh toán (Nhấn để chọn)',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Color.fromARGB(255, 99, 182, 124),
-                      ),
-                    ),
-                  ],
+
+                    //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+
+                    // Text(
+                    //   'Phương thức thanh toán (Nhấn để chọn)',
+                    //   style: TextStyle(
+                    //     fontSize: 14.0,
+                    //     color: Color.fromARGB(255, 99, 182, 124),
+                    //   ),
+                    // ),
+
+                    // TextButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: ((context) => PaymentMethod())));
+                    //   },
+                    //   child: const Text(
+                    //     'Phương thức thanh toán (Nhấn để chọn)',
+                    //     style: TextStyle(
+                    //       fontSize: 14.0,
+                    //       color: Color.fromARGB(255, 99, 182, 124),
+                    //     ),
+                    //   ),
+                    // ),      //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+                    
+                    PaymentMethod()]    //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
                 ),
                 const SizedBox(height: 20.0),
                 Divider(
@@ -455,6 +476,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   GestureDetector(
                     onTap: () {
                       // Xử lý sự kiện khi nhấn vào nút Đặt hàng
+                      // Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: ((context) =>
+                      //                  PaymentMethod())));
                     },
                     child: Container(
                       color: Colors.red,
@@ -500,8 +526,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 }
 
-class _ProductPageState {
-}
+class _ProductPageState {}
 
 int calculateShippingCost(double distance) {
   const double baseCostPerKm = 5000;

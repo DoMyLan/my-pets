@@ -18,9 +18,9 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
 
   List<String> menuItems = [
     'Adoption',
-    'Favorites',
-    'Pet Stories',
     'Profile',
+    'Pet Stories',
+    'Favorites',
     'Manage Adopt',
     'Notify',
     // 'Favorite',
@@ -29,9 +29,9 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
 
   List<IconData> icons = [
     FontAwesomeIcons.paw,
-    FontAwesomeIcons.heart,
-    FontAwesomeIcons.newspaper,
     FontAwesomeIcons.userAlt,
+    FontAwesomeIcons.newspaper,
+    FontAwesomeIcons.heart,
     FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.bell,
     // FontAwesomeIcons.heart,

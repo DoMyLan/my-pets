@@ -49,9 +49,10 @@ class _MenuFrameUserState extends State<MenuFrameUser>
   //Map chứa cặp key-value (int - widget)
   Map<int, Widget> screens = {
     0: HomeScreen(),
-    1: PetFavorites(),
+
+    1: ProfilePage(userId: null),
     2: FeedScreen(),
-    3: ProfilePage(userId: null),
+    3: FavoriteScreen(),
     4: StatusAdoptUser(),
     5: NotificationPage()
   };

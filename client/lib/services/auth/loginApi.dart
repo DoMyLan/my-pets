@@ -47,9 +47,13 @@ Future<void> login(
           ..phoneNumber = responseData['data']['phoneNumber']
           ..avatar = responseData['data']['avatar']
           ..address = responseData['data']['address']
-          ..location = CurrentLocation(
-            latitude: responseData['data']['location']['latitude'],
-            longitude: responseData['data']['location']['longitude'],
+          // ..location = CurrentLocation(
+          //   latitude: responseData['data']['location']['latitude'],
+          //   longitude: responseData['data']['location']['longitude'],
+          // )
+                    ..location = CurrentLocation(
+            latitude: '10.7784127',
+            longitude: '106.699445',
           )
           ..refreshToken = responseData['data']['refreshToken']
           ..accessToken = responseData['data']['accessToken'];
