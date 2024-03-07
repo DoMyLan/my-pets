@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -45,6 +46,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool success;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -492,6 +494,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           onPressed: () async {
+                            success = await createOrder(
+                                currentClient.id,
+                                widget.pet.centerId != null ? true : false,
+                                widget.pet.centerId != null
+                                    ? widget.pet.centerId.id
+                                    // ignore: prefer_null_aware_operators
+                                    : widget.pet.giver == null
+                                        ? null
+                                        : widget.pet.giver.id,
+                                widget.pet,
+                                currentClient.address,
+                                transportFee,
+                                totalFee);
 
                             // Navigator.push(
                             //     context,
