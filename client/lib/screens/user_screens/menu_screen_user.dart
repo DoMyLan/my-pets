@@ -21,6 +21,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     'Profile',
     'Pet Stories',
     'Favorites',
+    'Tracking Order'
     'Manage Adopt',
     'Notify',
     // 'Favorite',
@@ -31,6 +32,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     FontAwesomeIcons.paw,
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.newspaper,
+    FontAwesomeIcons.heart,
     FontAwesomeIcons.heart,
     FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.bell,

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';
+import 'package:found_adoption_application/screens/order_screen.dart';
 import 'package:found_adoption_application/screens/pet_favorites.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/screens/user_screens/status_adopt.dart';
+import 'package:found_adoption_application/screens/order_state.dart';
 
 class MenuFrameUser extends StatefulWidget {
   final userId;
@@ -36,6 +38,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -53,8 +56,9 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     1: ProfilePage(userId: null),
     2: FeedScreen(),
     3: FavoriteScreen(),
-    4: StatusAdoptUser(),
-    5: NotificationPage()
+    4: const TheOrders(),
+    5: StatusAdoptUser(),
+    6: NotificationPage()
   };
 
   late List<Widget> screenSnapshot;

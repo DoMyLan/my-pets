@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/screens/orders_screen.dart';
 import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
-import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -47,7 +45,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool success;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -299,45 +296,44 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.monetization_on_outlined,
-                      color: Colors.red,
+                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                  const Icon(
+                    Icons.monetization_on_outlined,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+
+                  //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+
+                  // Text(
+                  //   'Phương thức thanh toán (Nhấn để chọn)',
+                  //   style: TextStyle(
+                  //     fontSize: 14.0,
+                  //     color: Color.fromARGB(255, 99, 182, 124),
+                  //   ),
+                  // ),
+
+                  // TextButton(
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: ((context) => PaymentMethod())));
+                  //   },
+                  //   child: const Text(
+                  //     'Phương thức thanh toán (Nhấn để chọn)',
+                  //     style: TextStyle(
+                  //       fontSize: 14.0,
+                  //       color: Color.fromARGB(255, 99, 182, 124),
+                  //     ),
+                  //   ),
+                  // ),      //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+
+                  PaymentMethod()
+                ] //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
                     ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-
-                    //KHÔNG XÓA ĐOẠN CODE NÀY NHA
-
-                    // Text(
-                    //   'Phương thức thanh toán (Nhấn để chọn)',
-                    //   style: TextStyle(
-                    //     fontSize: 14.0,
-                    //     color: Color.fromARGB(255, 99, 182, 124),
-                    //   ),
-                    // ),
-
-                    // TextButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //             builder: ((context) => PaymentMethod())));
-                    //   },
-                    //   child: const Text(
-                    //     'Phương thức thanh toán (Nhấn để chọn)',
-                    //     style: TextStyle(
-                    //       fontSize: 14.0,
-                    //       color: Color.fromARGB(255, 99, 182, 124),
-                    //     ),
-                    //   ),
-                    // ),      //KHÔNG XÓA ĐOẠN CODE NÀY NHA
-                    
-                    PaymentMethod()]    //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
-                ),
                 const SizedBox(height: 20.0),
                 Divider(
                   color: Colors.grey.shade300,
@@ -496,21 +492,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           onPressed: () async {
-                            success = await createOrder(
-                                currentClient.id,
-                                currentClient.role == 'CENTER' ? true : false,
-                                currentClient.role == 'CENTER'
-                                    ? widget.pet.centerId.id
-                                    : widget.pet.giver.id,
-                                widget.pet,
-                                currentClient.address,
-                                transportFee,
-                                totalFee);
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Orders()));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => const Orders()));
                           },
                         ),
                       ),

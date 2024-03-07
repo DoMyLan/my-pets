@@ -57,7 +57,7 @@ Future<List<Adopt>> getStatusAdoptUser(String status) async {
     // notification(e.toString(), true);
   }
   // ignore: cast_from_null_always_fails
-  return null as List<Adopt>;
+  return [] as List<Adopt>;
 }
 
 Future<void> changeStatusAdoptCenter(String adoptId, String statusAdopt) async {
