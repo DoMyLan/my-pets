@@ -1,164 +1,204 @@
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
+import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
+  const FavoriteScreen({super.key});
+
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  Future<List<Pet>>? listPetFuture;
+  List<Pet> listPet = [];
+
+  @override
+  void initState() {
+    super.initState();
+    listPetFuture = getPetFavorite();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () async {
-            var currentClient = await getCurrentClient();
+    return FutureBuilder(
+        future: listPetFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Please try again later'));
+          } else {
+            listPet = snapshot.data as List<Pet>;
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () async {
+                    var currentClient = await getCurrentClient();
 
-            if (currentClient != null) {
-              if (currentClient.role == 'USER') {
-                // ignore: use_build_context_synchronously
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MenuFrameUser(
-                      userId: currentClient.id,
-                    ),
+                    if (currentClient != null) {
+                      if (currentClient.role == 'USER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuFrameUser(
+                              userId: currentClient.id,
+                            ),
+                          ),
+                        );
+                      } else if (currentClient.role == 'CENTER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MenuFrameCenter(centerId: currentClient.id),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.bars,
+                    size: 25,
+                    color: Color.fromRGBO(48, 96, 96, 1.0),
                   ),
-                );
-              } else if (currentClient.role == 'CENTER') {
-                // ignore: use_build_context_synchronously
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        MenuFrameCenter(centerId: currentClient.id),
-                  ),
-                );
-              }
-            }
-          },
-          icon: const Icon(
-            FontAwesomeIcons.bars,
-            size: 25,
-            color: Color.fromRGBO(48, 96, 96, 1.0),
-          ),
-        ),
-        title: Text('Favorite Pets'),
-      ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 8, // Khoảng cách giữa các item theo trục chính
-          crossAxisSpacing: 8, // Khoảng cách giữa các item theo trục phụ
-          childAspectRatio: 2 / 3, // Tỉ lệ chiều rộng và chiều cao của mỗi item
-        ),
-        itemCount: 10, // Số lượng item trong danh sách favorite
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              color: Colors.grey.shade200,
-              elevation: 3, // Độ nâng của Card
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0), // Bo góc của Card
+                ),
+                title: const Text('Favorite Pets'),
               ),
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.width *
-                            0.4, // Chiếm 2/3 chiều cao của chiều rộng
-                        child: Image.network(
-                          'https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg',
-                          fit: BoxFit.cover,
-                        ),
+              body: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing:
+                      8, // Khoảng cách giữa các item theo trục chính
+                  crossAxisSpacing:
+                      8, // Khoảng cách giữa các item theo trục phụ
+                  childAspectRatio:
+                      2 / 3, // Tỉ lệ chiều rộng và chiều cao của mỗi item
+                ),
+                itemCount:
+                    listPet.length, // Số lượng item trong danh sách favorite
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      color: Colors.grey.shade200,
+                      elevation: 3, // Độ nâng của Card
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // Bo góc của Card
                       ),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        child: Text(
-                          'JSirius Black',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        child: Text('Trung tâm Miami'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 2),
-                        child: Text('450.000 đ'),
-                      ),
-                    ],
-                  ),
-                  Positioned(
-                    right: -10,
-                    bottom: -10,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).primaryColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 1,
-                            blurRadius: 2,
-                            offset: Offset(0, 2), // changes position of shadow
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: MediaQuery.of(context).size.width *
+                                    0.4, // Chiếm 2/3 chiều cao của chiều rộng
+                                child: Image.network(
+                                  listPet[index].images[0],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                child: Text(
+                                  listPet[index].namePet,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                child: Text(listPet[index].centerId != null
+                                    ? listPet[index].centerId!.name
+                                    : '${listPet[index].giver!.firstName} ${listPet[index].giver!.lastName}'),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
+                                  child: Text(
+                                    '${listPet[index].price} đ',
+                                  )),
+                            ],
+                          ),
+                          Positioned(
+                            right: -10,
+                            bottom: -10,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).primaryColor,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: const Offset(
+                                        0, 2), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: -10,
+                            top: -10,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                FontAwesomeIcons.heart,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            top: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.yellow,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                '10%', // Mã giảm giá
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
-                  ),
-                  Positioned(
-                    right: -10,
-                    top: -10,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        FontAwesomeIcons.heart,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.yellow,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        '10%', // Mã giảm giá
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          );
-        },
-      ),
-    );
+            );
+          }
+        });
   }
 }
 

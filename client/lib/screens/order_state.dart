@@ -4,19 +4,6 @@ import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:intl/intl.dart';
 
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: TrackingOrder(),
-//     );
-//   }
-// }
-
 class TrackingOrder extends StatefulWidget {
   final String orderId;
   const TrackingOrder({super.key, required this.orderId});
