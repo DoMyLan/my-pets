@@ -1,184 +1,384 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/models/order.dart';
+import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:intl/intl.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: TrackingOrder(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: TrackingOrder(),
+//     );
+//   }
+// }
 
 class TrackingOrder extends StatefulWidget {
+  final String orderId;
+  const TrackingOrder({super.key, required this.orderId});
+
   @override
   State<TrackingOrder> createState() => _TrackingOrderState();
 }
 
 class _TrackingOrderState extends State<TrackingOrder> {
+  Future<Order>? orderFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    orderFuture = getOrderDetailByBuyer(widget.orderId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:
-            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
-        title: const Text('Tracking Order'),
+        backgroundColor: Colors.white,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Color.fromRGBO(48, 96, 96, 1.0),
+            )),
+        title: const Text(
+          'Order Detail',
+          style: TextStyle(
+              color: Color.fromRGBO(
+                48,
+                96,
+                96,
+                1.0,
+              ),
+              fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          petItem(),
-          const SizedBox(
-            height: 10,
-          ),
+      body: FutureBuilder(
+        future: orderFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Please try again later'));
+          } else {
+            Order order = snapshot.data as Order;
 
-          //chi tiết đơn hàng
-          Divider(
-            color: Colors.grey.shade300,
-            thickness: 1,
-            height: 1,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.list_alt,
-                color: Color.fromARGB(255, 209, 191, 28),
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              Text(
-                'Chi tiết thanh toán',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tổng tiền hàng',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13.0,
-                  ),
-                ),
-                Text(
-                  '235000 đ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13.0,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tổng tiền phí vận chuyển',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13.0,
-                  ),
-                ),
-                Text(
-                  '40000 đ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13.0,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tổng tiền hàng',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                  ),
-                ),
-                Text(
-                  '275000 đ',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 13.0,
-                  ),
-                ),
-              ],
-            ),
-          ]),
-          SizedBox(
-            height: 10,
-          ),
-          Divider(
-            color: Colors.grey.shade300,
-            thickness: 1,
-            height: 1,
-          ),
+            return Stack(children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    petItem(order),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
-          const SizedBox(
-            height: 20,
-          ),
+                    //chi tiết đơn hàng
+                    Divider(
+                      color: Colors.grey.shade300,
+                      thickness: 1,
+                      height: 1,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.list_alt,
+                            color: Color.fromARGB(255, 209, 191, 28),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            'Chi tiết thanh toán',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tổng tiền hàng',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${order.price} đ',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tổng tiền phí vận chuyển',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${order.transportFee} đ',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Thành tiền',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${order.totalFee} đ',
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Divider(
+                              color: Colors.grey.shade300,
+                              thickness: 1,
+                              height: 1,
+                              indent: 0,
+                              endIndent: 0,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Phương thức thanh toán",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text(
+                                  order.paymentMethods == "COD"
+                                      ? "Thanh toán khi nhận hàng"
+                                      : "VNPAY",
+                                  style: const TextStyle(fontSize: 14),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Trạng thái thanh toán",
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text(
+                                  order.statusPayment == "PENDING"
+                                      ? "Chờ thanh toán"
+                                      : "Đã thanh toán",
+                                  style: const TextStyle(fontSize: 14),
+                                )
+                              ],
+                            )
+                          ]),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      color: Colors.grey.shade300,
+                      thickness: 1,
+                      height: 1,
+                    ),
 
-          //Progress Delivery
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TrackingStep(
-                icon: FontAwesomeIcons.cartShopping,
-                title: 'Order Placed',
-                isFirstStep: true,
-                isCurrentStep: true,
-                isLastStep: false,
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, right: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Color.fromRGBO(48, 96, 96, 1.0),
+                              ),
+                              Text(
+                                "Địa chỉ nhận hàng",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(48, 96, 96, 1.0)),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 25),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${order.buyer.firstName} ${order.buyer.lastName}",
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                                Text(
+                                  order.buyer.phoneNumber,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                                Text(
+                                  order.buyer.address,
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Divider(
+                            color: Colors.grey.shade300,
+                            thickness: 1,
+                            height: 1,
+                            indent: 90,
+                            endIndent: 90,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    //Progress Delivery
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TrackingStep(
+                          date: order.createdAt,
+                          icon: FontAwesomeIcons.cartShopping,
+                          title: 'Order Placed',
+                          isFirstStep: true,
+                          isCurrentStep: true,
+                          isLastStep: false,
+                        ),
+                        TrackingStep(
+                          date: order.updatedAt,
+                          icon: Icons.home,
+                          title: 'Order Dispatched',
+                          isFirstStep: false,
+                          isCurrentStep: true,
+                          isLastStep: false,
+                        ),
+                        TrackingStep(
+                          date: order.updatedAt,
+                          icon: Icons.delivery_dining,
+                          title: 'Order in Transit',
+                          isFirstStep: false,
+                          isCurrentStep: true,
+                          isLastStep: false,
+                        ),
+                        TrackingStep(
+                          date: order.updatedAt,
+                          icon: Icons.done,
+                          title: 'Delivered Successfully',
+                          isFirstStep: false,
+                          isCurrentStep: false,
+                          isLastStep: true,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                  ],
+                ),
               ),
-              TrackingStep(
-                icon: Icons.home,
-                title: 'Order Dispatched',
-                isFirstStep: false,
-                isCurrentStep: true,
-                isLastStep: false,
+              Positioned(
+                left: 105,
+                bottom: 30,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    width: 180,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.orange,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Hủy đơn hàng",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              TrackingStep(
-                icon: Icons.delivery_dining,
-                title: 'Order in Transit',
-                isFirstStep: false,
-                isCurrentStep: true,
-                isLastStep: false,
-              ),
-              TrackingStep(
-                icon: Icons.done,
-                title: 'Delivered Successfully',
-                isFirstStep: false,
-                isCurrentStep: false,
-                isLastStep: true,
-              ),
-            ],
-          ),
-        ],
+            ]);
+          }
+        },
       ),
     );
   }
 
-  Widget petItem() {
+  Widget petItem(Order order) {
     return Container(
-      padding: EdgeInsets.all(4),
-      color: Color.fromARGB(255, 248, 245, 245),
+      padding: const EdgeInsets.all(8),
+      color: const Color.fromARGB(255, 248, 245, 245),
       child: Stack(
         children: [
           Row(
@@ -191,27 +391,29 @@ class _TrackingOrderState extends State<TrackingOrder> {
                   color: Colors.grey[300],
                 ),
                 // Placeholder for pet image
-                child: Image.asset('assets/images/Lan.jpg'),
+                child: Image.network(
+                  order.petId.images[0].toString(),
+                ),
               ),
-              SizedBox(width: 10.0),
+              const SizedBox(width: 10.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Sữa VinaMilk',
-                    style: TextStyle(
+                    order.petId.namePet.toString(),
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    'Breed: Mèo Anh lông ngắn',
-                    style: TextStyle(fontSize: 14.0),
+                    'Type: ${order.petId.petType}',
+                    style: const TextStyle(fontSize: 14.0),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Text(
@@ -228,17 +430,19 @@ class _TrackingOrderState extends State<TrackingOrder> {
           Align(
             alignment: Alignment.topRight,
             child: Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.yellow.withOpacity(0.6),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),
                 ),
               ),
               child: Text(
-                'Trung tâm Miami',
-                style: TextStyle(
+                order.seller.typeSeller == 'C'
+                    ? order.seller.centerId!.name
+                    : '${order.seller.userId!.firstName} ${order.seller.userId!.lastName}',
+                style: const TextStyle(
                     color: Colors.black,
                     fontSize: 12,
                     fontWeight: FontWeight.w500),
@@ -252,6 +456,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
 }
 
 class TrackingStep extends StatelessWidget {
+  final DateTime date;
   final IconData icon;
   final String title;
   final bool isFirstStep;
@@ -259,6 +464,8 @@ class TrackingStep extends StatelessWidget {
   final bool isLastStep;
 
   const TrackingStep({
+    super.key,
+    required this.date,
     required this.icon,
     required this.title,
     required this.isFirstStep,
@@ -276,7 +483,7 @@ class TrackingStep extends StatelessWidget {
           if (!isFirstStep)
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Container(
@@ -289,7 +496,7 @@ class TrackingStep extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: isCurrentStep ? Colors.blue : Colors.grey[200],
                   borderRadius: BorderRadius.circular(20.0),
@@ -303,7 +510,7 @@ class TrackingStep extends StatelessWidget {
                   color: isCurrentStep ? Colors.white : Colors.grey[600],
                 ),
               ),
-              SizedBox(width: 8.0),
+              const SizedBox(width: 8.0),
               Column(
                 children: [
                   Text(
@@ -313,7 +520,7 @@ class TrackingStep extends StatelessWidget {
                           isCurrentStep ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  Text('Jun 10, 2023 | 03:45')
+                  Text(DateFormat('MMM d, y | HH:mm').format(date).toString())
                 ],
               ),
             ],
@@ -321,7 +528,7 @@ class TrackingStep extends StatelessWidget {
           if (!isLastStep)
             Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 20,
                 ),
                 Container(
@@ -336,6 +543,7 @@ class TrackingStep extends StatelessWidget {
     );
   }
 }
+
 
 
 

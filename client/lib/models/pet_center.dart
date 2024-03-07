@@ -10,9 +10,8 @@ class PetCenter {
   final String? email;
   final String? status;
   final String? aboutMe;
-  final DateTime? createdAt; 
+  final DateTime? createdAt;
   final DateTime? updatedAt;
-  
 
   PetCenter({
     required this.id,
@@ -27,6 +26,23 @@ class PetCenter {
     this.createdAt,
     this.updatedAt,
   });
+
+  factory PetCenter.fromJson(Map<String, dynamic> json) {
+    return PetCenter(
+      id: json['_id'],
+      name: json['name'],
+      avatar: json['avatar'],
+      address: json['address'],
+      location: Location.fromJson(json['location']),
+      phoneNumber: json['phoneNumber'],
+      email: json['email'],
+      status: json['status'],
+      aboutMe: json['aboutMe'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       '_id': id,

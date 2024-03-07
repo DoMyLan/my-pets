@@ -20,7 +20,7 @@ class User {
     required this.lastName,
     required this.avatar,
     required this.address,
-     required this.location,
+    required this.location,
     required this.phoneNumber,
     this.email,
     this.status,
@@ -28,6 +28,23 @@ class User {
     this.createdAt,
     this.updatedAt,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['_id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      avatar: json['avatar'],
+      address: json['address'],
+      location: Location.fromJson(json['location']),
+      phoneNumber: json['phoneNumber'],
+      email: json['email'],
+      status: json['status'],
+      aboutMe: json['aboutMe'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
