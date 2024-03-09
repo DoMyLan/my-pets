@@ -5,13 +5,14 @@ Future<void> Loading(BuildContext context) async {
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Color.fromARGB(0, 249, 248, 248),
-        child: new Container(
-          width: 50.0,
-          height: 50.0,
-          child: new Center(
-            child: const CircularProgressIndicator(),
+      return const Dialog(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: Center(
+            child: CircularProgressIndicator(),
           ),
         ),
       );

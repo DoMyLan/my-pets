@@ -65,7 +65,7 @@ Future<void> changeStatusAdoptCenter(String adoptId, String statusAdopt) async {
    var body = jsonEncode(
         {'statusAdopt': statusAdopt});
   try {
-    responseData = await api('/adopt/${adoptId}/status', 'PUT', body);
+    responseData = await api('/adopt/$adoptId/status', 'PUT', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     }
