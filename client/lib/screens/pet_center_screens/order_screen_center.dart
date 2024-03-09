@@ -3,18 +3,19 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/screens/order_state.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/order_state_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
-class TheOrders extends StatefulWidget {
-  const TheOrders({super.key});
+class TheOrdersCenter extends StatefulWidget {
+  const TheOrdersCenter({super.key});
 
   @override
-  State<TheOrders> createState() => _TheOrdersState();
+  State<TheOrdersCenter> createState() => _TheOrdersCenterState();
 }
 
-class _TheOrdersState extends State<TheOrders>
+class _TheOrdersCenterState extends State<TheOrdersCenter>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
@@ -136,7 +137,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
   @override
   void initState() {
     super.initState();
-    orderFuture = getOrdersByBuyer(widget.status);
+    orderFuture = getOrdersBySeller(widget.status);
   }
 
   @override
@@ -164,7 +165,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    TrackingOrder(orderId: orders[index].id,),
+                                    TrackingOrderCenter(orderId: orders[index].id,),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               var begin = const Offset(1.0, 0.0);

@@ -21,7 +21,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     'Profile',
     'Pet Stories',
     'Favorites',
-    'Tracking Order'
+    'Order'
     'Manage Adopt',
     'Notify',
     // 'Favorite',
