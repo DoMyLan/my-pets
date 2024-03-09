@@ -4,6 +4,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/profile_ce
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -494,6 +495,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                           onPressed: () async {
+                            Loading(context);
                             success = await createOrder(
                                 currentClient.id,
                                 widget.pet.centerId != null ? true : false,
@@ -507,6 +509,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 currentClient.address,
                                 transportFee,
                                 totalFee);
+                            Navigator.pop(context);
 
                             // Navigator.push(
                             //     context,
