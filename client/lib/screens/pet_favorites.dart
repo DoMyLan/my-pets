@@ -5,6 +5,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -165,9 +166,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             right: -10,
                             top: -10,
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                Loading(context);
+                                await favoritePet(listPet[index].id);
+                                Navigator.pop(context);
+                                setState(() {
+                                  listPet.removeAt(index);
+                                });
+                              },
                               icon: const Icon(
-                                FontAwesomeIcons.heart,
+                                FontAwesomeIcons.solidHeart,
                                 color: Colors.red,
                               ),
                             ),

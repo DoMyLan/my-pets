@@ -62,3 +62,30 @@ Future<Order> getOrderDetailByBuyer(orderId) async {
   Order orders = Order.fromJson(orderRes);
   return orders;
 }
+
+
+Future<List<Order>> getOrdersBySeller(statusOrder) async {
+  var responseData;
+  try {
+    responseData = await api('order/seller?statusOrder=$statusOrder', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var orderList = responseData['data'] as List<dynamic>;
+  List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
+  return orders;
+}
+
+Future<Order> getOrderDetailBySeller(orderId) async {
+  var responseData;
+  try {
+    responseData = await api('order/seller/$orderId', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var orderRes = responseData['data'] as dynamic;
+  Order orders = Order.fromJson(orderRes);
+  return orders;
+}

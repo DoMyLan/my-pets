@@ -687,7 +687,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           setState(() {
                             isFavorite = !isFavorite;
                           });
+                          Loading(context);
                           await favoritePet(widget.animal.id);
+                          Navigator.of(context).pop();
                         },
                         child: Material(
                           borderRadius: BorderRadius.circular(20),
