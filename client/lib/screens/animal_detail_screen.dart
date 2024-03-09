@@ -856,13 +856,15 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           Expanded(
             child: ListView(
               children: [
-                _buildRow('Tên:', 'Product Name'),
-                _buildRow('Giá:', 'Price'),
-                _buildRow('Mã sản phẩm:', 'Product Code'),
-                _buildRow('Thương hiệu:', 'Brand'),
-                _buildRow('Xuất xứ:', 'Origin'),
-                _buildRow('Xuất xứ:', 'Origin'),
-                _buildRow('Xuất xứ:', 'Origin'),
+                _buildRow('Mã thú cưng:', 'Pet code'),
+                _buildRow('Tên:', 'Pet Name'),
+                _buildRow('Giống:', 'Price'),
+                _buildRow('Giá:', 'Cardigan Welsh Corgi'),
+                _buildRow('Tuổi:', '2 weeks'),
+                _buildRow('Cân nặng:', '1.5 kg'),
+                _buildRow('Màu sắc:', 'Trắng'),
+                _buildRow('Tuổi thọ:', '12 đến 15 năm'),
+                _buildRow('Xuất xứ:', 'Xứ Wales'),
                 // Add more rows as needed
               ],
             ),
