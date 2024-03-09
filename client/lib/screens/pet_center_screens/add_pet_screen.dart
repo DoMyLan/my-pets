@@ -568,15 +568,64 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 height: 20,
               ),
 
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Tell us about your pet',
-                    helperText: 'Keep it short, this is just demo',
-                    labelText: 'About Pet'),
-                maxLines: 4,
+              // TextFormField(
+              //   controller: _descriptionController,
+              //   decoration: const InputDecoration(
+              //       border: OutlineInputBorder(),
+              //       hintText: 'Tell us about your pet',
+              //       helperText: 'Keep it short, this is just demo',
+              //       labelText: 'About Pet'),
+              //   maxLines: 4,
+              // ),
+
+              //ABOUT PET
+              Text(
+                'About Pet:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Card(
+                    color: const Color.fromARGB(255, 250, 250, 250),
+                    elevation: 4, // Add elevation for shadow effect
+                    margin: EdgeInsets.all(0), // No margin
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInfoRow(
+                            Icons.assignment,
+                            'Hướng dẫn nuôi:',
+                            'Nhập hướng dẫn nuôi',
+                          ),
+                          _buildInfoRow(
+                            Icons.info,
+                            'Lưu ý:',
+                            'Nhập lưu ý',
+                          ),
+                          _buildInfoRow(
+                            Icons.favorite,
+                            'Sở thích:',
+                            'Nhập sở thích',
+                          ),
+                          _buildInfoRow(
+                            Icons.local_hospital,
+                            'Tiêm chủng:',
+                            'Nhập tiêm chủng',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -649,6 +698,53 @@ class _AddPetScreenState extends State<AddPetScreen> {
         return Colors.grey;
       default:
         return Colors.transparent;
+    }
+  }
+
+  Widget _buildInfoRow(IconData icon, String title, String hintText) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: _getColorIcon(title)),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getColorIcon(String colorString) {
+    switch (colorString) {
+      case 'Hướng dẫn nuôi:':
+        return Colors.blue; // Example color
+      case 'Lưu ý:':
+        return Colors.red; // Example color
+      case 'Sở thích:':
+        return Colors.green; // Example color
+      case 'Tiêm chủng:':
+        return Colors.orange; // Example color
+      default:
+        return Colors.black; // Default color
     }
   }
 

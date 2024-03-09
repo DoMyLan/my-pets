@@ -1,118 +1,90 @@
 import 'package:flutter/material.dart';
 
-
-class ColorSelect extends StatefulWidget {
-  @override
-  _ColorSelectState createState() => _ColorSelectState();
-}
-
-class _ColorSelectState extends State<ColorSelect> {
-  List<String> _selectedColors = [];
-  List<String> _colors = [
-    'Red',
-    'Green',
-    'Blue',
-    'Yellow',
-    'Orange',
-    'White',
-    'Black',
-    'Brown',
-    'Grey'
-  ];
-
-  void _onColorSelected(String? color) {
-    setState(() {
-      if (color != null) {
-        if (_selectedColors.contains(color)) {
-          _selectedColors.remove(color);
-        } else {
-          _selectedColors.add(color);
-        }
-      }
-    });
-  }
-
+class PetInfoForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            // Wrap ListTile with Expanded
-            child: ListTile(
-              title: Text('Select color'),
-              trailing: DropdownButton<String>(
-                value: null,
-                onChanged: _onColorSelected,
-                items: _colors.map((String color) {
-                  return DropdownMenuItem<String>(
-                    value: color,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 25,
-                          height: 10,
-                          color: _getColorFromString(color),
-                        ),
-                        SizedBox(width: 20,),
-                        Text(color),
-                        if (_selectedColors.contains(color))
-                          Icon(
-                            Icons.check,
-                            color: Colors.green,
-                          ),
-                      ],
+      appBar: AppBar(
+        title: Text('Pet Information'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 4, // Add elevation for shadow effect
+              margin: EdgeInsets.all(0), // No margin
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildInfoRow(
+                      Icons.assignment,
+                      'Hướng dẫn nuôi:',
+                      'Nhập hướng dẫn nuôi',
                     ),
-                  );
-                }).toList(),
+                    _buildInfoRow(
+                      Icons.info,
+                      'Lưu ý:',
+                      'Nhập lưu ý',
+                    ),
+                    _buildInfoRow(
+                      Icons.favorite,
+                      'Sở thích:',
+                      'Nhập sở thích',
+                    ),
+                    _buildInfoRow(
+                      Icons.local_hospital,
+                      'Tiêm chủng:',
+                      'Nhập tiêm chủng',
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
+        ),
+      ),
+    );
+  }
 
-          Flexible(
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Selected colors',
-                border: OutlineInputBorder(),
+  Widget _buildInfoRow(IconData icon, String title, String hintText) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: Colors.blue),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              controller: TextEditingController(
-                text: _selectedColors.join(', '),
-              ),
-              readOnly: true,
+            ],
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Color _getColorFromString(String colorString) {
-    switch (colorString) {
-      case 'Red':
-        return Colors.red;
-      case 'Green':
-        return Colors.green;
-      case 'Blue':
-        return Colors.blue;
-      case 'Yellow':
-        return Colors.yellow;
-      case 'Orange':
-        return Colors.orange;
-      case 'White':
-        return Color.fromARGB(255, 245, 242, 242);
-      case 'Black':
-        return Colors.black;
-      case 'Brown':
-        return Colors.brown;
-      case 'Grey':
-        return Colors.grey;
-      default:
-        return Colors.transparent;
-    }
-  }
+void main() {
+  runApp(MaterialApp(
+    home: PetInfoForm(),
+  ));
 }
