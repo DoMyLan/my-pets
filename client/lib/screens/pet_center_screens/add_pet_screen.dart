@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
+import 'package:found_adoption_application/screens/test_color.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -22,6 +23,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
   final _colorController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _originalController = TextEditingController();
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -45,6 +48,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   bool isFreeOptionSelected = true;
   String price = '0';
+
+  List<String> _selectedColors = ['Red'];
+  List<String> _colors = [
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Orange',
+    'White',
+    'Black',
+    'Brown',
+    'Grey'
+  ];
 
   @override
   void initState() {
@@ -77,6 +93,18 @@ class _AddPetScreenState extends State<AddPetScreen> {
         finalResult = finalResult2;
       });
     }
+  }
+
+  void _onColorSelected(String? color) {
+    setState(() {
+      if (color != null) {
+        if (_selectedColors.contains(color)) {
+          _selectedColors.remove(color);
+        } else {
+          _selectedColors.add(color);
+        }
+      }
+    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -255,7 +283,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       Container(
                         width: MediaQuery.of(context).size.width *
                             0.7, // Đặt chiều rộng của container
-                  
+
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -271,7 +299,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
                               price = value.toString();
                             });
                           },
-                  
                           decoration: InputDecoration(
                             hintText: 'Enter price ...',
                             hintStyle: TextStyle(fontSize: 14),
@@ -281,18 +308,98 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           ),
                         ),
                       ),
-                              
                     ],
                   ),
                 ),
 
-              TextField(
-                controller: _namePetController,
-                decoration: const InputDecoration(labelText: 'Pet Name'),
+              // TextField(
+              //   controller: _namePetController,
+              //   decoration: const InputDecoration(labelText: 'Pet Name'),
+              // ),
+              // TextField(
+              //   controller: _breedController,
+              //   decoration: const InputDecoration(labelText: 'Breed'),
+              // ),
+              // TextField(
+              //   controller: _weightController,
+              //   decoration: const InputDecoration(labelText: 'Weight'),
+              // ),
+              // TextField(
+              //   controller: _originalController,
+              //   decoration: const InputDecoration(labelText: 'Original'),
+              // ),
+
+              Text(
+                'Fill in the table with the needed information:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
-              TextField(
-                controller: _breedController,
-                decoration: const InputDecoration(labelText: 'Breed'),
+
+              Table(
+                columnWidths: {
+                  0: FractionColumnWidth(0.5),
+                  1: FractionColumnWidth(0.5),
+                },
+                children: [
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _namePetController,
+                            decoration: InputDecoration(
+                              labelText: 'Pet Name',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _breedController,
+                            decoration: InputDecoration(
+                              labelText: 'Breed',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _weightController,
+                            decoration: InputDecoration(
+                              labelText: 'Weight',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _originalController,
+                            decoration: InputDecoration(
+                              labelText: 'Original',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
 
               Row(
@@ -320,10 +427,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   Text('Dog'),
                 ],
               ),
-              TextField(
-                controller: _colorController,
-                decoration: InputDecoration(labelText: 'Color'),
-              ),
+              // TextField(
+              //   controller: _colorController,
+              //   decoration: InputDecoration(labelText: 'Color'),
+              // ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -345,33 +452,73 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                 ],
               ),
+              Divider(
+                color: Colors.grey.shade200,
+                thickness: 10,
+                height: 10,
+              ),
+
+              // Your other form fields go here(
+
+              //select color
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Select color:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 201, 121, 2)),
+                    ),
+                    trailing: DropdownButton<String>(
+                      value: _selectedColors.last,
+                      onChanged: _onColorSelected,
+                      items: _colors.map((String color) {
+                        return DropdownMenuItem<String>(
+                          value: color,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 25,
+                                height: 10,
+                                color: _getColorFromString(color),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(color),
+                              if (_selectedColors.contains(color))
+                                Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Container(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Selected colors',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: TextEditingController(
+                        text: _selectedColors.join(', '),
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 20,
               ),
-
-              //DropdownButtonFormField LEVEL
-              // DropdownButtonFormField<String>(
-              //   value: _selectedLevel,
-              //   onChanged: (String? value) {
-              //     setState(() {
-              //       _selectedLevel = value!;
-              //     });
-              //   },
-              //   decoration: const InputDecoration(labelText: 'Level'),
-              //   items: ['URGENT', 'NORMAL']
-              //       .map<DropdownMenuItem<String>>((String value) {
-              //     return DropdownMenuItem<String>(
-              //       value: value,
-              //       child: Text(
-              //         value,
-              //         style: const TextStyle(
-              //             color: Color.fromARGB(255, 192, 77, 36)),
-              //       ),
-              //     );
-              //   }).toList(),
-              // ),
-
-              // Your other form fields go here
 
               Row(
                 children: [
@@ -420,6 +567,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
               const SizedBox(
                 height: 20,
               ),
+
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
@@ -477,6 +625,31 @@ class _AddPetScreenState extends State<AddPetScreen> {
         ),
       ),
     );
+  }
+
+  Color _getColorFromString(String colorString) {
+    switch (colorString) {
+      case 'Red':
+        return Colors.red;
+      case 'Green':
+        return Colors.green;
+      case 'Blue':
+        return Colors.blue;
+      case 'Yellow':
+        return Colors.yellow;
+      case 'Orange':
+        return Colors.orange;
+      case 'White':
+        return Color.fromARGB(255, 245, 242, 242);
+      case 'Black':
+        return Colors.black;
+      case 'Brown':
+        return Colors.brown;
+      case 'Grey':
+        return Colors.grey;
+      default:
+        return Colors.transparent;
+    }
   }
 
   Widget _slider(List imageList) {

@@ -55,7 +55,7 @@ Color startingColor = const Color.fromRGBO(70, 112, 112, 1.0);
 //       theme: ThemeData(
 //         primaryColor: mainColor,
 //       ),
-//       home: PaymentScreen(),
+//       home: ReviewProfileScreen(),
 //     );
 //   }
 // }
