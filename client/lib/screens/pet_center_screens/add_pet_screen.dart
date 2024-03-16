@@ -1,3 +1,7 @@
+
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,9 +26,13 @@ class AddPetScreen extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreen> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
-  final _colorController = TextEditingController();
   final _weightController = TextEditingController();
   final _originalController = TextEditingController();
+  final _instructionController = TextEditingController();
+  final _attentionController = TextEditingController();
+  final _hobbiesController = TextEditingController();
+  final _inoculationController = TextEditingController();
+
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -32,7 +40,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   String _selectedPetType = '';
   String _selectedGender = '';
-  String _selectedLevel = 'NORMAL';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
@@ -49,7 +56,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
   bool isFreeOptionSelected = true;
   String price = '0';
 
-  List<String> _selectedColors = ['Red'];
+  List<dynamic> _selectedColors = ['Yellow'];
+
   List<String> _colors = [
     'Red',
     'Green',
@@ -123,6 +131,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
   Future<void> postPet() async {
     if (mounted) {
+      // print('coi thử: ${_selectedColors.map((color) => "'$color'").toList()}');
+      var colorsJson = jsonEncode(_selectedColors);
+      
       await addPet(
           currentClient.id,
           null,
@@ -133,18 +144,24 @@ class _AddPetScreenState extends State<AddPetScreen> {
           _breedController.text.toString(),
           birthday!,
           _selectedGender,
-          _colorController.text.toString(),
+           jsonDecode(colorsJson),
+          
+          _inoculationController.text.toString(),
+          
+          _instructionController.text.toString(),
+          _attentionController.text.toString(),
+          _hobbiesController.text.toString(),
+          _originalController.text.toString(),
           price,
           isFreeOptionSelected,
           finalResult,
-          _descriptionController.text.toString(),
-          _selectedLevel);
+          _weightController.text.toString()
+       );
     }
     setState(() {
       imageFileList = [];
       _namePetController.clear();
       _breedController.clear();
-      _colorController.clear();
       isFreeOptionSelected = true;
       _ageController.clear();
       _descriptionController.clear();
@@ -603,21 +620,26 @@ class _AddPetScreenState extends State<AddPetScreen> {
                             Icons.assignment,
                             'Hướng dẫn nuôi:',
                             'Nhập hướng dẫn nuôi',
+                            _instructionController,
+
                           ),
                           _buildInfoRow(
                             Icons.info,
                             'Lưu ý:',
                             'Nhập lưu ý',
+                            _attentionController,
                           ),
                           _buildInfoRow(
                             Icons.favorite,
                             'Sở thích:',
                             'Nhập sở thích',
+                            _hobbiesController,
                           ),
                           _buildInfoRow(
                             Icons.local_hospital,
                             'Tiêm chủng:',
                             'Nhập tiêm chủng',
+                            _inoculationController,
                           ),
                         ],
                       ),
@@ -650,9 +672,9 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     onPressed: () async {
                       if (_namePetController.text == '' ||
                           _breedController.text == '' ||
-                          _colorController.text == '' ||
+                      
                           birthday == null ||
-                          _descriptionController.text == '' ||
+                        
                           imageFileList.isEmpty ||
                           _selectedPetType == '' ||
                           _selectedGender == '') {
@@ -701,7 +723,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
     }
   }
 
-  Widget _buildInfoRow(IconData icon, String title, String hintText) {
+  Widget _buildInfoRow(IconData icon, String title, String hintText,
+      TextEditingController abouPetController) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Column(
@@ -723,6 +746,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
             ],
           ),
           TextField(
+            controller: abouPetController,
             decoration: InputDecoration(
               hintText: hintText,
               border: InputBorder.none,
@@ -810,7 +834,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
   void dispose() {
     _namePetController.dispose();
     _breedController.dispose();
-    _colorController.dispose();
+  
     _ageController.dispose();
     _descriptionController.dispose();
     super.dispose();

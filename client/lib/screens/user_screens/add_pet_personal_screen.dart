@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,19 +24,39 @@ class AddPetScreenPersonal extends StatefulWidget {
 class _AddPetScreenState extends State<AddPetScreenPersonal> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
-  final _colorController = TextEditingController();
+
+  final _weightController = TextEditingController();
+  final _originalController = TextEditingController();
+  final _instructionController = TextEditingController();
+  final _attentionController = TextEditingController();
+  final _hobbiesController = TextEditingController();
+  final _inoculationController = TextEditingController();
 
   final _ageController = TextEditingController();
-  final _descriptionController = TextEditingController();
+
   String? dropdownValue;
 
   String _selectedPetType = '';
   String _selectedGender = '';
-  String _selectedLevel = 'NORMAL';
+
   DateTime? birthday;
 
   bool isFreeOptionSelected = true;
   String price = '0';
+
+  List<dynamic> _selectedColors = ['Yellow'];
+
+  List<String> _colors = [
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Orange',
+    'White',
+    'Black',
+    'Brown',
+    'Grey'
+  ];
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
@@ -115,11 +137,24 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
     }
   }
 
+  void _onColorSelected(String? color) {
+    setState(() {
+      if (color != null) {
+        if (_selectedColors.contains(color)) {
+          _selectedColors.remove(color);
+        } else {
+          _selectedColors.add(color);
+        }
+      }
+    });
+  }
+
   Future<void> postPet() async {
     // print('test images here: $finalResult');
 
     // Kiểm tra trạng thái mounted trước khi gọi setState
     if (mounted) {
+      var colorsJson = jsonEncode(_selectedColors);
       // Call the API to post content with image paths
       await addPet(
           null,
@@ -131,21 +166,25 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
           _breedController.text.toString(),
           birthday!,
           _selectedGender,
-          _colorController.text.toString(),
+          jsonDecode(colorsJson),
+          _inoculationController.text.toString(),
+          _instructionController.text.toString(),
+          _attentionController.text.toString(),
+          _hobbiesController.text.toString(),
+          _originalController.text.toString(),
           price,
           isFreeOptionSelected,
           finalResult,
-          _descriptionController.text.toString(),
-          _selectedLevel);
+          _weightController.text.toString());
     }
     setState(() {
       imageFileList = [];
       _namePetController.clear();
       _breedController.clear();
-      _colorController.clear();
+
       isFreeOptionSelected = true;
       _ageController.clear();
-      _descriptionController.clear();
+ 
     });
     // Kéo giao diện lên trên cùng
     _scrollController.animateTo(0,
@@ -216,9 +255,7 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                       ),
                     )),
 
-
-
-                    //THÔNG TIN GIÁ
+              //THÔNG TIN GIÁ
               SizedBox(
                 height: 12,
               ),
@@ -283,7 +320,7 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                       Container(
                         width: MediaQuery.of(context).size.width *
                             0.7, // Đặt chiều rộng của container
-                  
+
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
@@ -300,7 +337,6 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                             });
                             print('price: $price');
                           },
-                  
                           decoration: InputDecoration(
                             hintText: 'Enter price ...',
                             hintStyle: TextStyle(fontSize: 14),
@@ -310,19 +346,81 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                           ),
                         ),
                       ),
-                              
                     ],
                   ),
                 ),
 
-              TextField(
-                controller: _namePetController,
-                decoration: const InputDecoration(
-                    labelText: 'Pet Name (*)', fillColor: Colors.red),
+              Text(
+                'Fill in the table with the needed information:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
-              TextField(
-                controller: _breedController,
-                decoration: const InputDecoration(labelText: 'Breed (*)'),
+
+              Table(
+                columnWidths: {
+                  0: FractionColumnWidth(0.5),
+                  1: FractionColumnWidth(0.5),
+                },
+                children: [
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _namePetController,
+                            decoration: InputDecoration(
+                              labelText: 'Pet Name (*)',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _breedController,
+                            decoration: InputDecoration(
+                              labelText: 'Breed (*)',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _weightController,
+                            decoration: InputDecoration(
+                              labelText: 'Weight (*)',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _originalController,
+                            decoration: InputDecoration(
+                              labelText: 'Original (*)',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -349,10 +447,6 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                   const Text('Dog'),
                 ],
               ),
-              TextField(
-                controller: _colorController,
-                decoration: const InputDecoration(labelText: 'Color (*)'),
-              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -373,6 +467,72 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                     },
                   ),
                 ],
+              ),
+
+              Divider(
+                color: Colors.grey.shade200,
+                thickness: 10,
+                height: 10,
+              ),
+
+              //select color
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Select color:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 201, 121, 2)),
+                    ),
+                    trailing: DropdownButton<String>(
+                      value: _selectedColors.last,
+                      onChanged: _onColorSelected,
+                      items: _colors.map((String color) {
+                        return DropdownMenuItem<String>(
+                          value: color,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 25,
+                                height: 10,
+                                color: _getColorFromString(color),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(color),
+                              if (_selectedColors.contains(color))
+                                Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Container(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Selected colors',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: TextEditingController(
+                        text: _selectedColors.join(', '),
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
               ),
 
               Row(
@@ -490,16 +650,61 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
               const SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Tell us about your pet',
-                    helperText: 'Keep it short, this is just demo',
-                    labelText: 'About Pet'),
-                maxLines: 4,
+
+              //ABOUT PET
+              Text(
+                'About Pet:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Card(
+                    color: const Color.fromARGB(255, 250, 250, 250),
+                    elevation: 4, // Add elevation for shadow effect
+                    margin: EdgeInsets.all(0), // No margin
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInfoRow(
+                            Icons.assignment,
+                            'Hướng dẫn nuôi:',
+                            'Nhập hướng dẫn nuôi',
+                            _instructionController,
+                          ),
+                          _buildInfoRow(
+                            Icons.info,
+                            'Lưu ý:',
+                            'Nhập lưu ý',
+                            _attentionController,
+                          ),
+                          _buildInfoRow(
+                            Icons.favorite,
+                            'Sở thích:',
+                            'Nhập sở thích',
+                            _hobbiesController,
+                          ),
+                          _buildInfoRow(
+                            Icons.local_hospital,
+                            'Tiêm chủng:',
+                            'Nhập tiêm chủng',
+                            _inoculationController,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               const SizedBox(height: 16),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -523,9 +728,7 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
                     onPressed: () async {
                       if (_namePetController.text == '' ||
                           _breedController.text == '' ||
-                          _colorController.text == '' ||
                           birthday == null ||
-                          _descriptionController.text == '' ||
                           imageFileList.isEmpty ||
                           _selectedPetType == '' ||
                           _selectedGender == '') {
@@ -547,6 +750,80 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
         ),
       ),
     );
+  }
+
+  Widget _buildInfoRow(IconData icon, String title, String hintText,
+      TextEditingController abouPetController) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: _getColorIcon(title)),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          TextField(
+            controller: abouPetController,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: InputBorder.none,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getColorIcon(String colorString) {
+    switch (colorString) {
+      case 'Hướng dẫn nuôi:':
+        return Colors.blue; // Example color
+      case 'Lưu ý:':
+        return Colors.red; // Example color
+      case 'Sở thích:':
+        return Colors.green; // Example color
+      case 'Tiêm chủng:':
+        return Colors.orange; // Example color
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  Color _getColorFromString(String colorString) {
+    switch (colorString) {
+      case 'Red':
+        return Colors.red;
+      case 'Green':
+        return Colors.green;
+      case 'Blue':
+        return Colors.blue;
+      case 'Yellow':
+        return Colors.yellow;
+      case 'Orange':
+        return Colors.orange;
+      case 'White':
+        return Color.fromARGB(255, 245, 242, 242);
+      case 'Black':
+        return Colors.black;
+      case 'Brown':
+        return Colors.brown;
+      case 'Grey':
+        return Colors.grey;
+      default:
+        return Colors.transparent;
+    }
   }
 
   Widget _slider(List imageList) {
@@ -611,9 +888,9 @@ class _AddPetScreenState extends State<AddPetScreenPersonal> {
   void dispose() {
     _namePetController.dispose();
     _breedController.dispose();
-    _colorController.dispose();
+
     _ageController.dispose();
-    _descriptionController.dispose();
+
     super.dispose();
   }
 }

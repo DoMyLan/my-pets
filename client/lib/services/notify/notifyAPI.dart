@@ -5,7 +5,7 @@ Future<List<Notify>> getNotify() async {
   var responseData;
   List<Notify> adopts = List.empty();
   try {
-    responseData = await api('/notify/', 'GET', '');
+    responseData = await api('notify/', 'GET', '');
 
     if (responseData['success']) {
       var adoptList = responseData['data'] as List<dynamic>;

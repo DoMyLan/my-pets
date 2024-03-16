@@ -7,7 +7,7 @@ Future<String> createAdopt(String petId, String descriptionAdoption) async {
   try {
     var body = jsonEncode(
         {'petId': petId, 'descriptionAdoption': descriptionAdoption});
-    var responseData = await api('/adopt', 'POST', body);
+    var responseData = await api('adopt', 'POST', body);
 
     if (responseData['success']) {
       notification(responseData['message'], false);
@@ -25,7 +25,7 @@ Future<String> createAdopt(String petId, String descriptionAdoption) async {
 Future<List<Adopt>> getStatusAdoptCenter(String status) async {
   var responseData;
   try {
-    responseData = await api('/adopt/center?status=${status}', 'GET', '');
+    responseData = await api('adopt/center?status=${status}', 'GET', '');
 
     if (responseData['success']) {
       var adoptList = responseData['data'] as List<dynamic>;
@@ -38,13 +38,13 @@ Future<List<Adopt>> getStatusAdoptCenter(String status) async {
     // notification(e.toString(), true);
   }
   // ignore: cast_from_null_always_fails
-  return null as List<Adopt>;
+  return [];
 }
 
 Future<List<Adopt>> getStatusAdoptUser(String status) async {
   var responseData;
   try {
-    responseData = await api('/adopt/user?status=${status}', 'GET', '');
+    responseData = await api('adopt/user?status=${status}', 'GET', '');
 
     if (responseData['success']) {
       var adoptList = responseData['data'] as List<dynamic>;
@@ -57,7 +57,7 @@ Future<List<Adopt>> getStatusAdoptUser(String status) async {
     // notification(e.toString(), true);
   }
   // ignore: cast_from_null_always_fails
-  return [] as List<Adopt>;
+  return [] ;
 }
 
 Future<void> changeStatusAdoptCenter(String adoptId, String statusAdopt) async {
@@ -65,7 +65,7 @@ Future<void> changeStatusAdoptCenter(String adoptId, String statusAdopt) async {
    var body = jsonEncode(
         {'statusAdopt': statusAdopt});
   try {
-    responseData = await api('/adopt/$adoptId/status', 'PUT', body);
+    responseData = await api('adopt/$adoptId/status', 'PUT', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     }
@@ -80,7 +80,7 @@ Future<void> changeStatusAdoptUser(String adoptId, String statusAdopt) async {
    var body = jsonEncode(
         {'statusAdopt': statusAdopt});
   try {
-    responseData = await api('/adopt/${adoptId}/status', 'PUT', body);
+    responseData = await api('adopt/${adoptId}/status', 'PUT', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     }

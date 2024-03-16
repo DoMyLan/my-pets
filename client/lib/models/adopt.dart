@@ -57,10 +57,12 @@ class Adopt {
               location: json['centerId']['location'],
               phoneNumber: json['centerId']['phoneNumber'] as String,
               aboutMe: json['centerId']['aboutMe'] as String,
-              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['centerId']['createdAt']))
-          .add(Duration(hours: 7)),
-              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['centerId']['createdAt']))
-          .add(Duration(hours: 7)),
+              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['centerId']['createdAt']))
+                  .add(Duration(hours: 7)),
+              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['centerId']['createdAt']))
+                  .add(Duration(hours: 7)),
             )
           : null,
       petId: json['petId'] != null
@@ -73,17 +75,24 @@ class Adopt {
               gender: json['petId']['gender'],
               age: double.parse(json['petId']['age'] as String),
               color: json['petId']['color'],
+              inoculation: json['petId']['inoculation'],
+              instruction: json['petId']['instruction'],
+              attention: json['petId']['attention'],
+              hobbies: json['petId']['hobbies'],
+              original: json['petId']['original'],
               price: json['petId']['price'],
-              free: json['petId']['free'],
-              description: json['petId']['description'],
+              free: json['petId']['free'] as bool,
               images: json['petId']['images'] as List<dynamic>,
-              level: json['petId']['level'],
+              weight: json['petId']['weight'],
+            
               foundOwner_id: json['petId']['foundOwner'],
               statusAdopt: json['petId']['statusAdopt'],
-              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['petId']['createdAt']))
-          .add(Duration(hours: 7)),
-              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['petId']['updatedAt']))
-          .add(Duration(hours: 7)),
+              createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['petId']['createdAt']))
+                  .add(Duration(hours: 7)),
+              updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
+                      .parse(json['petId']['updatedAt']))
+                  .add(Duration(hours: 7)),
             )
           : null,
       descriptionAdoption: json['descriptionAdoption'] as String,

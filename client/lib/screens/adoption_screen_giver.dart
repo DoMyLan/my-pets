@@ -389,6 +389,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
+            print('what error: ${snapshot.error}');
             return const Center(child: Text('Please try again later'));
           } else {
             animals = snapshot.data ?? [];

@@ -68,7 +68,7 @@ class PetOrder {
           : null,
       color: json['color'],
       price: json['price'],
-      free: json['free'],
+      free: json['free'] as bool,
       description: json['description'],
       images: json['images'] as List<dynamic>,
       level: json['level'],

@@ -18,12 +18,17 @@ Future<void> addPet(
   String breed,
   DateTime birthday,
   String gender,
-  String color,
+  List<dynamic> color,
+  String inoculation,
+  String instruction,
+  String attention,
+  String hobbies,
+  String original,
   String price,
   bool free,
   List<dynamic> imagePaths,
-  String description,
-  String level,
+  String weight,
+
 ) async {
   var responseData = {};
   var body = jsonEncode({
@@ -37,28 +42,33 @@ Future<void> addPet(
     "birthday": DateFormat("MM-dd-yyyy").format(birthday),
     "gender": gender,
     "color": color,
+    "inoculation": inoculation,
+    "instruction": instruction,
+    "attention": attention,
+    "hobbies": hobbies,
+    "original": original,
     "price": price,
-    "free": free,
+    "free": free ,
     "images": imagePaths,
-    "description": description,
-    "level": level
+    "weight": weight,
+
   });
 
   String a = DateFormat("MM-dd-yyyy").format(birthday);
-
+ 
   try {
-    responseData = await api('/pet', 'POST', body);
-
+  
+    responseData = await api('pet', 'POST', body);
+  
     if (responseData['success']) {
-      print('aaaa');
+   
       notification(responseData['message'], false);
     } else {
-      print('bbbbb');
+     
       notification(responseData['message'], true);
     }
   } catch (e) {
-    print('faillll');
-    print(e);
+    print('faillll: $e');
     //  notification(e.toString(), true);
   }
 }
@@ -70,9 +80,9 @@ Future<List<Pet>> getAllPet() async {
 
   try {
     if (currentClient.role == 'USER') {
-      apiUrl = "/pet/all/pets/center";
+      apiUrl = "pet/all/pets/center";
     } else {
-      apiUrl = "/pet/${currentClient.id}";
+      apiUrl = "pet/${currentClient.id}";
     }
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
@@ -91,9 +101,9 @@ Future<List<Pet>> getAllPetPersonal() async {
 
   try {
     if (currentClient.role == 'USER') {
-      apiUrl = "/pet/all/pets/personal";
+      apiUrl = "pet/all/pets/personal";
     } else {
-      apiUrl = "/pet/${currentClient.id}";
+      apiUrl = "pet/${currentClient.id}";
     }
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
@@ -108,7 +118,7 @@ Future<List<Pet>> getAllPetPersonal() async {
 Future<List<Pet>> getAllPetOfCenter(centerId) async {
   var responseData;
   try {
-    final apiUrl = "/pet/${centerId}";
+    final apiUrl = "pet/${centerId}";
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
     print(e);
@@ -146,7 +156,7 @@ Future<List<Pet>> filterPet(breed, color, age) async {
 
   try {
     final apiUrl =
-        "/pet/search/find?breed=$breedSearch&color=$colorSearch$ageSearch";
+        "pet/search/find?breed=$breedSearch&color=$colorSearch$ageSearch";
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
     print(e);
@@ -160,7 +170,7 @@ Future<List<Pet>> filterPet(breed, color, age) async {
 Future<void> deletePet(petId) async {
   var responseData;
   try {
-    final apiUrl = "/pet/${petId}";
+    final apiUrl = "pet/${petId}";
     responseData = await api(apiUrl, "DELETE", '');
     if (!responseData['success']) {
       notification(responseData['message'], true);
@@ -206,7 +216,7 @@ Future<void> updatePet(
     if (isNewUpload) "images": finalResult,
   });
   try {
-    responseData = await api('/pet/$petId', 'PUT', body);
+    responseData = await api('pet/$petId', 'PUT', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     } else {
@@ -222,7 +232,7 @@ Future<List<CenterLoad>> loadCenterAll() async {
   var responseData;
   var currentClient = await getCurrentClient();
   try {
-    const apiUrl = "/pet/centers/all";
+    const apiUrl = "pet/centers/all";
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
     print(e);

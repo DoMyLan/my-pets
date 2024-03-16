@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 Future<dynamic> api(path, method, body) async {
   var currentClient = await getCurrentClient();
   var accessToken = currentClient.accessToken;
-  var responseData = {};
+  Map<String, dynamic> responseData = {};
 
   try {
     final apiUrl = Uri.parse("$BASE_URL/$path");
@@ -16,20 +16,25 @@ Future<dynamic> api(path, method, body) async {
         'Authorization': 'Bearer ${accessToken}',
         'Content-Type': 'application/json',
       });
-      responseData = json.decode(response.body);
+      responseData = await json.decode(response.body);
+   
 
       if (responseData['message'] == 'jwt expired')
-        responseData = await callBackApi(apiUrl, method, '') as Map;
+        responseData = await callBackApi(apiUrl, method, '') ;
       return responseData;
     } else if(method == "POST"){
+      
       var response = await http.post(apiUrl, headers: {
         'Authorization': 'Bearer ${accessToken}',
         'Content-Type': 'application/json',
       }, body: body);
-      responseData = json.decode(response.body);
+      
+      responseData =await json.decode(response.body);
+    
 
       if (responseData['message'] == 'jwt expired')
-        responseData = await callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) ;
+    
       return responseData;
     } else if(method == "DELETE"){
       var response = await http.delete(apiUrl, headers: {
@@ -39,7 +44,7 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = await callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) ;
       return responseData;
     }
     else if(method == "PUT"){
@@ -50,11 +55,11 @@ Future<dynamic> api(path, method, body) async {
       responseData = json.decode(response.body);
 
       if (responseData['message'] == 'jwt expired')
-        responseData = await callBackApi(apiUrl, method, body) as Map;
+        responseData = await callBackApi(apiUrl, method, body) ;
       return responseData;
     }
   } catch (e) {
-    print(e);
+    print('API fail:$e');
     return false;
   }
 }

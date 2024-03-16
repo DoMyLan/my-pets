@@ -346,52 +346,52 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              widget.animal.description,
-                              maxLines: _isExpanded == true ? 100 : maxlines,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            // Text(
+                            //   widget.animal.description,
+                            //   maxLines: _isExpanded == true ? 100 : maxlines,
+                            //   overflow: TextOverflow.ellipsis,
+                            // ),
 
-                            if (!_isExpanded &&
-                                widget.animal.description.split('\n').length >=
-                                    maxlines)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isExpanded = true;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Xem thêm'),
-                                    Icon(
-                                      Icons.keyboard_arrow_down,
-                                      size: 20,
-                                      color: Color.fromARGB(255, 90, 90, 90),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            if (_isExpanded == true)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isExpanded = false;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Thu gọn'),
-                                    Icon(
-                                      Icons.expand_less,
-                                      size: 20,
-                                      color: Color.fromARGB(255, 90, 90, 90),
-                                    )
-                                  ],
-                                ),
-                              ),
+                            // if (!_isExpanded &&
+                            //     widget.animal.description.split('\n').length >=
+                            //         maxlines)
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         _isExpanded = true;
+                            //       });
+                            //     },
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text('Xem thêm'),
+                            //         Icon(
+                            //           Icons.keyboard_arrow_down,
+                            //           size: 20,
+                            //           color: Color.fromARGB(255, 90, 90, 90),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
+                            // if (_isExpanded == true)
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         _isExpanded = false;
+                            //       });
+                            //     },
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text('Thu gọn'),
+                            //         Icon(
+                            //           Icons.expand_less,
+                            //           size: 20,
+                            //           color: Color.fromARGB(255, 90, 90, 90),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
                           ],
                         ),
                       ),
@@ -611,52 +611,52 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Text(
-                              widget.animal.description,
-                              maxLines: _isExpanded == true ? 100 : maxlines,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            // Text(
+                            //   widget.animal.description,
+                            //   maxLines: _isExpanded == true ? 100 : maxlines,
+                            //   overflow: TextOverflow.ellipsis,
+                            // ),
 
-                            if (!_isExpanded &&
-                                widget.animal.description.split('\n').length >=
-                                    maxlines)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isExpanded = true;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Xem thêm'),
-                                    Icon(
-                                      Icons.keyboard_arrow_down,
-                                      size: 20,
-                                      color: Color.fromARGB(255, 90, 90, 90),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            if (_isExpanded == true)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isExpanded = false;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Thu gọn'),
-                                    Icon(
-                                      Icons.expand_less,
-                                      size: 20,
-                                      color: Color.fromARGB(255, 90, 90, 90),
-                                    )
-                                  ],
-                                ),
-                              ),
+                            // if (!_isExpanded &&
+                            //     widget.animal.description.split('\n').length >=
+                            //         maxlines)
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         _isExpanded = true;
+                            //       });
+                            //     },
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text('Xem thêm'),
+                            //         Icon(
+                            //           Icons.keyboard_arrow_down,
+                            //           size: 20,
+                            //           color: Color.fromARGB(255, 90, 90, 90),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
+                            // if (_isExpanded == true)
+                            //   TextButton(
+                            //     onPressed: () {
+                            //       setState(() {
+                            //         _isExpanded = false;
+                            //       });
+                            //     },
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Text('Thu gọn'),
+                            //         Icon(
+                            //           Icons.expand_less,
+                            //           size: 20,
+                            //           color: Color.fromARGB(255, 90, 90, 90),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
                           ],
                         ),
                       ),

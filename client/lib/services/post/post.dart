@@ -21,7 +21,7 @@ class PostResult {
 Future<PostResult> getAllPost(page, limit) async {
   var responseData = {};
   try {
-    responseData = await api('/post/?limit=$limit&page=$page', 'GET', '');
+    responseData = await api('post/?limit=$limit&page=$page', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -38,7 +38,7 @@ Future<PostResult> getAllPost(page, limit) async {
 Future<Post> getOnePost(String postId) async {
   var responseData = {};
   try {
-    responseData = await api('/post/$postId', 'GET', '');
+    responseData = await api('post/$postId', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -52,7 +52,7 @@ Future<String> changeStatusPost(String postId, String status) async {
   var responseData = {};
   var message;
   try {
-    responseData = await api('/post/$postId/status', 'PUT', body);
+    responseData = await api('post/$postId/status', 'PUT', body);
     message = responseData['message'];
   } catch (err) {
     print(err);
@@ -64,7 +64,7 @@ Future<String> changeStatusPost(String postId, String status) async {
 Future<List<Post>> getAllPostPersonal(var id) async {
   var responseData;
   try {
-    responseData = await api('/post/personal/${id}', 'GET', '');
+    responseData = await api('post/personal/${id}', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -83,7 +83,7 @@ Future<bool> addPost(String content, List<dynamic> imagePaths) async {
     "images": imagePaths,
   });
   try {
-    responseData = await api('/post', 'POST', body);
+    responseData = await api('post', 'POST', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
       // Navigator.push(
@@ -116,7 +116,7 @@ Future<void> updatePost(String content, List<XFile> imagePaths,
     if (isNewUpload) "images": finalResult,
   });
   try {
-    responseData = await api('/post/$postId', 'PUT', body);
+    responseData = await api('post/$postId', 'PUT', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     } else {
@@ -131,7 +131,7 @@ Future<void> updatePost(String content, List<XFile> imagePaths,
 Future<String> deleteOnePost(String postId) async {
   var responseData = {};
   try {
-    responseData = await api('/post/$postId', 'DELETE', '');
+    responseData = await api('post/$postId', 'DELETE', '');
   } catch (e) {
     print(e);
     notification(e.toString(), true);
