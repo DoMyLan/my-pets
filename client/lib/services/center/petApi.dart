@@ -28,7 +28,6 @@ Future<void> addPet(
   bool free,
   List<dynamic> imagePaths,
   String weight,
-
 ) async {
   var responseData = {};
   var body = jsonEncode({
@@ -48,23 +47,19 @@ Future<void> addPet(
     "hobbies": hobbies,
     "original": original,
     "price": price,
-    "free": free ,
+    "free": free,
     "images": imagePaths,
     "weight": weight,
-
   });
 
   String a = DateFormat("MM-dd-yyyy").format(birthday);
- 
+
   try {
-  
     responseData = await api('pet', 'POST', body);
-  
+
     if (responseData['success']) {
-   
       notification(responseData['message'], false);
     } else {
-     
       notification(responseData['message'], true);
     }
   } catch (e) {
@@ -277,4 +272,15 @@ Future<List<Pet>> getPetFavorite() async {
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
   return pets;
+}
+
+Future<Pet> getOnePet(petId) async {
+  var responseData;
+  try {
+    final apiUrl = "pet/one/$petId";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print('error happen: $e');
+  }
+  return responseData['data'];
 }
