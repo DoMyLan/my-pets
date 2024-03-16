@@ -28,11 +28,27 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   int maxlines = 5;
   bool isFavorite = false;
 
+   Pet? animalInfor;
+
   final CarouselController carouselController = CarouselController();
 
   @override
   void initState() {
     super.initState();
+    // animalInfor = getOnePet(widget.animal.id);
+
+    getOnePet(widget.animal.id).then((pet) {
+      setState(() {
+        // Lưu trữ dữ liệu Pet vào biến animalInfor
+        animalInfor = pet;
+      });
+    }).catchError((error) {
+      // Xử lý lỗi nếu có
+      print('Error happened: $error');
+    });
+
+    print('testlll: ${animalInfor!.namePet}');
+
     currentClient = widget.currentId;
 
     for (var element in widget.animal.favorites!) {
@@ -47,6 +63,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    print('test miếng: ${animalInfor!.namePet}');
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -856,11 +873,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           Expanded(
             child: ListView(
               children: [
-                _buildRow('Mã thú cưng:', 'Pet code'),
-                _buildRow('Tên:', 'Pet Name'),
-                _buildRow('Giống:', 'Price'),
-                _buildRow('Giá:', 'Cardigan Welsh Corgi'),
-                _buildRow('Tuổi:', '2 weeks'),
+                _buildRow('Mã thú cưng:', animalInfor!.id),
+                _buildRow('Tên:', animalInfor!.namePet),
+                _buildRow('Giống:', animalInfor!.breed),
+                _buildRow('Giá:', animalInfor!.price),
+                _buildRow('Tuổi:', '2 tuổi'),
                 _buildRow('Cân nặng:', '1.5 kg'),
                 _buildRow('Màu sắc:', 'Trắng'),
                 _buildRow('Tuổi thọ:', '12 đến 15 năm'),
