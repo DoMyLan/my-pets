@@ -4,7 +4,7 @@ import 'package:found_adoption_application/services/api.dart';
 
 Future<void> like(BuildContext context, postId) async {
   try {
-    await api('/post/${postId}/reaction', 'PUT', '');
+    await api('post/${postId}/reaction', 'PUT', '');
   } catch (e) {
     print(e);
   //  notification(e.toString(), true);
@@ -14,7 +14,7 @@ Future<void> like(BuildContext context, postId) async {
 Future<List<Like>> getLike(BuildContext context, postId) async {
   var responseData;
   try {
-    responseData = await api('/post/${postId}/reaction', 'GET', '');
+    responseData = await api('post/${postId}/reaction', 'GET', '');
   } catch (e) {
     print(e);
   //  notification(e.toString(), true);

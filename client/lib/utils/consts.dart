@@ -1,4 +1,4 @@
-const String GOOGLE_MAPS_API_KEY = "AIzaSyBAE4bhL6R_0mvurWRnQK0-20X6kpcjLYc";
+const String GOOGLE_MAPS_API_KEY = "AIzaSyDO0eeTLvbSNmN1bYwhJLpOxj5OA6RvceE";
 // ignore: constant_identifier_names
 const String BASE_URL = "https://my-pets-api.vercel.app/api/v1";
 

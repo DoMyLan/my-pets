@@ -50,8 +50,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
     notificationHandler.initializeNotifications();
     _namePetController.text = widget.pet.namePet;
     _breedController.text = widget.pet.breed;
-    _colorController.text = widget.pet.color;
-    _descriptionController.text = widget.pet.description;
+   
     birthday = widget.pet.birthday;
     // _selectedLevel = widget.pet.level;
     _selectedPetType = widget.pet.petType;

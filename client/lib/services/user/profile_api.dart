@@ -13,7 +13,7 @@ Future<InfoUser> getProfile(BuildContext context, var userId) async {
   var user;
   var responseData;
   try {
-    responseData = await api('/user/${id}', 'GET', '');
+    responseData = await api('user/${id}', 'GET', '');
     var userData = responseData['data'];
     user = InfoUser.fromJson(userData);
   } catch (e) {
@@ -40,7 +40,7 @@ Future<void> updateProfile(BuildContext context, firstName, lastName,
       notification('No something change!', false);
       return;
     }
-    responseData = await api('/user/${id}', 'PUT', body);
+    responseData = await api('user/${id}', 'PUT', body);
     notification(responseData['message'], false);
   } catch (e) {
     // notification(e.toString(), true);
@@ -90,7 +90,7 @@ Future<void> changeStatus(BuildContext context, userId, status) async {
     'status': status,
   });
   try {
-    responseData = await api('/user/${userId}/status', 'PUT', body);
+    responseData = await api('user/${userId}/status', 'PUT', body);
     notification(responseData['message'], false);
   } catch (e) {
     // notification(e.toString(), true);

@@ -16,13 +16,16 @@ class Pet {
   final String gender;
   final double? age;
   final DateTime? birthday;
-  final String color;
+  final List<dynamic> color;
+  final String inoculation;
+  final String instruction;
+  final String attention;
+  final String hobbies;
+  final String original;
   final String price;
   final bool free;
-
-  final String description;
   List<dynamic> images;
-  final String level;
+  final String weight;
   List<dynamic>? favorites;
   final User? foundOwner;
   final String? foundOwner_id;
@@ -45,11 +48,15 @@ class Pet {
     this.birthday,
     this.favorites,
     required this.color,
+    required this.inoculation,
+    required this.instruction,
+    required this.attention,
+    required this.hobbies,
+    required this.original,
     required this.price,
     required this.free,
-    required this.description,
     required this.images,
-    required this.level,
+    required this.weight,
     this.foundOwner,
     this.foundOwner_id,
     required this.statusAdopt,
@@ -153,12 +160,19 @@ class Pet {
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['birthday']))
               .add(const Duration(hours: 7))
           : null,
-      color: json['color'],
+      color: json['color'] as List<dynamic>,
+      inoculation: json['inoculation'],
+
+      instruction: json['instruction'],
+      attention: json['attention'],
+      hobbies: json['hobbies'],
+      original: json['original'],
+
       price: json['price'],
-      free: json['free'],
-      description: json['description'],
+      free: json['free'] as bool,
       images: json['images'] as List<dynamic>,
-      level: json['level'],
+      weight: json['weight'],
+     
       favorites:
           json['favorites'] != null ? json['favorites'] as List<dynamic> : [],
       foundOwner: json['foundOwner'] != null
@@ -208,9 +222,14 @@ class Pet {
       'age': age,
       'birthday': birthday,
       'color': color,
-      'description': description,
+      'inoculation': inoculation,
+      'instruction': instruction,
+      'attention': attention,
+      'hobbies': hobbies,
+      'original': original,
       'images': images,
-      'level': level,
+      'weight': weight,
+ 
       'foundOwner': foundOwner,
       'statusAdopt': statusAdopt,
       'createdAt': createdAt,
