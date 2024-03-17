@@ -6,6 +6,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 
 class TheOrders extends StatefulWidget {
   const TheOrders({super.key});
@@ -106,7 +107,7 @@ class _TheOrdersState extends State<TheOrders>
                   TabTrackingOrder(
                     status: 'PENDING',
                   ),
-                  TabTrackingOrder(status: 'COMFIRMED'),
+                  TabTrackingOrder(status: 'CONFIRMED'),
                   TabTrackingOrder(status: 'DELIVERING'),
                   TabTrackingOrder(status: 'DELIVERED'),
                   TabTrackingOrder(status: 'CANCEL'),
@@ -133,6 +134,7 @@ class TabTrackingOrder extends StatefulWidget {
 
 class _TabTrackingOrderState extends State<TabTrackingOrder> {
   Future<List<Order>>? orderFuture;
+  late List<Order> orders;
   @override
   void initState() {
     super.initState();
@@ -151,7 +153,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
           } else if (snapshot.hasError) {
             return const Center(child: Text('Please try again later'));
           } else {
-            List<Order> orders = snapshot.data as List<Order>;
+            orders = snapshot.data as List<Order>;
 
             return Expanded(
               child: ListView.builder(
@@ -164,7 +166,9 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    TrackingOrder(orderId: orders[index].id,),
+                                    TrackingOrder(
+                              orderId: orders[index].id,
+                            ),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               var begin = const Offset(1.0, 0.0);
@@ -245,9 +249,22 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      const Text(
-                                        "Hoàn thành",
-                                        style: TextStyle(color: Colors.orange),
+                                      Text(
+                                        orders[index].statusOrder == 'PENDING'
+                                            ? 'Chờ xác nhận'
+                                            : orders[index].statusOrder ==
+                                                    'CONFIRMED'
+                                                ? 'Đã xác nhận'
+                                                : orders[index].statusOrder ==
+                                                        'DELIVERING'
+                                                    ? 'Đang vận chuyển'
+                                                    : orders[index]
+                                                                .statusOrder ==
+                                                            'DELIVERED'
+                                                        ? 'Giao thành công'
+                                                        : 'Bị hủy',
+                                        style: const TextStyle(
+                                            color: Colors.orange),
                                       ),
                                     ],
                                   ),
@@ -362,7 +379,17 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         width: 10,
                                       ),
                                       GestureDetector(
-                                        onTap: () {},
+                                        onTap: () async {
+                                          Loading(context);
+                                          await changeStatusOrder(
+                                              orders[index].id, 'CONFIRMED');
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.pop(context);
+
+                                          setState(() {
+                                            orders.removeAt(index);
+                                          });
+                                        },
                                         child: Container(
                                           width: 100,
                                           height: 40,
