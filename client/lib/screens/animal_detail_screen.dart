@@ -14,7 +14,8 @@ class AnimalDetailScreen extends StatefulWidget {
   final String petId;
   final dynamic currentId;
 
-  const AnimalDetailScreen({super.key, required this.petId, required this.currentId});
+  const AnimalDetailScreen(
+      {super.key, required this.petId, required this.currentId});
 
   @override
   State<AnimalDetailScreen> createState() => _AnimalDetailScreenState();
@@ -24,7 +25,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   int currentIndex = 0;
   dynamic currentClient;
   bool _isExpanded = false;
-  int maxlines = 5;
+  int maxlines = 3;
   bool isFavorite = false;
   Future<Pet>? petFuture;
 
@@ -61,7 +62,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           } else {
             Pet pet = snapshot.data as Pet;
 
-
             return Scaffold(
               resizeToAvoidBottomInset: false,
               body: Column(
@@ -78,8 +78,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                 child: Image(
                                   height: screenHeight * 0.45,
                                   width: double.infinity,
-                                  image:
-                                      NetworkImage(pet.images.first),
+                                  image: NetworkImage(pet.images.first),
                                   fit: BoxFit.cover, //vấn đề ở đây nè nha
                                 ),
                               )
@@ -114,13 +113,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => EditPetScreen(
-                                                pet: pet),
+                                            builder: (context) =>
+                                                EditPetScreen(pet: pet),
                                           ),
                                         );
                                       } else if (choice == 'delete') {
-                                        _showDeleteConfirmationDialog(
-                                            pet.id);
+                                        _showDeleteConfirmationDialog(pet.id);
                                       }
                                     },
                                     itemBuilder: (BuildContext context) =>
@@ -179,8 +177,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            pet.statusAdopt ==
-                                                    'HAS_ONE_OWNER'
+                                            pet.statusAdopt == 'HAS_ONE_OWNER'
                                                 ? pet.foundOwner!.avatar
                                                 : pet.centerId!.avatar,
                                           ),
@@ -198,8 +195,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                   pet.statusAdopt ==
                                                           'HAS_ONE_OWNER'
                                                       ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                      : pet.centerId!
-                                                          .name,
+                                                      : pet.centerId!.name,
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                         .primaryColor,
@@ -228,8 +224,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         ),
 
                                         //Btn View ProfileUser đối với các Pet đã bán
-                                        if (pet.statusAdopt ==
-                                            'HAS_ONE_OWNER')
+                                        if (pet.statusAdopt == 'HAS_ONE_OWNER')
                                           ElevatedButton(
                                             onPressed: () {
                                               // Xử lý sự kiện khi nút được nhấn
@@ -339,7 +334,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               builder: (BuildContext context) {
                                                 //widget modelbottomsheet
                                                 return CustomModalBottomSheet(
-                                                    context);
+                                                    context, pet);
                                               },
                                             );
                                           },
@@ -424,6 +419,50 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     //       ],
                                     //     ),
                                     //   ),
+
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+
+                                    //Pet information Detail
+
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _buildInfoRow(
+                                              Icons.assignment,
+                                              'Hướng dẫn nuôi:',
+                                              'Nhập hướng dẫn nuôi',
+                                              pet.instruction,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.info,
+                                              'Lưu ý:',
+                                              'Nhập lưu ý',
+                                              pet.attention,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.favorite,
+                                              'Sở thích:',
+                                              'Nhập sở thích',
+                                              pet.hobbies,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.local_hospital,
+                                              'Tiêm chủng:',
+                                              'Nhập tiêm chủng',
+                                              pet.inoculation,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -455,13 +494,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            pet.statusAdopt ==
-                                                    'HAS_ONE_OWNER'
+                                            pet.statusAdopt == 'HAS_ONE_OWNER'
                                                 ? pet.foundOwner!.avatar
                                                 : pet.centerId == null
                                                     ? pet.giver!.avatar
-                                                    : pet.centerId!
-                                                        .avatar,
+                                                    : pet.centerId!.avatar,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -477,12 +514,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                   pet.statusAdopt ==
                                                           'HAS_ONE_OWNER'
                                                       ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                      : pet
-                                                                  .centerId ==
-                                                              null
+                                                      : pet.centerId == null
                                                           ? '${pet.giver!.firstName} ${pet.giver!.lastName}'
-                                                          : pet
-                                                              .centerId!.name,
+                                                          : pet.centerId!.name,
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                         .primaryColor,
@@ -619,7 +653,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               builder: (BuildContext context) {
                                                 //widget modelbottomsheet
                                                 return CustomModalBottomSheet(
-                                                    context);
+                                                    context, pet);
                                               },
                                             );
                                           },
@@ -712,8 +746,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         ),
 
                   Spacer(),
-                  if (currentClient.role == "USER" &&
-                      pet.foundOwner == null)
+                  if (currentClient.role == "USER" && pet.foundOwner == null)
                     Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Container(
@@ -818,8 +851,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditPetScreen(pet: pet),
+                            builder: (context) => EditPetScreen(pet: pet),
                           ),
                         );
                       },
@@ -849,8 +881,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                EditPetScreen(pet: pet),
+                            builder: (context) => EditPetScreen(pet: pet),
                           ),
                         );
                       },
@@ -875,7 +906,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         });
   }
 
-  Widget CustomModalBottomSheet(BuildContext context) {
+  Widget CustomModalBottomSheet(BuildContext context, pet) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.5,
       padding: EdgeInsets.all(15),
@@ -908,15 +939,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
           Expanded(
             child: ListView(
               children: [
-                _buildRow('Mã thú cưng:', 'Pet code'),
-                _buildRow('Tên:', 'Pet Name'),
-                _buildRow('Giống:', 'Price'),
-                _buildRow('Giá:', 'Cardigan Welsh Corgi'),
+                _buildRow('Mã thú cưng:', '${pet.id}'),
+                _buildRow('Tên:', '${pet.namePet}'),
+                _buildRow('Giống:', '${pet.breed}'),
+                _buildRow('Giá:', '${pet.price}'),
                 _buildRow('Tuổi:', '2 weeks'),
-                _buildRow('Cân nặng:', '1.5 kg'),
-                _buildRow('Màu sắc:', 'Trắng'),
-                _buildRow('Tuổi thọ:', '12 đến 15 năm'),
-                _buildRow('Xuất xứ:', 'Xứ Wales'),
+                _buildRow('Cân nặng:', '${pet.weight}'),
+                _buildRowColors('Màu sắc:', pet.color),
+                _buildRow('Xuất xứ:', '${pet.original}'),
                 // Add more rows as needed
               ],
             ),
@@ -977,6 +1007,34 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     );
   }
 
+  Widget _buildRowColors(String title, List<dynamic> values) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              values.join(', '), // Join the list elements into a single string
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
   void showInfoInputDialog(BuildContext context, String id) {
     TextEditingController infoController = TextEditingController();
 
@@ -1014,6 +1072,56 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
         );
       },
     );
+  }
+
+  Widget _buildInfoRow(
+      IconData icon, String title, String hintText, String aboutPetInfor) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: _getColorIcon(title)),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+               
+              ),
+            ],
+          ),
+          Text(
+            aboutPetInfor,
+            maxLines: null, 
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getColorIcon(String colorString) {
+    switch (colorString) {
+      case 'Hướng dẫn nuôi:':
+        return Colors.blue; // Example color
+      case 'Lưu ý:':
+        return Colors.red; // Example color
+      case 'Sở thích:':
+        return Colors.green; // Example color
+      case 'Tiêm chủng:':
+        return Colors.orange; // Example color
+      default:
+        return Colors.black; // Default color
+    }
   }
 
   //sử dụng slider
