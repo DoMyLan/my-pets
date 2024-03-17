@@ -31,7 +31,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   String _selectedPetType = '';
   String _selectedGender = '';
-  // String _selectedLevel = 'NORMAL';
+ late bool isFreeOptionSelected ;
+ String price = '0';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
@@ -47,6 +48,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
   @override
   void initState() {
     super.initState();
+    isFreeOptionSelected = widget.pet.free;
     notificationHandler.initializeNotifications();
     _namePetController.text = widget.pet.namePet;
     _breedController.text = widget.pet.breed;
@@ -159,6 +161,104 @@ class _EditPetScreenState extends State<EditPetScreen> {
                         color: Colors.grey[400],
                       ),
                     )),
+
+
+
+
+                    //THÔNG TIN GIÁ
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'Choose an option:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
+              ),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Radio(
+                          value: true,
+                          groupValue: isFreeOptionSelected,
+                          onChanged: (value) {
+                            setState(() {
+                              isFreeOptionSelected = value as bool;
+                            });
+                          },
+                        ),
+                        Text('Free'),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFreeOptionSelected = false;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Radio(
+                          value: false,
+                          groupValue: isFreeOptionSelected,
+                          onChanged: (value) {
+                            setState(() {
+                              isFreeOptionSelected = value as bool;
+                            });
+                          },
+                        ),
+                        Text('Set Price'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              if (!isFreeOptionSelected)
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 4),
+                      Container(
+                        width: MediaQuery.of(context).size.width *
+                            0.7, // Đặt chiều rộng của container
+
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(fontSize: 18),
+                          onChanged: (value) {
+                            setState(() {
+                              price = value.toString();
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Enter price ...',
+                            hintStyle: TextStyle(fontSize: 14),
+                            border: InputBorder.none,
+                            suffixText: 'vnd',
+                            suffixStyle: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
 
               TextField(
                 controller: _namePetController,
