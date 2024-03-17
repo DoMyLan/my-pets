@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
-import 'package:found_adoption_application/screens/order_state.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/order_state_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 
 class TheOrdersCenter extends StatefulWidget {
   const TheOrdersCenter({super.key});
@@ -104,13 +104,11 @@ class _TheOrdersCenterState extends State<TheOrdersCenter>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  TabTrackingOrder(
-                    status: 'PENDING',
-                  ),
-                  TabTrackingOrder(status: 'COMFIRMED'),
-                  TabTrackingOrder(status: 'DELIVERING'),
-                  TabTrackingOrder(status: 'DELIVERED'),
-                  TabTrackingOrder(status: 'CANCEL'),
+                  TabTrackingOrder(status: 'PENDING', tabIndex: 0),
+                  TabTrackingOrder(status: 'CONFIRMED', tabIndex: 1),
+                  TabTrackingOrder(status: 'DELIVERING', tabIndex: 2),
+                  TabTrackingOrder(status: 'COMPLETED', tabIndex: 3),
+                  TabTrackingOrder(status: 'CANCEL', tabIndex: 4),
                 ],
               ),
             ),
@@ -123,9 +121,11 @@ class _TheOrdersCenterState extends State<TheOrdersCenter>
 class TabTrackingOrder extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
   var status;
+  final int tabIndex;
   TabTrackingOrder({
     super.key,
     required this.status,
+    required this.tabIndex,
   });
 
   @override
@@ -134,6 +134,28 @@ class TabTrackingOrder extends StatefulWidget {
 
 class _TabTrackingOrderState extends State<TabTrackingOrder> {
   Future<List<Order>>? orderFuture;
+  late List<Order> orders;
+  final List<String> statusOrder = [
+    'PENDING',
+    'CONFIRMED',
+    'DELIVERING',
+    'COMPLETED',
+    'CANCEL',
+  ];
+  final List<String> statusOrderText = [
+    'Chờ xác nhận',
+    'Đã xác nhận',
+    'Đang vận chuyển',
+    'Giao thành công',
+  ];
+  final List<String> statusOrderButton = [
+    'Xác nhận',
+    'Vận chuyển',
+    'Giao hàng',
+    '',
+    ''
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -152,7 +174,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
           } else if (snapshot.hasError) {
             return const Center(child: Text('Please try again later'));
           } else {
-            List<Order> orders = snapshot.data as List<Order>;
+            orders = snapshot.data as List<Order>;
 
             return Expanded(
               child: ListView.builder(
@@ -165,7 +187,9 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    TrackingOrderCenter(orderId: orders[index].id,),
+                                    TrackingOrderCenter(
+                              orderId: orders[index].id,
+                            ),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               var begin = const Offset(1.0, 0.0);
@@ -228,7 +252,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         width: 10,
                                       ),
                                       SizedBox(
-                                        width: 200,
+                                        width: 150,
                                         child: Text(
                                           orders[index].seller.centerId != null
                                               ? orders[index]
@@ -246,9 +270,10 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      const Text(
-                                        "Hoàn thành",
-                                        style: TextStyle(color: Colors.orange),
+                                      Text(
+                                        statusOrderText[widget.tabIndex],
+                                        style: const TextStyle(
+                                            color: Colors.orange),
                                       ),
                                     ],
                                   ),
@@ -337,53 +362,72 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             fontSize: 14, color: Colors.grey),
                                       ),
                                       const Spacer(),
-                                      GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: 60,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.red[400],
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "Hủy",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
+                                      widget.tabIndex == 0
+                                          ? GestureDetector(
+                                              onTap: () {},
+                                              child: Container(
+                                                width: 60,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.red[400],
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Hủy",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                            )
+                                          : const SizedBox(),
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: 100,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.orange,
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "Xác nhận",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
+                                      widget.tabIndex < 3
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                Loading(context);
+                                                await changeStatusOrder(
+                                                    orders[index].id,
+                                                    statusOrder[
+                                                        widget.tabIndex + 1]);
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.pop(context);
+
+                                                setState(() {
+                                                  orders.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                width: 100,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.orange,
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    statusOrderButton[
+                                                        widget.tabIndex],
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                            )
+                                          : const SizedBox(),
                                     ],
                                   ),
                                   const SizedBox(

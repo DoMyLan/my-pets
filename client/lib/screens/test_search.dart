@@ -27,15 +27,14 @@
 //   PolylinePoints polylinePoints = PolylinePoints();
 
 //   String googleAPiKey = "AIzaSyChnbx9TGSXLu6GePcdzb9IjYBGWHRsqcc";
-  
+
 //   Set<Marker> markers = Set(); //markers for google map
 //   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-//   LatLng startLocation = LatLng(27.6683619, 85.3101895);  
-//   LatLng endLocation = LatLng(27.6875436, 85.2751138); 
+//   LatLng startLocation = LatLng(27.6683619, 85.3101895);
+//   LatLng endLocation = LatLng(27.6875436, 85.2751138);
 
 //   double distance = 0.0;
-                            
 
 //   @override
 //   void initState() {
@@ -43,7 +42,7 @@
 //      markers.add(Marker( //add start location marker
 //         markerId: MarkerId(startLocation.toString()),
 //         position: startLocation, //position of marker
-//         infoWindow: InfoWindow( //popup info 
+//         infoWindow: InfoWindow( //popup info
 //           title: 'Starting Point ',
 //           snippet: 'Start Marker',
 //         ),
@@ -53,21 +52,21 @@
 //       markers.add(Marker( //add distination location marker
 //         markerId: MarkerId(endLocation.toString()),
 //         position: endLocation, //position of marker
-//         infoWindow: InfoWindow( //popup info 
+//         infoWindow: InfoWindow( //popup info
 //           title: 'Destination Point ',
 //           snippet: 'Destination Marker',
 //         ),
 //         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
 //       ));
-      
+
 //       getDirections(); //fetch direction polylines from Google API
-      
+
 //     super.initState();
 //   }
 
 //   getDirections() async {
 //       List<LatLng> polylineCoordinates = [];
-     
+
 //       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
 //           googleAPiKey,
 //           PointLatLng(startLocation.latitude, startLocation.longitude),
@@ -87,9 +86,9 @@
 //       double totalDistance = 0;
 //       for(var i = 0; i < polylineCoordinates.length-1; i++){
 //            totalDistance += calculateDistance(
-//                 polylineCoordinates[i].latitude, 
-//                 polylineCoordinates[i].longitude, 
-//                 polylineCoordinates[i+1].latitude, 
+//                 polylineCoordinates[i].latitude,
+//                 polylineCoordinates[i].longitude,
+//                 polylineCoordinates[i+1].latitude,
 //                 polylineCoordinates[i+1].longitude);
 //       }
 //       print(totalDistance);
@@ -116,16 +115,16 @@
 
 //   double calculateDistance(lat1, lon1, lat2, lon2){
 //     var p = 0.017453292519943295;
-//     var a = 0.5 - cos((lat2 - lat1) * p)/2 + 
-//           cos(lat1 * p) * cos(lat2 * p) * 
+//     var a = 0.5 - cos((lat2 - lat1) * p)/2 +
+//           cos(lat1 * p) * cos(lat2 * p) *
 //           (1 - cos((lon2 - lon1) * p))/2;
 //     return 12742 * asin(sqrt(a));
 //   }
-  
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return  Scaffold(
-//           appBar: AppBar( 
+//           appBar: AppBar(
 //              title: Text("Calculate Distance in Google Map"),
 //              backgroundColor: Colors.deepPurpleAccent,
 //           ),
@@ -142,7 +141,7 @@
 //                         mapType: MapType.normal, //map type
 //                         onMapCreated: (controller) { //method called when map is created
 //                           setState(() {
-//                             mapController = controller; 
+//                             mapController = controller;
 //                           });
 //                         },
 //                   ),
@@ -150,8 +149,8 @@
 //                   Positioned(
 //                     bottom: 200,
 //                     left: 50,
-//                     child: Container( 
-//                      child: Card( 
+//                     child: Container(
+//                      child: Card(
 //                          child: Container(
 //                             padding: EdgeInsets.all(20),
 //                             child: Text("Total Distance: " + distance.toStringAsFixed(2) + " KM",
@@ -165,7 +164,6 @@
 //        );
 //   }
 // }
-
 
 //file dự phòng của profile_center.dart
 
@@ -203,7 +201,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
   int selectedAnimalIconIndex = 0;
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoCenter> centerFuture;
-  late Future<List<Pet>> petsFuture;
+  late Future<List<Pet>?> petsFuture;
   late List<Pet> animals = [];
   var currentClient;
   late bool isLoading = true;
@@ -282,7 +280,6 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
               fontWeight: FontWeight.bold,
               fontSize: 25.0),
         ),
-       
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -515,7 +512,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                     //             buildPostsList(petStoriesPosts!),
                     //             // Nội dung cho tab "Pet Adoption"
                     //             buildAdoptionList(),
-                               
+
                     //           ],
                     //         ),
                     //       ),
@@ -526,8 +523,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                 ),
               );
             }
-          }
-          ),
+          }),
     );
   }
 
@@ -586,7 +582,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
             children: [
               //CHI TIẾT VỀ THÔNG TIN CÁC PET ĐƯỢC NHẬN NUÔI
               Expanded(
-                child: FutureBuilder<List<Pet>>(
+                child: FutureBuilder<List<Pet>?>(
                     future: petsFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -608,7 +604,7 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return AnimalDetailScreen(
-                                      animal: animal,
+                                      petId: animal.id,
                                       currentId: currentClient,
                                     );
                                   }));

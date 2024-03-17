@@ -34,7 +34,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
   int selectedAnimalIconIndex = 0;
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoCenter> centerFuture;
-  late Future<List<Pet>> petsFuture;
+  late Future<List<Pet>?> petsFuture;
   late List<Pet> animals = [];
   var currentClient;
   late bool isLoading = true;

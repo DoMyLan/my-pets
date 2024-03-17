@@ -455,7 +455,6 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                     : animal.giver!.location)
             .then((value) {
           String distanceString = value.toStringAsFixed(2);
-          print('khoảng cách: $distanceString');
         });
 
         return GestureDetector(
@@ -465,7 +464,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
               MaterialPageRoute(
                 builder: (context) {
                   return AnimalDetailScreen(
-                    animal: animal,
+                    petId: animal.id,
                     currentId: currentClient,
                   );
                 },

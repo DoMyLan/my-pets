@@ -110,17 +110,20 @@ Future<List<Pet>> getAllPetPersonal() async {
   return pets;
 }
 
-Future<List<Pet>> getAllPetOfCenter(centerId) async {
+Future<List<Pet>?> getAllPetOfCenter(centerId) async {
   var responseData;
+  List<Pet>? pets;
   try {
     final apiUrl = "pet/${centerId}";
     responseData = await api(apiUrl, "GET", '');
+    var petList = responseData['data'] as List<dynamic>;
+    pets = petList.map((json) => Pet.fromJson(json)).toList();
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
+    return null;
   }
-  var petList = responseData['data'] as List<dynamic>;
-  List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+
   return pets;
 }
 
@@ -274,13 +277,15 @@ Future<List<Pet>> getPetFavorite() async {
   return pets;
 }
 
-Future<Pet> getOnePet(petId) async {
+Future<Pet> getPet(petId) async {
   var responseData;
   try {
     final apiUrl = "pet/one/$petId";
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
-    print('error happen: $e');
+    print(e);
+    //  notification(e.toString(), true);
   }
-  return responseData['data'];
+  var pet = Pet.fromJson(responseData['data']);
+  return pet;
 }

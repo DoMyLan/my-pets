@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
@@ -63,11 +64,11 @@ Future<Order> getOrderDetailByBuyer(orderId) async {
   return orders;
 }
 
-
 Future<List<Order>> getOrdersBySeller(statusOrder) async {
   var responseData;
   try {
-    responseData = await api('order/seller?statusOrder=$statusOrder', 'GET', '');
+    responseData =
+        await api('order/seller?statusOrder=$statusOrder', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -88,4 +89,16 @@ Future<Order> getOrderDetailBySeller(orderId) async {
   var orderRes = responseData['data'] as dynamic;
   Order orders = Order.fromJson(orderRes);
   return orders;
+}
+
+Future<void> changeStatusOrder(orderId, statusOrder) async {
+  var responseData;
+  var body = jsonEncode({'statusOrder': statusOrder});
+  try {
+    responseData = await api('order/$orderId', 'PUT', body);
+    notification(responseData['message'], false);
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
 }

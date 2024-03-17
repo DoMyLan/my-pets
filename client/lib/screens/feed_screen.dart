@@ -51,10 +51,12 @@ class _FeedScreenState extends State<FeedScreen> {
     PostResult postReturn = await getAllPost(currentPage, itemsPerPage);
     List<Post> newPosts = postReturn.posts;
     totalPages = postReturn.totalPages;
-    setState(() {
-      visiblePosts.addAll(newPosts);
-      countScroll = 0;
-    });
+    if (mounted) {
+      setState(() {
+        visiblePosts.addAll(newPosts);
+        countScroll = 0;
+      });
+    }
 
     setState(() {
       isLoading = false;
@@ -166,24 +168,22 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ),
       ),
-   
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewPostScreen(),
-                ),
-              );
-            },
-            backgroundColor: Theme.of(context).primaryColor,
-            child: const Icon(
-              Icons.add,
-              size: 30,
-              color: Colors.white,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewPostScreen(),
             ),
+          );
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+        child: const Icon(
+          Icons.add,
+          size: 30,
+          color: Colors.white,
         ),
+      ),
     );
   }
 }
