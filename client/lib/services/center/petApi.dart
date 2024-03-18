@@ -52,8 +52,6 @@ Future<void> addPet(
     "weight": weight,
   });
 
-  String a = DateFormat("MM-dd-yyyy").format(birthday);
-
   try {
     responseData = await api('pet', 'POST', body);
 
@@ -114,7 +112,7 @@ Future<List<Pet>?> getAllPetOfCenter(centerId) async {
   var responseData;
   List<Pet>? pets;
   try {
-    final apiUrl = "pet/${centerId}";
+    final apiUrl = "pet/$centerId";
     responseData = await api(apiUrl, "GET", '');
     var petList = responseData['data'] as List<dynamic>;
     pets = petList.map((json) => Pet.fromJson(json)).toList();
@@ -288,4 +286,20 @@ Future<Pet> getPet(petId) async {
   }
   var pet = Pet.fromJson(responseData['data']);
   return pet;
+}
+
+Future<List<PetCustom>> getPetCenterPost(centerId) async {
+  // ignore: prefer_typing_uninitialized_variables
+  var responseData;
+  try {
+    final apiUrl = "pet/center/$centerId";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<PetCustom> pets =
+      petList.map((json) => PetCustom.fromJson(json)).toList();
+  return pets;
 }

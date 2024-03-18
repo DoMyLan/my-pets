@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
+import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -11,7 +13,10 @@ import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewPostScreen extends StatefulWidget {
+  const NewPostScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _NewPostScreenState createState() => _NewPostScreenState();
 }
 
@@ -23,10 +28,15 @@ class _NewPostScreenState extends State<NewPostScreen> {
   List<XFile> imageFileList = [];
 
   List<dynamic> finalResult = [];
+  Future<List<PetCustom>>? petFuture;
+  List<PetCustom> pets = [];
 
   final TextEditingController _captionController = TextEditingController();
   var avatar = '';
   var name = '';
+  var currentClient;
+  String isCenter = '';
+  String? dropdownValue;
 
   Future<void> selectImage() async {
     List<dynamic> finalResult2 = [];
@@ -36,8 +46,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
+    // ignore: use_build_context_synchronously
     Loading(context);
     var result = await uploadMultiImage(imageFileList);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
     if (mounted) {
@@ -49,7 +61,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   Future<void> _post() async {
     if (mounted) {
-      await addPost(_captionController.text.toString(), finalResult);
+      await addPost(_captionController.text.toString(), finalResult, dropdownValue);
       setState(() {
         _captionController.clear();
         imageFileList.clear();
@@ -64,6 +76,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
       name = currentClient.role == 'USER'
           ? '${currentClient.firstName} ${currentClient.lastName}'
           : currentClient.name;
+      if (currentClient.role == 'CENTER') {
+        isCenter = currentClient.id;
+      }
     });
   }
 
@@ -71,6 +86,17 @@ class _NewPostScreenState extends State<NewPostScreen> {
   void initState() {
     super.initState();
     openHiveBox();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    if (temp.role == 'CENTER') {
+      Future<List<PetCustom>> petFutureTemp = getPetCenterPost(isCenter);
+      setState(() {
+        petFuture = petFutureTemp;
+      });
+    }
   }
 
   @override
@@ -124,15 +150,16 @@ class _NewPostScreenState extends State<NewPostScreen> {
                       }
                       Loading(context);
                       await _post();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromRGBO(
-                          48, 96, 96, 1.0), // Điều chỉnh màu nền của nút
-                      onPrimary: Colors
-                          .white, // Điều chỉnh màu văn bản của nút khi được nhấn
-                      textStyle: TextStyle(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromRGBO(48, 96, 96,
+                          1.0), // Điều chỉnh màu văn bản của nút khi được nhấn
+                      textStyle: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -144,7 +171,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
               const SizedBox(height: 15),
               TextField(
                 controller: _captionController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Write a caption...',
                   border: InputBorder.none,
                   hintStyle: TextStyle(
@@ -154,7 +181,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   ),
                 ),
                 maxLines: 2,
-                style: TextStyle(fontSize: 18.0, color: Colors.black),
+                style: const TextStyle(fontSize: 18.0, color: Colors.black),
               ),
 
               // Conditionally render the image widget
@@ -208,6 +235,64 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     )),
 
               const SizedBox(height: 50),
+
+              const Text("Liên kết voi một thú cưng",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  )),
+              const SizedBox(height: 10),
+              FutureBuilder(
+                  future: petFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return const Center(child: Text('Error'));
+                    } else {
+                      pets = snapshot.data!;
+                      if (pets.isEmpty) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            dropdownValue = pets[0].id;
+                          });
+                        });
+                      }
+                      return DropdownButton<String>(
+                        value: dropdownValue,
+                        icon: const Icon(Icons.arrow_drop_down),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.black),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey[400],
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue;
+                          });
+                        },
+                        items: pets?.map<DropdownMenuItem<String>>(
+                                (PetCustom pet) {
+                              return DropdownMenuItem<String>(
+                                value: pet.id,
+                                child: Row(
+                                  children: <Widget>[
+                                    Image.network(pet.images[0],
+                                        width: 25, height: 25),
+                                    const SizedBox(width: 10),
+                                    Text(pet.namePet),
+                                  ],
+                                ),
+                              );
+                            }).toList() ??
+                            [],
+                      );
+                    }
+                  }),
+              const SizedBox(height: 50),
+
               MaterialButton(
                 minWidth: double.infinity,
                 height: 50,
@@ -215,13 +300,13 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FeedScreen()),
+                    MaterialPageRoute(builder: (context) => const FeedScreen()),
                   );
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Text(
+                child: const Text(
                   "Cancel",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,

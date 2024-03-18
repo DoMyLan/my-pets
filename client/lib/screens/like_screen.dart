@@ -88,7 +88,8 @@ class _LikeScreenState extends State<LikeScreen> {
                                                 ProfileCenterPage(
                                                     centerId: likes[index]
                                                         .centerId!
-                                                        .id),
+                                                        .id,
+                                                    petId: null),
                                           ),
                                         );
                                 },
@@ -165,7 +166,8 @@ class _LikeScreenState extends State<LikeScreen> {
                                                               centerId:
                                                                   likes[index]
                                                                       .centerId!
-                                                                      .id),
+                                                                      .id,
+                                                              petId: null),
                                                     ),
                                                   );
                                           },

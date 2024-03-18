@@ -8,7 +8,6 @@ import 'package:found_adoption_application/screens/pet_favorites.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/screens/user_screens/status_adopt.dart';
-import 'package:found_adoption_application/screens/order_state.dart';
 
 class MenuFrameUser extends StatefulWidget {
   final userId;
@@ -131,7 +130,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
+    MediaQuery.of(context).size.width;
     return Stack(children: finalStack());
   }
 }

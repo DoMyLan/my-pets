@@ -172,7 +172,7 @@ class Pet {
       free: json['free'] as bool,
       images: json['images'] as List<dynamic>,
       weight: json['weight'],
-     
+
       favorites:
           json['favorites'] != null ? json['favorites'] as List<dynamic> : [],
       foundOwner: json['foundOwner'] != null
@@ -229,11 +229,31 @@ class Pet {
       'original': original,
       'images': images,
       'weight': weight,
- 
+
       'foundOwner': foundOwner,
       'statusAdopt': statusAdopt,
       'createdAt': createdAt,
       'updatedAt': updatedAt
     };
+  }
+}
+
+class PetCustom {
+  final String id;
+  final String namePet;
+  final List<String> images;
+
+  PetCustom({
+    required this.id,
+    required this.namePet,
+    required this.images,
+  });
+
+  factory PetCustom.fromJson(Map<String, dynamic> json) {
+    return PetCustom(
+      id: json['_id'],
+      namePet: json['namePet'],
+      images: json['images'].cast<String>(),
+    );
   }
 }

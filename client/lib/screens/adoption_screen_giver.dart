@@ -454,7 +454,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                     ? animal.centerId!.location
                     : animal.giver!.location)
             .then((value) {
-          String distanceString = value.toStringAsFixed(2);
+          value.toStringAsFixed(2);
         });
 
         return GestureDetector(

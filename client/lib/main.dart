@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/hive/current_location.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
-import 'package:found_adoption_application/screens/payment_screen.dart';
-import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/services/auth_api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
@@ -116,7 +114,6 @@ class _MyAppState extends State<MyApp> {
                         bool isTokenExpired = now.isAfter(expirationTime);
                         if (!isTokenExpired) {
                           refreshAccessToken();
-                          
                         } else {
                           Navigator.push(
                               context,
@@ -205,7 +202,7 @@ Future<bool> checkRefreshToken() async {
     //     ? currentUser!.firstName
     //     : currentCenter!.name;
 
-    var name = currentUser != null && currentUser.role == 'USER'
+    currentUser != null && currentUser.role == 'USER'
         ? currentUser!.firstName
         : currentCenter != null
             ? currentCenter.name

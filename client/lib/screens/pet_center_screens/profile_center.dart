@@ -7,7 +7,6 @@ import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 
-
 import 'package:found_adoption_application/screens/map_page.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
@@ -24,13 +23,15 @@ import 'package:found_adoption_application/screens/change_password.dart';
 
 class ProfileCenterPage extends StatefulWidget {
   final centerId;
-  ProfileCenterPage({super.key, required this.centerId});
+  final petId;
+  const ProfileCenterPage({super.key, required this.centerId, required this.petId});
 
   @override
   State<ProfileCenterPage> createState() => _ProfileCenterPageState();
 }
 
-class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCenterPage> {
+class _ProfileCenterPageState<T extends AdoptionScreen>
+    extends State<ProfileCenterPage> {
   int selectedAnimalIconIndex = 0;
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoCenter> centerFuture;
@@ -38,7 +39,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
   late List<Pet> animals = [];
   var currentClient;
   late bool isLoading = true;
- 
+
   List<String> animalTypes = [
     'Cats',
     'Dogs',
@@ -60,10 +61,12 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
   void initState() {
     super.initState();
     adoptionScreen = AdoptionScreen(centerId: widget.centerId);
-   
 
-
-    petStoriesPosts = getAllPostPersonal(widget.centerId);
+    if (widget.petId != null) {
+      petStoriesPosts = getPostPet(widget.petId);
+    } else {
+      petStoriesPosts = getAllPostPersonal(widget.centerId);
+    }
     centerFuture = getProfileCenter(context, widget.centerId);
     petsFuture = getAllPetOfCenter(widget.centerId);
     getClient();
@@ -76,8 +79,6 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
       isLoading = false;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +122,6 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
               fontWeight: FontWeight.bold,
               fontSize: 25.0),
         ),
-       
       ),
       body: FutureBuilder<InfoCenter>(
           future: centerFuture,
@@ -354,9 +354,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
                                 buildPostsList(petStoriesPosts!),
                                 // Nội dung cho tab "Pet Adoption"
                                 // buildAdoptionList(),
-                                 buildPostsList(petStoriesPosts!),
-                                              
-                               
+                                buildPostsList(petStoriesPosts!),
                               ],
                             ),
                           ),
@@ -367,11 +365,9 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
                 ),
               );
             }
-          }
-          ),
+          }),
     );
   }
-  
 
   // Widget hiển thị danh sách bài đăng
   Widget buildPostsList(Future<List<Post>>? posts) {
@@ -410,7 +406,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
           }
         });
   }
-  
+
   //hiển thị danh sách PetAdopt
   // Widget buildAdoptionList() {
   //   final deviceWidth = MediaQuery.of(context).size.width;
@@ -721,7 +717,6 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
     Clipboard.setData(ClipboardData(text: text));
   }
 
-
   //lấy từ adop qua->kh code lại nữa
   // Widget buildAnimalIcon(int index) {
   //   return Padding(
@@ -790,7 +785,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfileCenterPage(
-                                        centerId: centerId,
+                                        centerId: centerId, petId: null,
                                       )));
                         });
                       },
@@ -807,7 +802,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen> extends State<ProfileCen
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfileCenterPage(
-                                        centerId: centerId,
+                                        centerId: centerId, petId: null,
                                       )));
                         });
                       },

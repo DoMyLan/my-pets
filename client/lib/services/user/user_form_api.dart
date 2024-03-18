@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/models/location.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
-import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/utils/consts.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
