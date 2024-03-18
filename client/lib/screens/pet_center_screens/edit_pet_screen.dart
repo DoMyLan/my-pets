@@ -24,6 +24,13 @@ class _EditPetScreenState extends State<EditPetScreen> {
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
   final _colorController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _originalController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _hobbiesController = TextEditingController();
+  final _attentionController = TextEditingController();
+  final _instructionController = TextEditingController();
+  final _inoculationController = TextEditingController();
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -31,19 +38,31 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   String _selectedPetType = '';
   String _selectedGender = '';
- late bool isFreeOptionSelected ;
- String price = '0';
+  late bool isFreeOptionSelected;
+  String price = '0';
 
   int currentIndex = 0;
   final CarouselController carouselController = CarouselController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
+  List<dynamic> _selectedColors = [];
 
   final ScrollController _scrollController = ScrollController();
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
+  List<String> _colors = [
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Orange',
+    'White',
+    'Black',
+    'Brown',
+    'Grey'
+  ];
 
   @override
   void initState() {
@@ -52,11 +71,20 @@ class _EditPetScreenState extends State<EditPetScreen> {
     notificationHandler.initializeNotifications();
     _namePetController.text = widget.pet.namePet;
     _breedController.text = widget.pet.breed;
-   
+    _weightController.text = widget.pet.weight;
+    _originalController.text = widget.pet.original;
+
+    _priceController.text = widget.pet.price;
+    _attentionController.text = widget.pet.attention;
+    _hobbiesController.text = widget.pet.hobbies;
+    _inoculationController.text = widget.pet.inoculation;
+    _instructionController.text = widget.pet.instruction;
+
     birthday = widget.pet.birthday;
     // _selectedLevel = widget.pet.level;
     _selectedPetType = widget.pet.petType;
     _selectedGender = widget.pet.gender;
+    _selectedColors = widget.pet.color;
     finalResult.addAll(widget.pet.images);
   }
 
@@ -162,10 +190,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       ),
                     )),
 
-
-
-
-                    //THÔNG TIN GIÁ
+              //THÔNG TIN GIÁ
               SizedBox(
                 height: 12,
               ),
@@ -226,7 +251,6 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 4),
                       Container(
                         width: MediaQuery.of(context).size.width *
                             0.7, // Đặt chiều rộng của container
@@ -246,6 +270,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                               price = value.toString();
                             });
                           },
+                          controller: _priceController,
                           decoration: InputDecoration(
                             hintText: 'Enter price ...',
                             hintStyle: TextStyle(fontSize: 14),
@@ -255,19 +280,94 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 8,
+                      )
                     ],
                   ),
                 ),
 
+              Text(
+                'Fill in the table with the needed information:',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
+              ),
 
-              TextField(
-                controller: _namePetController,
-                decoration: const InputDecoration(labelText: 'Pet Name'),
+              Table(
+                columnWidths: {
+                  0: FractionColumnWidth(0.5),
+                  1: FractionColumnWidth(0.5),
+                },
+                children: [
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _namePetController,
+                            decoration: InputDecoration(
+                              labelText: 'Pet Name',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _breedController,
+                            decoration: InputDecoration(
+                              labelText: 'Breed',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _weightController,
+                            decoration: InputDecoration(
+                              labelText: 'Weight',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _originalController,
+                            decoration: InputDecoration(
+                              labelText: 'Original',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              TextField(
-                controller: _breedController,
-                decoration: const InputDecoration(labelText: 'Breed'),
-              ),
+
+              // TextField(
+              //   controller: _namePetController,
+              //   decoration: const InputDecoration(labelText: 'Pet Name'),
+              // ),
+              // TextField(
+              //   controller: _breedController,
+              //   decoration: const InputDecoration(labelText: 'Breed'),
+              // ),
               Row(
                 children: [
                   const Text('Type:'),
@@ -293,10 +393,6 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   const Text('Dog'),
                 ],
               ),
-              TextField(
-                controller: _colorController,
-                decoration: const InputDecoration(labelText: 'Color'),
-              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -317,9 +413,6 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     },
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 20,
               ),
 
               //DropdownButtonFormField LEVEL
@@ -343,6 +436,69 @@ class _EditPetScreenState extends State<EditPetScreen> {
               //     );
               //   }).toList(),
               // ),
+
+              Divider(
+                color: Colors.grey.shade200,
+                thickness: 10,
+                height: 10,
+              ),
+
+              //select color
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Select color:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 201, 121, 2)),
+                    ),
+                    trailing: DropdownButton<String>(
+                      value: _selectedColors.last,
+                      onChanged: _onColorSelected,
+                      items: _colors.map((String color) {
+                        return DropdownMenuItem<String>(
+                          value: color,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 25,
+                                height: 10,
+                                color: _getColorFromString(color),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(color),
+                              if (_selectedColors.contains(color))
+                                Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  Container(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Selected colors',
+                        border: OutlineInputBorder(),
+                      ),
+                      controller: TextEditingController(
+                        text: _selectedColors.join(', '),
+                      ),
+                      readOnly: true,
+                    ),
+                  ),
+                ],
+              ),
 
               // Your other form fields go here
 
@@ -384,14 +540,55 @@ class _EditPetScreenState extends State<EditPetScreen> {
               const SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Tell us about your pet',
-                    helperText: 'Keep it short, this is just demo',
-                    labelText: 'About Pet'),
-                maxLines: 4,
+              //ABOUT PET
+              Divider(
+                color: Colors.grey.shade200,
+                height: 10, // Chiều cao của đường gạch ngang
+                thickness: 1,
+              ),
+
+              const Text(
+                'Mô tả thú cưng',
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoRow(
+                        Icons.assignment,
+                        'Hướng dẫn nuôi:',
+                        'Nhập hướng dẫn nuôi',
+                        
+                        _instructionController,
+                      ),
+                      _buildInfoRow(
+                        Icons.info,
+                        'Lưu ý:',
+                        'Nhập lưu ý',
+                        _attentionController,
+                      ),
+                      _buildInfoRow(
+                        Icons.favorite,
+                        'Sở thích:',
+                        'Nhập sở thích',
+                        _hobbiesController,
+                      ),
+                      _buildInfoRow(
+                        Icons.local_hospital,
+                        'Tiêm chủng:',
+                        'Nhập tiêm chủng',
+                        _inoculationController,
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Row(
@@ -442,6 +639,82 @@ class _EditPetScreenState extends State<EditPetScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Color _getColorFromString(String colorString) {
+    switch (colorString) {
+      case 'Red':
+        return Colors.red;
+      case 'Green':
+        return Colors.green;
+      case 'Blue':
+        return Colors.blue;
+      case 'Yellow':
+        return Colors.yellow;
+      case 'Orange':
+        return Colors.orange;
+      case 'White':
+        return Color.fromARGB(255, 245, 242, 242);
+      case 'Black':
+        return Colors.black;
+      case 'Brown':
+        return Colors.brown;
+      case 'Grey':
+        return Colors.grey;
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  Color _getColorIcon(String colorString) {
+    switch (colorString) {
+      case 'Hướng dẫn nuôi:':
+        return Colors.blue; // Example color
+      case 'Lưu ý:':
+        return Colors.red; // Example color
+      case 'Sở thích:':
+        return Colors.green; // Example color
+      case 'Tiêm chủng:':
+        return Colors.orange; // Example color
+      default:
+        return Colors.black; // Default color
+    }
+  }
+
+  Widget _buildInfoRow(
+      IconData icon, String title, String hintText, TextEditingController aboutPetInfor) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: _getColorIcon(title)),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+               
+              ),
+            ],
+          ),
+          TextField(
+            controller: aboutPetInfor
+            ,
+            maxLines: null, 
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -524,6 +797,18 @@ class _EditPetScreenState extends State<EditPetScreen> {
         ),
       ],
     );
+  }
+
+  void _onColorSelected(String? color) {
+    setState(() {
+      if (color != null) {
+        if (_selectedColors.contains(color)) {
+          _selectedColors.remove(color);
+        } else {
+          _selectedColors.add(color);
+        }
+      }
+    });
   }
 
   @override
