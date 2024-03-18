@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -32,7 +30,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
   final _attentionController = TextEditingController();
   final _hobbiesController = TextEditingController();
   final _inoculationController = TextEditingController();
-
 
   final _ageController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -133,7 +130,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
     if (mounted) {
       // print('coi thử: ${_selectedColors.map((color) => "'$color'").toList()}');
       var colorsJson = jsonEncode(_selectedColors);
-      
+
       await addPet(
           currentClient.id,
           null,
@@ -144,10 +141,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
           _breedController.text.toString(),
           birthday!,
           _selectedGender,
-           jsonDecode(colorsJson),
-          
+          jsonDecode(colorsJson),
           _inoculationController.text.toString(),
-          
           _instructionController.text.toString(),
           _attentionController.text.toString(),
           _hobbiesController.text.toString(),
@@ -155,8 +150,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
           price,
           isFreeOptionSelected,
           finalResult,
-          _weightController.text.toString()
-       );
+          _weightController.text.toString());
     }
     setState(() {
       imageFileList = [];
@@ -296,7 +290,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 4),
+                 
                       Container(
                         width: MediaQuery.of(context).size.width *
                             0.7, // Đặt chiều rộng của container
@@ -325,26 +319,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           ),
                         ),
                       ),
+                     
                     ],
                   ),
                 ),
-
-              // TextField(
-              //   controller: _namePetController,
-              //   decoration: const InputDecoration(labelText: 'Pet Name'),
-              // ),
-              // TextField(
-              //   controller: _breedController,
-              //   decoration: const InputDecoration(labelText: 'Breed'),
-              // ),
-              // TextField(
-              //   controller: _weightController,
-              //   decoration: const InputDecoration(labelText: 'Weight'),
-              // ),
-              // TextField(
-              //   controller: _originalController,
-              //   decoration: const InputDecoration(labelText: 'Original'),
-              // ),
 
               Text(
                 'Fill in the table with the needed information:',
@@ -621,7 +599,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
                             'Hướng dẫn nuôi:',
                             'Nhập hướng dẫn nuôi',
                             _instructionController,
-
                           ),
                           _buildInfoRow(
                             Icons.info,
@@ -672,9 +649,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     onPressed: () async {
                       if (_namePetController.text == '' ||
                           _breedController.text == '' ||
-                      
                           birthday == null ||
-                        
                           imageFileList.isEmpty ||
                           _selectedPetType == '' ||
                           _selectedGender == '') {
@@ -834,7 +809,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
   void dispose() {
     _namePetController.dispose();
     _breedController.dispose();
-  
+
     _ageController.dispose();
     _descriptionController.dispose();
     super.dispose();

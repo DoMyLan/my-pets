@@ -738,6 +738,55 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     //       ],
                                     //     ),
                                     //   ),
+
+
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+
+                                    //Pet information Detail
+
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _buildInfoRow(
+                                              Icons.assignment,
+                                              'Hướng dẫn nuôi:',
+                                              'Nhập hướng dẫn nuôi',
+                                              pet.instruction,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.info,
+                                              'Lưu ý:',
+                                              'Nhập lưu ý',
+                                              pet.attention,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.favorite,
+                                              'Sở thích:',
+                                              'Nhập sở thích',
+                                              pet.hobbies,
+                                            ),
+                                            _buildInfoRow(
+                                              Icons.local_hospital,
+                                              'Tiêm chủng:',
+                                              'Nhập tiêm chủng',
+                                              pet.inoculation,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                    
+
+
                                   ],
                                 ),
                               ),
