@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/loading.dart';
@@ -191,18 +192,34 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 10.0),
-                                                child: Text(
-                                                  pet.statusAdopt ==
-                                                          'HAS_ONE_OWNER'
-                                                      ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                      : pet.centerId!.name,
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileCenterPage(
+                                                          centerId:
+                                                              pet.centerId!.id,
+                                                          petId: pet.id,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    pet.statusAdopt ==
+                                                            'HAS_ONE_OWNER'
+                                                        ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
+                                                        : pet.centerId!.name,
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    softWrap: true,
                                                   ),
-                                                  softWrap: true,
                                                 ),
                                               ),
                                               Align(
@@ -262,13 +279,13 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     Row(
                                       children: [
                                         //Số lượng thú cưng đang đăng bán
-                                        Icon(
+                                        const Icon(
                                           Icons.done,
                                           color: Colors.green,
                                           weight: 20,
                                           fill: 0.8,
                                         ),
-                                        Text(
+                                        const Text(
                                           ' Đã mua',
                                           style: TextStyle(
                                             fontSize: 13,
@@ -319,12 +336,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Spacer(),
+                                        const Spacer(),
                                         TextButton(
                                           style: ButtonStyle(
                                             padding: MaterialStateProperty.all<
                                                 EdgeInsets>(
-                                              EdgeInsets.all(
+                                              const EdgeInsets.all(
                                                   0), // Đây là giá trị padding bạn muốn thiết lập
                                             ),
                                           ),
@@ -338,7 +355,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               },
                                             );
                                           },
-                                          child: Row(
+                                          child: const Row(
                                             children: [
                                               Text(
                                                 'Tên, Giống, Tuổi,...',
@@ -510,20 +527,37 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                     top: 10.0),
-                                                child: Text(
-                                                  pet.statusAdopt ==
-                                                          'HAS_ONE_OWNER'
-                                                      ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                      : pet.centerId == null
-                                                          ? '${pet.giver!.firstName} ${pet.giver!.lastName}'
-                                                          : pet.centerId!.name,
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileCenterPage(
+                                                          centerId:
+                                                              pet.centerId!.id,
+                                                          petId: pet.id,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    pet.statusAdopt ==
+                                                            'HAS_ONE_OWNER'
+                                                        ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
+                                                        : pet.centerId == null
+                                                            ? '${pet.giver!.firstName} ${pet.giver!.lastName}'
+                                                            : pet
+                                                                .centerId!.name,
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    softWrap: true,
                                                   ),
-                                                  softWrap: true,
                                                 ),
                                               ),
                                               Align(
@@ -739,7 +773,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     //     ),
                                     //   ),
 
-
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -783,10 +816,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         ),
                                       ],
                                     ),
-
-                                    
-
-
                                   ],
                                 ),
                               ),
@@ -1142,13 +1171,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
-               
               ),
             ],
           ),
           Text(
             aboutPetInfor,
-            maxLines: null, 
+            maxLines: null,
             style: TextStyle(
               fontSize: 14,
             ),

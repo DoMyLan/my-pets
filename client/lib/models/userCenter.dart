@@ -1,4 +1,3 @@
-import 'package:found_adoption_application/models/location.dart';
 import 'package:intl/intl.dart';
 
 class InfoCenter {

@@ -51,7 +51,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
     //sao chép danh sách screens vào screensnapshot
     screenSnapshot = screens.values.toList();
     // print(widget.centerId);
-    screens[2] = ProfileCenterPage(centerId: widget.centerId);
+    screens[2] = ProfileCenterPage(centerId: widget.centerId, petId: null);
     screens[0] = AdoptionScreen(centerId: widget.centerId);
   }
 
@@ -59,13 +59,9 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
   Map<int, Widget> screens = {
     0: AdoptionScreen(
       centerId: null,
-      
-    
     ),
     1: FeedScreen(),
-    2: ProfileCenterPage(
-      centerId: null,
-    ),
+    2: ProfileCenterPage(centerId: null, petId: null),
     3: AddPetScreen(),
     4: TheOrdersCenter(),
     5: StatusAdopt(),
@@ -85,7 +81,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
           //chèn screen được chọn lên vtri đầu tiên
           screenSnapshot.insert(0, selectedWidget);
           menuOpen = false;
-    _animationController.reverse();
+          _animationController.reverse();
         });
       },
     ));

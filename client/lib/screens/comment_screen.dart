@@ -167,7 +167,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                       MaterialPageRoute(
                                         builder: (context) => ProfileCenterPage(
                                             centerId:
-                                                comments[index].centerId!.id),
+                                                comments[index].centerId!.id, petId: null),
                                       ),
                                     );
                             },
@@ -219,7 +219,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                                         centerId:
                                                             comments[index]
                                                                 .centerId!
-                                                                .id),
+                                                                .id, petId: null),
                                               ),
                                             );
                                     },

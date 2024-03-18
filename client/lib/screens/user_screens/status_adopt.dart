@@ -140,7 +140,7 @@ class AdoptionTabView extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => ProfileCenterPage(
                                   centerId: adopt.centerId!
-                                      .id) // Thay thế bằng tên lớp tương ứng
+                                      .id, petId: null,) // Thay thế bằng tên lớp tương ứng
                               ));
                     },
                     child: CircleAvatar(
@@ -160,7 +160,7 @@ class AdoptionTabView extends StatelessWidget {
                                 MaterialPageRoute(
                                     builder: (context) => ProfileCenterPage(
                                         centerId: adopt.centerId!
-                                            .id) // Thay thế bằng tên lớp tương ứng
+                                            .id, petId: null) // Thay thế bằng tên lớp tương ứng
                                     ));
                           },
                           child: Text(

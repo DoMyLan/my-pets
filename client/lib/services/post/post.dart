@@ -76,11 +76,13 @@ Future<List<Post>> getAllPostPersonal(var id) async {
   return posts;
 }
 
-Future<bool> addPost(String content, List<dynamic> imagePaths) async {
+Future<bool> addPost(
+    String content, List<dynamic> imagePaths, String? petId) async {
   var responseData = {};
   var body = jsonEncode({
     "content": content,
     "images": imagePaths,
+    "petId": petId,
   });
   try {
     responseData = await api('post', 'POST', body);
@@ -156,4 +158,17 @@ Future<void> reportPost(String postId, String title, String reason) async {
     print(e);
     //  notification(e.toString(), true);
   }
+}
+
+Future<List<Post>> getPostPet(String petId) async {
+  var responseData;
+  try {
+    responseData = await api('post/pet/$petId', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var postList = responseData['data'] as List<dynamic>;
+  List<Post> post = postList.map((json) => Post.fromJson(json)).toList();
+  return post;
 }

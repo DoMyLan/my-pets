@@ -247,7 +247,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 //Navigate
-                Navigator.push(context,
+                Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: ((context) => LoginScreen())));
 
                 var userBox = await Hive.openBox('userBox');

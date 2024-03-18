@@ -354,35 +354,10 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                       ),
                                       const Spacer(),
                                       GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: 60,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.red[400],
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "Hủy",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      GestureDetector(
                                         onTap: () async {
                                           Loading(context);
                                           await changeStatusOrder(
-                                              orders[index].id, 'CONFIRMED');
+                                              orders[index].id, 'CANCEL');
                                           // ignore: use_build_context_synchronously
                                           Navigator.pop(context);
 
@@ -391,16 +366,16 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                           });
                                         },
                                         child: Container(
-                                          width: 100,
+                                          width: 120,
                                           height: 40,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(5),
-                                            color: Colors.orange,
+                                            color: Colors.red[400],
                                           ),
                                           child: const Center(
                                             child: Text(
-                                              "Xác nhận",
+                                              "Hủy đơn hàng",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,

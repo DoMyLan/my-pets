@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
@@ -127,7 +128,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProfileCenterPage(
-                                  centerId: widget.pet.centerId!.id),
+                                centerId: widget.pet.centerId!.id,
+                                petId: widget.pet.id,
+                              ),
                             ),
                           )
                         : Navigator.push(
@@ -142,23 +145,64 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Flexible(
-                        child: Text(
-                          widget.pet.centerId != null
-                              ? widget.pet.centerId!.name
-                              : widget.pet.giver!.firstName +
-                                  ' ' +
-                                  widget.pet.giver!.lastName,
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
+                        child: GestureDetector(
+                          onTap: () {
+                            widget.pet.centerId != null
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileCenterPage(
+                                        centerId: widget.pet.centerId!.id,
+                                        petId: null,
+                                      ),
+                                    ),
+                                  )
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfilePage(
+                                          userId: widget.pet.giver!.id),
+                                    ),
+                                  );
+                          },
+                          child: Text(
+                            widget.pet.centerId != null
+                                ? widget.pet.centerId!.name
+                                : widget.pet.giver!.firstName +
+                                    ' ' +
+                                    widget.pet.giver!.lastName,
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(
                         width: 12,
                       ),
-                      const Text('View'),
+                      GestureDetector(
+                          onTap: () {
+                            widget.pet.centerId != null
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileCenterPage(
+                                        centerId: widget.pet.centerId!.id,
+                                        petId: widget.pet.id,
+                                      ),
+                                    ),
+                                  )
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfilePage(
+                                          userId: widget.pet.giver!.id),
+                                    ),
+                                  );
+                          },
+                          child: const Text('Xem bài viết')),
                       const SizedBox(
                         width: 4,
                       ),
@@ -172,51 +216,61 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const SizedBox(
                   height: 4,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  color: const Color.fromARGB(255, 248, 245, 245),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 100.0,
-                        height: 100.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.grey[300],
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AnimalDetailScreen(
+                                  petId: widget.pet.id, currentId: currentClient,
+                                )));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    color: const Color.fromARGB(255, 248, 245, 245),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 100.0,
+                          height: 100.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.grey[300],
+                          ),
+                          // Placeholder for pet image
+                          child: Image.network(
+                            widget.pet.images[0],
+                          ),
                         ),
-                        // Placeholder for pet image
-                        child: Image.network(
-                          widget.pet.images[0],
-                        ),
-                      ),
-                      const SizedBox(width: 20.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${widget.pet.namePet}',
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
+                        const SizedBox(width: 20.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.pet.namePet}',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Breed: ${widget.pet.breed}',
-                            style: const TextStyle(fontSize: 14.0),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Text(
-                            'Price: ${widget.pet.price} đ',
-                            style: const TextStyle(fontSize: 14.0),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              'Breed: ${widget.pet.breed}',
+                              style: const TextStyle(fontSize: 14.0),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              'Price: ${widget.pet.price} đ',
+                              style: const TextStyle(fontSize: 14.0),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(

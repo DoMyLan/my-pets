@@ -116,7 +116,7 @@ class _PostCardState extends State<PostCard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProfileCenterPage(
-                              centerId: clientPost.petCenterId.id),
+                              centerId: clientPost.petCenterId.id, petId: null),
                         ),
                       );
                     }
@@ -166,7 +166,7 @@ class _PostCardState extends State<PostCard> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProfileCenterPage(
-                                    centerId: clientPost.petCenterId.id),
+                                    centerId: clientPost.petCenterId.id, petId: null),
                               ),
                             );
                     },

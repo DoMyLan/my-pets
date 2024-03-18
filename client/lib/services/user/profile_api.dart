@@ -66,6 +66,7 @@ Future<void> updateProfileCenter(
     BuildContext context, name, phoneNumber, address) async {
   var currentClient = await getCurrentClient();
   var id = currentClient.id;
+  // ignore: unused_local_variable
   var responseData;
   var body = jsonEncode(<String, String>{
     if (name != "") 'name': name,
