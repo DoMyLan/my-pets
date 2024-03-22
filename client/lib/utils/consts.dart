@@ -6,5 +6,5 @@ const String CLIENT_ID = "AZSY26IEl67v1Ia5Cbuki0VCQEioOUnhVj99G-eIIcHQjIEWflnPL6
 
 const String SECRET_KEY = "EEXuDObywl66eeUF2baiGjmJFv11LX-m8fexsqRsihhDC3-biQqIDVgQ7v1RKVJoEFp-SQW_0TTGtI4I";
 
-
+const String apiKeyExchangeRate = "2812c96d93-069ba2d046-saqc7f";
  

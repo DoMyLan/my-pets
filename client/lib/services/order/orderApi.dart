@@ -3,7 +3,7 @@ import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 
-Future<bool> createOrder(buyer, isCenterSeller, sellerId, pet, address,
+Future<String?> createOrder(buyer, isCenterSeller, sellerId, pet, address,
     transportFee, totalFee) async {
   try {
     var body = jsonEncode({
@@ -24,15 +24,15 @@ Future<bool> createOrder(buyer, isCenterSeller, sellerId, pet, address,
 
     if (responseData['success']) {
       notification(responseData['message'], false);
-      return true;
+      return responseData['orderId']; 
     } else {
       notification(responseData['message'], true);
-      return false;
+      return null;
     }
   } catch (e) {
     // print(e.toString());
     notification("Order: ${e.toString()}", true);
-    return false;
+    return null;
   }
 }
 
