@@ -48,7 +48,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool success;
+    String? success;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -362,15 +362,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 4,
                   ),
 
-                  //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+                
 
-                  // Text(
-                  //   'Phương thức thanh toán (Nhấn để chọn)',
-                  //   style: TextStyle(
-                  //     fontSize: 14.0,
-                  //     color: Color.fromARGB(255, 99, 182, 124),
-                  //   ),
-                  // ),
+                  Text(
+                    'Phương thức thanh toán (Nhấn để chọn)',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Color.fromARGB(255, 99, 182, 124),
+                    ),
+                  ),
 
                   // TextButton(
                   //   onPressed: () {
@@ -386,9 +386,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   //       color: Color.fromARGB(255, 99, 182, 124),
                   //     ),
                   //   ),
-                  // ),      //KHÔNG XÓA ĐOẠN CODE NÀY NHA
+                  // ),      
 
-                  PaymentMethod()
+                  
                 ] //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
                     ),
                 const SizedBox(height: 20.0),
@@ -563,7 +563,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 currentClient.address,
                                 transportFee,
                                 totalFee);
-                            Navigator.pop(context);
+
+                                //KHÔNG XÓA CODE Ở ĐÂY NHA
+                            // Navigator.push(
+                            // context,
+                            // MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         PaymentMethod(success: success!,)));
 
                             // Navigator.push(
                             //     context,
