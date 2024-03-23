@@ -24,7 +24,8 @@ import 'package:found_adoption_application/screens/change_password.dart';
 class ProfileCenterPage extends StatefulWidget {
   final centerId;
   final petId;
-  const ProfileCenterPage({super.key, required this.centerId, required this.petId});
+  const ProfileCenterPage(
+      {super.key, required this.centerId, required this.petId});
 
   @override
   State<ProfileCenterPage> createState() => _ProfileCenterPageState();
@@ -190,10 +191,9 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                               icon: Icon(Icons.person_add, color: Colors.white),
                               label: Text('Follow'),
                               style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context)
-                                    .primaryColor, // Đổi màu nền của nút
-                                onPrimary:
-                                    Colors.white, // Đổi màu văn bản của nút
+                                foregroundColor: Colors.white,
+                                backgroundColor: Theme.of(context)
+                                    .primaryColor, // Đổi màu văn bản của nút
                               ),
                             ),
                             SizedBox(width: 3.0),
@@ -216,9 +216,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                 color: Colors.white),
                                             label: Text('Edit profile'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -241,9 +240,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                 color: Colors.white),
                                             label: Text('Change Password'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -261,9 +259,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                 color: Colors.white),
                                             label: Text('Change status'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -785,7 +782,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfileCenterPage(
-                                        centerId: centerId, petId: null,
+                                        centerId: centerId,
+                                        petId: null,
                                       )));
                         });
                       },
@@ -802,7 +800,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfileCenterPage(
-                                        centerId: centerId, petId: null,
+                                        centerId: centerId,
+                                        petId: null,
                                       )));
                         });
                       },

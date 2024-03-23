@@ -176,12 +176,9 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                   SizedBox(height: 30),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary:
-                          isValidate && isPasswordValid && password.text != ""
+                      foregroundColor: Colors.white, backgroundColor: isValidate && isPasswordValid && password.text != ""
                               ? Theme.of(context).primaryColor
-                              : Colors.grey,
-                      onPrimary: Colors.white,
-                      onSurface: Colors.grey,
+                              : Colors.grey, disabledForegroundColor: Colors.grey.withOpacity(0.38), disabledBackgroundColor: Colors.grey.withOpacity(0.12),
                       fixedSize: Size.fromHeight(60),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50), 

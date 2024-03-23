@@ -190,9 +190,7 @@ class _LikeScreenState extends State<LikeScreen> {
                                             color: Colors.white),
                                         label: Text('Follow'),
                                         style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Theme.of(context).primaryColor,
-                                          onPrimary: Colors.white,
+                                          foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
                                         ),
                                       ),
                                     ],

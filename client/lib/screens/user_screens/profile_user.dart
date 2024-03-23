@@ -182,9 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             color: Colors.white),
                                         label: Text('Follow'),
                                         style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Theme.of(context).primaryColor,
-                                          onPrimary: Colors.white,
+                                          foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
                                         ),
                                       ),
                                       SizedBox(width: 8.0),
@@ -210,10 +208,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           Text('Edit profile'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary:
-                                                            Theme.of(context)
+                                                        foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                                 .primaryColor,
-                                                        onPrimary: Colors.white,
                                                       ),
                                                     ),
                                                   ),
@@ -239,10 +235,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           'Change Password'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary:
-                                                            Theme.of(context)
+                                                        foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                                 .primaryColor,
-                                                        onPrimary: Colors.white,
                                                       ),
                                                     ),
                                                   ),
@@ -264,10 +258,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           Text('Change status'),
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary:
-                                                            Theme.of(context)
+                                                        foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                                 .primaryColor,
-                                                        onPrimary: Colors.white,
                                                       ),
                                                     ),
                                                   ),

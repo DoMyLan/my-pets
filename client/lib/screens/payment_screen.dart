@@ -563,6 +563,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 currentClient.address,
                                 transportFee,
                                 totalFee);
+                              Navigator.of(context).pop();
 
                                 //KHÔNG XÓA CODE Ở ĐÂY NHA
                             // Navigator.push(

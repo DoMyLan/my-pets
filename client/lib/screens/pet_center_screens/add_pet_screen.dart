@@ -640,7 +640,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                     child: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
-                      primary: const Color.fromARGB(255, 241, 189,
+                      backgroundColor: const Color.fromARGB(255, 241, 189,
                           186), // Specify background color for the cancel button
                     ),
                   ),

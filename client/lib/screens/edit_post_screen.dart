@@ -132,10 +132,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: const Color.fromRGBO(
-                          48, 96, 96, 1.0), // Điều chỉnh màu nền của nút
-                      onPrimary: Colors
-                          .white, // Điều chỉnh màu văn bản của nút khi được nhấn
+                      foregroundColor: Colors
+                          .white, backgroundColor: const Color.fromRGBO(
+                          48, 96, 96, 1.0), // Điều chỉnh màu văn bản của nút khi được nhấn
                       textStyle: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

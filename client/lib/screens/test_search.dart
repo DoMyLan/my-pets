@@ -348,10 +348,9 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                               icon: Icon(Icons.person_add, color: Colors.white),
                               label: Text('Follow'),
                               style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context)
-                                    .primaryColor, // Đổi màu nền của nút
-                                onPrimary:
-                                    Colors.white, // Đổi màu văn bản của nút
+                                foregroundColor: Colors.white,
+                                backgroundColor: Theme.of(context)
+                                    .primaryColor, // Đổi màu văn bản của nút
                               ),
                             ),
                             SizedBox(width: 3.0),
@@ -374,9 +373,9 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                 color: Colors.white),
                                             label: Text('Edit profile'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -399,9 +398,9 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                 color: Colors.white),
                                             label: Text('Change Password'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -419,9 +418,9 @@ class _ProfileCenterPageState extends State<ProfileCenterPage> {
                                                 color: Colors.white),
                                             label: Text('Change status'),
                                             style: ElevatedButton.styleFrom(
-                                              primary: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
-                                              onPrimary: Colors.white,
                                             ),
                                           ),
                                         ),

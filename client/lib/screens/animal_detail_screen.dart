@@ -250,12 +250,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 2,
-                                                      horizontal: 5),
+                                                      horizontal: 5), backgroundColor: Colors.white,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(0),
-                                              ),
-                                              primary: Colors.white, // Màu nền
+                                              ), // Màu nền
 
                                               side: BorderSide(
                                                   color: Theme.of(context)
@@ -583,12 +582,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 5),
+                                                vertical: 2, horizontal: 5), backgroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(0),
-                                            ),
-                                            primary: Colors.white, // Màu nền
+                                            ), // Màu nền
 
                                             side: BorderSide(
                                                 color: Theme.of(context)
@@ -1037,9 +1035,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 .width, // Chiều dài bằng với độ rộng của màn hình
             child: TextButton(
               style: TextButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).primaryColor, // Màu nền của nút
-                primary: Colors.white, // Màu của văn bản
+                foregroundColor: Colors.white, backgroundColor:
+                    Theme.of(context).primaryColor, // Màu của văn bản
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
                 ),

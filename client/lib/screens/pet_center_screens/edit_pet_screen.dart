@@ -609,7 +609,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     child: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
                       // ignore: deprecated_member_use
-                      primary: const Color.fromARGB(255, 241, 189,
+                      backgroundColor: const Color.fromARGB(255, 241, 189,
                           186), // Specify background color for the cancel button
                     ),
                   ),
