@@ -261,7 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).primaryColor,
+                              backgroundColor: Theme.of(context).primaryColor,
                               padding: EdgeInsets.symmetric(horizontal: 30),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),

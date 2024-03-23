@@ -438,9 +438,7 @@ class AdoptionTabView extends StatelessWidget {
                     label: const Text('Accept', style: TextStyle(fontSize: 17)),
                     style: ElevatedButton.styleFrom(
                       // ignore: deprecated_member_use
-                      primary: const Color.fromRGBO(48, 96, 96, 1.0),
-                      // ignore: deprecated_member_use
-                      onPrimary: Colors.white,
+                      foregroundColor: Colors.white, backgroundColor: const Color.fromRGBO(48, 96, 96, 1.0),
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(8.0), // Điều này sẽ bo góc
@@ -463,9 +461,7 @@ class AdoptionTabView extends StatelessWidget {
                     ),
                     style: ElevatedButton.styleFrom(
                       // ignore: deprecated_member_use
-                      primary: const Color.fromRGBO(241, 95, 4, 1),
-                      // ignore: deprecated_member_use
-                      onPrimary: Colors.white,
+                      foregroundColor: Colors.white, backgroundColor: const Color.fromRGBO(241, 95, 4, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.circular(8.0), // Điều này sẽ bo góc
