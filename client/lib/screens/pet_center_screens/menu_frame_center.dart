@@ -8,6 +8,7 @@ import 'package:found_adoption_application/screens/adoption_screen.dart';
 
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/voucher.dart';
 
 class MenuFrameCenter extends StatefulWidget {
   final centerId;
@@ -64,7 +65,8 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
     2: ProfileCenterPage(centerId: null, petId: null),
     3: AddPetScreen(),
     4: TheOrdersCenter(),
-    5: StatusAdopt(),
+    // 5: StatusAdopt(),
+    5: VoucherScreen(),
     6: NotificationPage()
   };
 
