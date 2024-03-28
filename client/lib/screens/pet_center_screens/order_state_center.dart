@@ -299,27 +299,30 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                           isLastStep: false,
                         ),
                         TrackingStep(
-                          date: order.updatedAt,
+                          date: order.dateConfirm,
                           icon: Icons.home,
                           title: 'Order Dispatched',
                           isFirstStep: false,
-                          isCurrentStep: true,
+                          isCurrentStep:
+                              order.dateConfirm != null ? true : false,
                           isLastStep: false,
                         ),
                         TrackingStep(
-                          date: order.updatedAt,
+                          date: order.dateDelivering,
                           icon: Icons.delivery_dining,
                           title: 'Order in Transit',
                           isFirstStep: false,
-                          isCurrentStep: true,
+                          isCurrentStep:
+                              order.dateDelivering != null ? true : false,
                           isLastStep: false,
                         ),
                         TrackingStep(
-                          date: order.updatedAt,
+                          date: order.dateCompleted,
                           icon: Icons.done,
                           title: 'Delivered Successfully',
                           isFirstStep: false,
-                          isCurrentStep: false,
+                          isCurrentStep:
+                              order.dateCompleted != null ? true : false,
                           isLastStep: true,
                         ),
                       ],
@@ -443,7 +446,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
 }
 
 class TrackingStep extends StatelessWidget {
-  final DateTime date;
+  final DateTime? date;
   final IconData icon;
   final String title;
   final bool isFirstStep;
@@ -452,7 +455,7 @@ class TrackingStep extends StatelessWidget {
 
   const TrackingStep({
     super.key,
-    required this.date,
+    this.date,
     required this.icon,
     required this.title,
     required this.isFirstStep,
@@ -507,7 +510,11 @@ class TrackingStep extends StatelessWidget {
                           isCurrentStep ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  Text(DateFormat('MMM d, y | HH:mm').format(date).toString())
+                  date != null
+                      ? Text(DateFormat('MMM d, y | HH:mm')
+                          .format(date!)
+                          .toString())
+                      : const Text("Chờ cập nhật")
                 ],
               ),
             ],

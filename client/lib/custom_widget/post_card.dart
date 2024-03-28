@@ -46,14 +46,14 @@ class _PostCardState extends State<PostCard> {
       'autoConnect': true,
     });
 
-    socket.on("getOnlineUsers", (data) {
-      if (data['userId'] == clientPost.userId?.id ||
-          data['userId'] == clientPost.petCenterId?.id) {
-        setState(() {
-          isOnline = true;
-        });
-      }
-    });
+    // socket.on("getOnlineUsers", (data) {
+    //   if (data['userId'] == clientPost.userId?.id ||
+    //       data['userId'] == clientPost.petCenterId?.id) {
+    //     setState(() {
+    //       isOnline = true;
+    //     });
+    //   }
+    // });
   }
 
   Future<void> getLiked() async {

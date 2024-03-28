@@ -1,6 +1,9 @@
-
 import "package:flutter/material.dart";
 import "package:found_adoption_application/main.dart";
+import "package:found_adoption_application/models/voucher_model.dart";
+import "package:found_adoption_application/services/order/voucherApi.dart";
+import "package:found_adoption_application/utils/getCurrentClient.dart";
+import "package:found_adoption_application/utils/loading.dart";
 import "package:intl/intl.dart";
 
 class CustomModalBottomSheet extends StatefulWidget {
@@ -11,7 +14,6 @@ class CustomModalBottomSheet extends StatefulWidget {
 }
 
 class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
-
   late DateTime start;
   late DateTime end;
 
@@ -20,22 +22,27 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
   TextEditingController khuyenmai = TextEditingController();
   TextEditingController toida = TextEditingController();
 
-   String selectedVoucher = 'Thú cưng';
-  String selectedActionState = 'Hoạt động';
+  String selectedVoucher = 'Product';
+  String selectedActionState = 'active';
+  var currentClient;
 
   @override
   void initState() {
     super.initState();
-  
+
     start = DateTime.now();
-    end = DateTime.parse('2024-12-31');
+    end = DateTime.now().add(const Duration(days: 1));
+    getClient();
   }
 
-
-
-
-
-  Future<DateTime?> _selectDate(BuildContext context, DateTime selectedDate) async {
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
+  Future<DateTime?> _selectDate(
+      BuildContext context, DateTime selectedDate) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate,
@@ -44,6 +51,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
     );
     return pickedDate;
   }
+
   @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -52,7 +60,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
       child: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 0.75,
-          padding: EdgeInsets.fromLTRB(15, 4, 15, 4),
+          padding: const EdgeInsets.fromLTRB(15, 4, 15, 4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,7 +94,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 10.0,
                       ),
@@ -121,20 +129,19 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                     onChanged: (value) {
                       setState(() {
                         selectedVoucher = value!;
-                        print('Loại voucher: $selectedVoucher');
                       });
                     },
-                    items: [
+                    items: const [
                       DropdownMenuItem(
-                        value: 'Thú cưng',
+                        value: 'Product',
                         child: Text('Thú cưng'),
                       ),
                       DropdownMenuItem(
-                        value: 'Giao hàng',
+                        value: 'Shipping',
                         child: Text('Giao hàng'),
                       ),
                       DropdownMenuItem(
-                        value: 'Tổng đơn hàng',
+                        value: 'All',
                         child: Text('Tổng đơn hàng'),
                       ),
                     ],
@@ -154,8 +161,8 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Khuyến mãi'),
-                        SizedBox(height: 8),
+                        const Text('Khuyến mãi'),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: khuyenmai,
                           decoration: InputDecoration(
@@ -169,7 +176,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                             ),
                             filled: true,
                             fillColor: Colors.grey.shade300,
-                            suffixIcon: Padding(
+                            suffixIcon: const Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Text(
                                 '%',
@@ -177,20 +184,20 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Tối đa'),
-                        SizedBox(height: 8),
+                        const Text('Tối đa'),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: toida,
                           decoration: InputDecoration(
@@ -204,7 +211,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                             ),
                             filled: true,
                             fillColor: Colors.grey.shade300,
-                            suffixIcon: Padding(
+                            suffixIcon: const Padding(
                               padding: EdgeInsets.all(10.0),
                               child: Text(
                                 'VND',
@@ -212,7 +219,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                           ),
                         ),
@@ -234,8 +241,8 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Bắt đầu'),
-                        SizedBox(height: 8),
+                        const Text('Bắt đầu'),
+                        const SizedBox(height: 8),
                         InkWell(
                           onTap: () async {
                             final pickedDate =
@@ -243,12 +250,11 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                             if (pickedDate != null && mounted) {
                               setState(() {
                                 start = pickedDate;
-                                print('Date start: $start');
                               });
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
@@ -260,11 +266,11 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                               children: [
                                 Text(
                                   DateFormat('dd-MM-yyyy HH:mm').format(start),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13,
                                       fontStyle: FontStyle.italic),
                                 ),
-                                Icon(Icons.calendar_today),
+                                const Icon(Icons.calendar_today),
                               ],
                             ),
                           ),
@@ -272,25 +278,24 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Kết thúc'),
-                        SizedBox(height: 8),
+                        const Text('Kết thúc'),
+                        const SizedBox(height: 8),
                         InkWell(
                           onTap: () async {
                             final pickedDate = await _selectDate(context, end);
-                            if ( pickedDate != null && mounted) {
+                            if (pickedDate != null && mounted) {
                               setState(() {
                                 end = pickedDate;
-                                print('Date end: $end');
                               });
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
@@ -302,11 +307,11 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                               children: [
                                 Text(
                                   DateFormat('dd-MM-yyyy HH:mm').format(end),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 13,
                                       fontStyle: FontStyle.italic),
                                 ),
-                                Icon(Icons.calendar_today),
+                                const Icon(Icons.calendar_today),
                               ],
                             ),
                           ),
@@ -348,8 +353,8 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Số lượng'),
-                        SizedBox(height: 8),
+                        const Text('Số lượng'),
+                        const SizedBox(height: 8),
                         TextField(
                           controller: soluong,
                           decoration: InputDecoration(
@@ -363,20 +368,20 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                             ),
                             filled: true,
                             fillColor: Colors.grey.shade300,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Trạng thái hoạt động'),
-                        SizedBox(height: 8),
+                        const Text('Trạng thái hoạt động'),
+                        const SizedBox(height: 8),
                         DropdownButtonFormField<String>(
                           value: selectedActionState,
                           decoration: InputDecoration(
@@ -386,29 +391,24 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                             ),
                             filled: true,
                             fillColor: Colors.grey.shade300,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                           ),
                           onChanged: (value) {
                             setState(() {
                               selectedActionState = value!;
-                              print(
-                                  'Trạng thái hoạt động: $selectedActionState');
                             });
                           },
-                          items: [
+                          items: const [
                             DropdownMenuItem(
-                              value: 'Hoạt động',
+                              value: 'active',
                               child: Text('Hoạt động'),
                             ),
                             DropdownMenuItem(
-                              value: 'Kích hoạt',
-                              child: Text('Kích hoạt'),
+                              value: 'non-active',
+                              child: Text('Không hoạt động'),
                             ),
-                            DropdownMenuItem(
-                              value: 'Hủy bỏ',
-                              child: Text('Hủy bỏ'),
-                            ),
+                            
                           ],
                         ),
                       ],
@@ -421,18 +421,45 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
               ),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  Loading(context);
+                  Voucher voucher = Voucher(
+                      id: "id",
+                      code: voucherCodeController.text,
+                      type: selectedVoucher,
+                      discount: int.parse(khuyenmai.text),
+                      maxDiscount: int.parse(toida.text),
+                      startDate: start,
+                      endDate: end,
+                      status: selectedActionState,
+                      createdBy: currentClient.id,
+                      quantity: int.parse(soluong.text),
+                      createdAt:  DateTime.now(),
+                      updatedAt: DateTime.now());
+                  await createVoucher(voucher);
+                  Navigator.of(context).pop();
+                  Navigator.pop(context, voucher);
+
+                  setState(() {
+                    voucherCodeController.clear();
+                    khuyenmai.clear();
+                    toida.clear();
+                    soluong.clear();
+                  });
+
+
+
+                },
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.green),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(color: Colors.green),
+                      side: const BorderSide(color: Colors.green),
                     ),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Tạo Voucher',
                   style: TextStyle(color: Colors.white, fontSize: 14),
                 ), // Văn bản của button
@@ -444,8 +471,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
     );
   }
 
-
-   @override
+  @override
   void dispose() {
     soluong.dispose();
     voucherCodeController.dispose();
@@ -454,4 +480,3 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
     super.dispose();
   }
 }
-
