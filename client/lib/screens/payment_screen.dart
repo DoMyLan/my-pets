@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
-import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/services/order/voucherApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,6 +28,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var currentClient;
   var transportFee = 0;
   var totalFee = 0;
+
+  TextEditingController voucherText = TextEditingController();
 
   @override
   void initState() {
@@ -222,7 +227,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => AnimalDetailScreen(
-                                  petId: widget.pet.id, currentId: currentClient,
+                                  petId: widget.pet.id,
+                                  currentId: currentClient,
                                 )));
                   },
                   child: Container(
@@ -302,7 +308,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        decoration: const InputDecoration(
+                        controller: voucherText,
+                        decoration: InputDecoration(
                           hintText: 'Nhập mã voucher',
                         ),
                       ),
@@ -313,7 +320,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Theme.of(context).primaryColor),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        Loading(context);
+                        var voucher = await applyVoucher(voucherText.text);
+                        Navigator.of(context).pop();
+                        setState(() {
+                          if (voucher != null) {
+                            if (voucher.type == "Product") {
+                              totalFee = totalFee -
+                                  min(voucher.discount * totalFee,
+                                      voucher.maxDiscount);
+                            } else if (voucher.type == "Shipping") {
+                              transportFee = transportFee -
+                                  min(voucher.discount * transportFee,
+                                      voucher.maxDiscount);
+                            } else {
+                              totalFee = totalFee -
+                                  min(voucher.discount * totalFee,
+                                      voucher.maxDiscount);
+                            }
+                          }
+                        });
+                      },
                       child: const Text(
                         'Áp dụng',
                         style: TextStyle(fontSize: 13, color: Colors.white),
@@ -362,8 +390,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 4,
                   ),
 
-                
-
                   Text(
                     'Phương thức thanh toán (Nhấn để chọn)',
                     style: TextStyle(
@@ -386,9 +412,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   //       color: Color.fromARGB(255, 99, 182, 124),
                   //     ),
                   //   ),
-                  // ),      
-
-                  
+                  // ),
                 ] //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
                     ),
                 const SizedBox(height: 20.0),
@@ -563,9 +587,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 currentClient.address,
                                 transportFee,
                                 totalFee);
-                              Navigator.of(context).pop();
+                            Navigator.of(context).pop();
 
-                                //KHÔNG XÓA CODE Ở ĐÂY NHA
+                            //KHÔNG XÓA CODE Ở ĐÂY NHA
                             // Navigator.push(
                             // context,
                             // MaterialPageRoute(
