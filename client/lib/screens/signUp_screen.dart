@@ -66,11 +66,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Column(
                 children: <Widget>[
                   // inputFile(label: "Username"),
-                  inputField(label: "Email", controller: emailController, isPassword: false, isLogin: false),
+                  inputField(
+                      label: "Email",
+                      controller: emailController,
+                      isPassword: false,
+                      isLogin: false),
                   inputField(
                       label: "Password",
                       obscureText: true,
-                      controller: passwordController, isPassword: true, isLogin: false),
+                      controller: passwordController,
+                      isPassword: true,
+                      isLogin: false),
 
                   // inputField(label: "Confirm Password ", obscureText: true),
 
@@ -165,7 +171,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     await signup(context, emailController.text.toString(),
                         passwordController.text.toString(), signupType);
                     Navigator.of(context).pop();
-
                   },
                   elevation: 0,
                   shape: RoundedRectangleBorder(
