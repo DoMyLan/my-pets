@@ -41,6 +41,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
       currentClient = temp;
     });
   }
+
   Future<DateTime?> _selectDate(
       BuildContext context, DateTime selectedDate) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -408,7 +409,6 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                               value: 'non-active',
                               child: Text('Không hoạt động'),
                             ),
-                            
                           ],
                         ),
                       ],
@@ -434,7 +434,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                       status: selectedActionState,
                       createdBy: currentClient.id,
                       quantity: int.parse(soluong.text),
-                      createdAt:  DateTime.now(),
+                      createdAt: DateTime.now(),
                       updatedAt: DateTime.now());
                   await createVoucher(voucher);
                   Navigator.of(context).pop();
@@ -446,13 +446,14 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                     toida.clear();
                     soluong.clear();
                   });
-
-
-
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                  //code của Tuấn sao nó báo lỗi nên cmt lại
+                  //lỗi WidgetStateProperty chưa đc define
+                  // backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                  // shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       side: const BorderSide(color: Colors.green),
