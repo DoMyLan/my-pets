@@ -275,24 +275,33 @@ class _VoucherItemState extends State<VoucherItem> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                            'Số lượng còn lại: ${vouchers[index].quantity}',
-                                            style:
-                                                const TextStyle(fontSize: 11.0),
-                                          ),
-                                          const SizedBox(
-                                            width: 25,
+                                          Container(
+                                            width:
+                                                115, // Đặt kích thước tối đa cho Text
+                                            child: Text(
+                                              'Số lượng còn lại: ${vouchers[index].quantity}',
+                                              style: const TextStyle(
+                                                  fontSize: 11.0),
+                                              overflow: TextOverflow
+                                                  .ellipsis, // Xác định cách xử lý khi vượt quá kích thước
+                                            ),
                                           ),
                                           TextButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
-                                              shape: WidgetStateProperty.all(
+                                              //lỗi WidgetStateProperty chưa đc define
+                                              // shape: WidgetStateProperty.all(
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
                                                 const RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.zero,
                                                 ),
                                               ),
-                                              side: WidgetStateProperty.all(
+                                              //lỗi WidgetStateProperty chưa đc define
+                                              // side: WidgetStateProperty.all(
+                                              side: MaterialStateProperty.all<
+                                                  BorderSide>(
                                                 BorderSide(color: mainColor),
                                               ),
                                             ),
