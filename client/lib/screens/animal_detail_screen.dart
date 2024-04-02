@@ -5,6 +5,7 @@ import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/loading.dart';
@@ -250,7 +251,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: 2,
-                                                      horizontal: 5), backgroundColor: Colors.white,
+                                                      horizontal: 5),
+                                              backgroundColor: Colors.white,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(0),
@@ -312,6 +314,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                             ],
                                           ),
                                         ),
+
+                                        TextButton(
+                                            onPressed: () {},
+                                            child: Text('hello'))
                                       ],
                                     ),
                                     const SizedBox(
@@ -582,7 +588,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           },
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 5), backgroundColor: Colors.white,
+                                                vertical: 2, horizontal: 5),
+                                            backgroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(0),
@@ -608,6 +615,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
                                     //Thống kê số lượng thú cưng đăng bán + đánh giá ở screen Review
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         //Số lượng thú cưng đang đăng bán
                                         RichText(
@@ -625,9 +634,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               TextSpan(text: ' Thú cưng'),
                                             ],
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 20,
                                         ),
 
                                         //đánh giá sao
@@ -647,10 +653,43 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                             ],
                                           ),
                                         ),
+
+                                        //Tạo ở đây
+                                        GestureDetector(
+                                          onTap: () {
+                                            // Chuyển đến Trang ReviewProfileScreen
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReviewProfileScreen()));
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                FontAwesomeIcons
+                                                    .solidHandPointRight,
+                                                size: 16,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                              const SizedBox(
+                                                width: 6,
+                                              ),
+                                              // Khoảng cách giữa icon và text
+                                              Text(
+                                                'VIEW ALL',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
                                     ),
 
                                     Divider(
@@ -1035,7 +1074,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 .width, // Chiều dài bằng với độ rộng của màn hình
             child: TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor:
+                foregroundColor: Colors.white,
+                backgroundColor:
                     Theme.of(context).primaryColor, // Màu của văn bản
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
