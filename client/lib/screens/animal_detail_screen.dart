@@ -315,9 +315,40 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           ),
                                         ),
 
-                                        TextButton(
-                                            onPressed: () {},
-                                            child: Text('hello'))
+                                      GestureDetector(
+                                          onTap: () {
+                                            // Chuyển đến Trang ReviewProfileScreen
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReviewProfileScreen()));
+                                          },
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                FontAwesomeIcons
+                                                    .solidHandPointRight,
+                                                size: 16,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                              const SizedBox(
+                                                width: 6,
+                                              ),
+                                              // Khoảng cách giữa icon và text
+                                              Text(
+                                                'VIEW ALL',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     const SizedBox(
