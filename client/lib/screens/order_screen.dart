@@ -353,38 +353,41 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             fontSize: 14, color: Colors.grey),
                                       ),
                                       const Spacer(),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          Loading(context);
-                                          await changeStatusOrder(
-                                              orders[index].id, 'CANCEL');
-                                          // ignore: use_build_context_synchronously
-                                          Navigator.pop(context);
+                                      orders[index].statusOrder == "PENDING"
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                Loading(context);
+                                                await changeStatusOrder(
+                                                    orders[index].id, 'CANCEL');
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.pop(context);
 
-                                          setState(() {
-                                            orders.removeAt(index);
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 120,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.red[400],
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "Hủy đơn hàng",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.white,
+                                                setState(() {
+                                                  orders.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                width: 120,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.red[400],
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Hủy đơn hàng",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                            )
+                                          : SizedBox(),
                                     ],
                                   ),
                                   const SizedBox(
