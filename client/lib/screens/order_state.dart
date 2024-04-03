@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:intl/intl.dart';
 
 class TrackingOrder extends StatefulWidget {
@@ -110,7 +111,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Tổng tiền hàng',
+                                  'Giá sản phẩm',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -125,11 +126,33 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                 ),
                               ],
                             ),
+                            order.voucherProduct != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá sản phẩm',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${order.voucherProduct} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Tổng tiền phí vận chuyển',
+                                  'Phí vận chuyển',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -144,6 +167,69 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                 ),
                               ],
                             ),
+                            order.voucherShipping != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá vận chuyển',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${order.voucherProduct} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tổng đơn hàng',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${order.totalFee} đ',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            order.voucherTotal != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá đơn hàng',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${order.voucherTotal} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -154,7 +240,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.totalFee} đ',
+                                  '${order.totalPayment} đ',
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 13.0,
@@ -333,31 +419,38 @@ class _TrackingOrderState extends State<TrackingOrder> {
                   ],
                 ),
               ),
-              Positioned(
-                left: 105,
-                bottom: 30,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 180,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.orange,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Hủy đơn hàng",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+              order.statusOrder == "PENDING"
+                  ? Positioned(
+                      left: 105,
+                      bottom: 30,
+                      child: GestureDetector(
+                        onTap: () async {
+                          Loading(context);
+                          await changeStatusOrder(order.id, 'CANCEL');
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 180,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.orange,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Hủy đơn hàng",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : SizedBox(),
             ]);
           }
         },

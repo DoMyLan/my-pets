@@ -26,8 +26,13 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   // ignore: prefer_typing_uninitialized_variables
   var currentClient;
+  var priceProduct = 0;
   var transportFee = 0;
   var totalFee = 0;
+  var voucherProduct = 0;
+  var voucherShipping = 0;
+  var voucherTotal = 0;
+  var totalPayment = 0;
 
   TextEditingController voucherText = TextEditingController();
 
@@ -42,6 +47,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ? widget.pet.centerId!.location
             : widget.pet.giver!.location));
     totalFee = int.parse(widget.pet.price) + transportFee;
+    priceProduct = int.parse(widget.pet.price);
+    totalPayment = int.parse(widget.pet.price) + transportFee;
   }
 
   Future<void> getClient() async {
@@ -53,7 +60,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String? success;
+    String? message;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -321,26 +328,51 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             Theme.of(context).primaryColor),
                       ),
                       onPressed: () async {
-                        Loading(context);
-                        var voucher = await applyVoucher(voucherText.text);
-                        Navigator.of(context).pop();
-                        setState(() {
-                          if (voucher != null) {
-                            if (voucher.type == "Product") {
-                              totalFee = totalFee -
-                                  min(voucher.discount * totalFee,
-                                      voucher.maxDiscount);
-                            } else if (voucher.type == "Shipping") {
-                              transportFee = transportFee -
-                                  min(voucher.discount * transportFee,
-                                      voucher.maxDiscount);
-                            } else {
-                              totalFee = totalFee -
-                                  min(voucher.discount * totalFee,
-                                      voucher.maxDiscount);
+                        if (voucherProduct == 0 &&
+                            voucherShipping == 0 &&
+                            voucherTotal == 0) {
+                          Loading(context);
+                          var voucher = await applyVoucher(voucherText.text);
+                          Navigator.of(context).pop();
+                          setState(() {
+                            if (voucher != null) {
+                              if (voucher.type == "Product") {
+                                voucherProduct = min(
+                                    voucher.discount * priceProduct,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - voucherProduct;
+                              } else if (voucher.type == "Shipping") {
+                                voucherShipping = min(
+                                    voucher.discount * transportFee,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - transportFee;
+                              } else {
+                                voucherTotal = min(voucher.discount * totalFee,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - voucherTotal;
+                              }
                             }
-                          }
-                        });
+                          });
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Thông báo'),
+                                content:
+                                    const Text('Chỉ được áp dụng 1 voucher'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Đóng'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       },
                       child: const Text(
                         'Áp dụng',
@@ -448,7 +480,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Tổng tiền hàng',
+                        'Giá sản phẩm',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
@@ -463,6 +495,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
+                  voucherProduct != 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Giảm giá sản phẩm',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                            Text(
+                              '-$voucherProduct đ',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -482,6 +535,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
+                  voucherShipping != 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Giảm giá vận chuyển',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                            Text(
+                              '-$voucherShipping đ',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -500,7 +574,46 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
+                  voucherTotal != 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Giảm giá tổng hóa đơn',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                            Text(
+                              '-${voucherTotal} đ',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13.0,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ]),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Thanh toán sau giảm giá',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    ),
+                    Text(
+                      '$totalPayment đ',
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 13.0,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -540,7 +653,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        '$totalFee đ',
+                        '$totalPayment đ',
                         style: const TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
@@ -574,7 +687,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           onPressed: () async {
                             Loading(context);
-                            success = await createOrder(
+                            message = await createOrder(
                                 currentClient.id,
                                 widget.pet.centerId != null ? true : false,
                                 widget.pet.centerId != null
@@ -586,8 +699,44 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 widget.pet,
                                 currentClient.address,
                                 transportFee,
-                                totalFee);
+                                voucherText.text,
+                                voucherProduct,
+                                voucherShipping,
+                                voucherTotal,
+                                totalFee,
+                                totalPayment);
                             Navigator.of(context).pop();
+                            if (message != "Create order successfully!") {
+                              setState(() {
+                                voucherProduct = 0;
+                                voucherShipping = 0;
+                                voucherTotal = 0;
+                                totalPayment = totalFee;
+                              });
+                            }
+
+                            if (message != null) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Thông báo'),
+                                    content:
+                                        message == "Create order successfully!"
+                                            ? const Text("Đặt hàng thành công")
+                                            : const Text("Chưa thể đặt hàng"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Đóng'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
 
                             //KHÔNG XÓA CODE Ở ĐÂY NHA
                             // Navigator.push(

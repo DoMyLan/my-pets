@@ -386,10 +386,13 @@ class _CommentScreenState extends State<CommentScreen> {
                         userId: userCmt,
                         centerId: centerCmt,
                         content: commentText,
+                        createdAt: DateTime.now(),
                       );
 
                       // Gửi comment thông qua Socket.IO
                       socket.emit('comment', newComment.toMap());
+                      // socket.emit('comment', {"hi": "there"});
+                      print(socket);
                     }
                   } else {
                     print("Not validated");

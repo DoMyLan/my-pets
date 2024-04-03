@@ -3,8 +3,19 @@ import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 
-Future<String?> createOrder(buyer, isCenterSeller, sellerId, pet, address,
-    transportFee, totalFee) async {
+Future<String?> createOrder(
+    buyer,
+    isCenterSeller,
+    sellerId,
+    pet,
+    address,
+    transportFee,
+    voucher,
+    voucherProduct,
+    voucherShipping,
+    voucherTotal,
+    totalFee,
+    totalPayment) async {
   try {
     var body = jsonEncode({
       "buyer": buyer,
@@ -16,19 +27,17 @@ Future<String?> createOrder(buyer, isCenterSeller, sellerId, pet, address,
       "petId": pet.id,
       "address": address,
       "price": pet.price,
+      "code": voucher,
       "transportFee": transportFee.toString(),
       "totalFee": totalFee.toString(),
+      "voucherProduct": voucherProduct,
+      "voucherShipping": voucherShipping,
+      "voucherTotal": voucherTotal,
+      "totalPayment": totalPayment,
       "paymentMethods": "COD"
     });
     var responseData = await api('order', 'POST', body);
-
-    if (responseData['success']) {
-      notification(responseData['message'], false);
-      return responseData['orderId']; 
-    } else {
-      notification(responseData['message'], true);
-      return null;
-    }
+    return responseData['message'];
   } catch (e) {
     // print(e.toString());
     notification("Order: ${e.toString()}", true);
@@ -46,6 +55,7 @@ Future<List<Order>> getOrdersByBuyer(statusOrder) async {
   }
   var orderList = responseData['data'] as List<dynamic>;
   List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
+  print(orders);
   return orders;
 }
 

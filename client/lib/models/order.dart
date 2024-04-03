@@ -156,8 +156,12 @@ class Order {
   final PetOrder petId;
   final String address;
   final int price;
+  final int voucherProduct;
+  final int voucherShipping;
+  final int voucherTotal;
   final int transportFee;
   final int totalFee;
+  final int totalPayment;
   final String paymentMethods;
   final String statusOrder;
   final String statusPayment;
@@ -175,8 +179,12 @@ class Order {
     required this.petId,
     required this.address,
     required this.price,
+    required this.voucherProduct,
+    required this.voucherShipping,
+    required this.voucherTotal,
     required this.transportFee,
     required this.totalFee,
+    required this.totalPayment,
     required this.paymentMethods,
     required this.statusOrder,
     required this.statusPayment,
@@ -196,8 +204,12 @@ class Order {
       petId: PetOrder.fromJson(json['petId']),
       address: json['address'],
       price: int.parse(json['price']),
+      voucherProduct: json['voucherProduct'],
+      voucherShipping: json['voucherShipping'],
+      voucherTotal: json['voucherTotal'],
       transportFee: int.parse(json['transportFee']),
       totalFee: int.parse(json['totalFee']),
+      totalPayment: json['totalPayment'],
       paymentMethods: json['paymentMethods'],
       statusOrder: json['statusOrder'],
       statusPayment: json['statusPayment'],

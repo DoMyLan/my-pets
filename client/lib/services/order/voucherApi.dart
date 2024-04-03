@@ -61,7 +61,7 @@ Future<Voucher?> applyVoucher(code) async {
     orders = Voucher.fromJson(order);
   } catch (e) {
     print(e);
-    notification(e.toString(), true);
+    // notification(e.toString(), true);
   }
   return orders;
 }

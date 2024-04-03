@@ -45,7 +45,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
     //sao chép danh sách screens vào screensnapshot
     screenSnapshot = screens.values.toList();
-    screens[2] = ProfilePage(userId: widget.userId);
+    screens[2] = FeedScreen();
   }
 
   //Map chứa cặp key-value (int - widget)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:intl/intl.dart';
 
 class TrackingOrderCenter extends StatefulWidget {
@@ -333,31 +334,38 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                   ],
                 ),
               ),
-              Positioned(
-                left: 105,
-                bottom: 30,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 180,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.orange,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Hủy đơn hàng",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
+              order.statusOrder == 'PENDING'
+                  ? Positioned(
+                      left: 105,
+                      bottom: 30,
+                      child: GestureDetector(
+                        onTap: () async {
+                          Loading(context);
+                          await changeStatusOrder(order.id, 'CANCEL');
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 180,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.orange,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Hủy đơn hàng",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : SizedBox(),
             ]);
           }
         },

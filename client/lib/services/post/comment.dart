@@ -6,7 +6,7 @@ import 'package:found_adoption_application/utils/messageNotifi.dart';
 Future<List<Comment>> getComment(String postId) async {
   var responseData = {};
   try {
-    responseData = await api('/post/$postId/comment', 'GET', '');
+    responseData = await api('post/$postId/comment', 'GET', '');
   } catch (e) {
     // notification(e.toString(), true);
   }
@@ -20,7 +20,7 @@ Future<String> deleteComment(String postId, String commentId) async {
   var responseData;
   var message = '';
   try {
-    responseData = await api('/post/$postId/comment/$commentId', 'DELETE', '');
+    responseData = await api('post/$postId/comment/$commentId', 'DELETE', '');
     message = responseData['message'];
   } catch (err) {
     print(err);
@@ -33,7 +33,7 @@ Future<String> postComment(String postID, String content) async {
   var responseData = {};
   var body = jsonEncode({"content": content});
   try {
-    responseData = await api('/post/$postID/comment', 'POST', body);
+    responseData = await api('post/$postID/comment', 'POST', body);
     return responseData['_id'];
   } catch (e) {
     print(e);
