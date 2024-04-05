@@ -6,6 +6,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/add_pet_personal_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -389,8 +390,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            print('what error: ${snapshot.error}');
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             animals = snapshot.data ?? [];
             return Column(

@@ -5,7 +5,6 @@ import 'package:found_adoption_application/screens/chart_folder/yearly_revenue.d
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 // void main() {
 //   runApp(MyApp());

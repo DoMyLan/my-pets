@@ -12,6 +12,7 @@ import 'package:found_adoption_application/screens/user_screens/edit_profile_scr
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -383,7 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             List<Post>? postList = snapshot.data;
             if (postList!.isNotEmpty) {

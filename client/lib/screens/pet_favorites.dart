@@ -4,6 +4,7 @@ import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 
@@ -34,7 +35,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             listPet = snapshot.data as List<Pet>;
             return Scaffold(
@@ -595,7 +596,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 //               child: CircularProgressIndicator(),
 //             );
 //           } else if (snapshot.hasError) {
-//             return const Center(child: Text('Please try again later'));
+//             return const errorWidget();
 //           } else {
 //             animals = snapshot.data ?? [];
 //             return Column(

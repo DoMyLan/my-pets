@@ -4,6 +4,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/screens/user_screens/upload_avatar_screen.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:hive/hive.dart';
 
 class EditProfileCenterScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
               );
             } else if (snapshot.hasError) {
               // If there is an error fetching data, show an error message
-              return const Center(child: Text('Please try again later'));
+              return const errorWidget();
             } else {
               // If data is successfully fetched, display the form
               InfoCenter center = snapshot.data!;
