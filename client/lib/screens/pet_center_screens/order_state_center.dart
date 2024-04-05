@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/utils/error.dart';
+import 'package:found_adoption_application/utils/fomatPrice.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:intl/intl.dart';
 
@@ -56,7 +58,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             Order order = snapshot.data as Order;
 
@@ -111,14 +113,14 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Tổng tiền hàng',
+                                  'Giá sản phẩm',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
                                   ),
                                 ),
                                 Text(
-                                  '${order.price} đ',
+                                  '${formatPrice(order.price)} đ',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -126,18 +128,40 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                                 ),
                               ],
                             ),
+                            order.voucherProduct != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá sản phẩm',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${formatPrice(order.voucherProduct)} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  'Tổng tiền phí vận chuyển',
+                                  'Phí vận chuyển',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
                                   ),
                                 ),
                                 Text(
-                                  '${order.transportFee} đ',
+                                  '${formatPrice(order.transportFee)} đ',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -145,6 +169,69 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                                 ),
                               ],
                             ),
+                            order.voucherShipping != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá vận chuyển',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${formatPrice(order.voucherProduct)} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Tổng đơn hàng',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${formatPrice(order.totalFee)} đ',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            order.voucherTotal != 0
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'Giảm giá đơn hàng',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        '-${formatPrice(order.voucherTotal)} đ',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -155,7 +242,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.totalFee} đ',
+                                  '${formatPrice(order.totalPayment)} đ',
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 13.0,
@@ -294,7 +381,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                         TrackingStep(
                           date: order.createdAt,
                           icon: FontAwesomeIcons.cartShopping,
-                          title: 'Order Placed',
+                          title: 'Ngày đặt hàng',
                           isFirstStep: true,
                           isCurrentStep: true,
                           isLastStep: false,
@@ -302,7 +389,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                         TrackingStep(
                           date: order.dateConfirm,
                           icon: Icons.home,
-                          title: 'Order Dispatched',
+                          title: 'Ngày xác nhận đơn hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateConfirm != null ? true : false,
@@ -311,7 +398,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                         TrackingStep(
                           date: order.dateDelivering,
                           icon: Icons.delivery_dining,
-                          title: 'Order in Transit',
+                          title: 'Ngày chuyển hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateDelivering != null ? true : false,
@@ -320,7 +407,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                         TrackingStep(
                           date: order.dateCompleted,
                           icon: Icons.done,
-                          title: 'Delivered Successfully',
+                          title: 'Ngày hoàn thành đơn hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateCompleted != null ? true : false,
@@ -519,7 +606,7 @@ class TrackingStep extends StatelessWidget {
                     ),
                   ),
                   date != null
-                      ? Text(DateFormat('MMM d, y | HH:mm')
+                      ? Text(DateFormat('EEEE, d/M/y | HH:mm')
                           .format(date!)
                           .toString())
                       : const Text("Chờ cập nhật")

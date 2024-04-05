@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:hive/hive.dart';
 
 import 'package:found_adoption_application/models/userInfo.dart';
@@ -68,7 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
-              return const Center(child: Text('Please try again later'));
+              return const errorWidget();
             } else {
               InfoUser user = snapshot.data!;
               if (count == 0) {

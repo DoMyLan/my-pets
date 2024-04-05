@@ -6,6 +6,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -489,7 +490,7 @@ class AdoptionTabView extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else if (snapshot.hasData) {
             adopt = snapshot.data;
             if (adopt!.isNotEmpty) {

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/chart_folder/chart_revenue_screen.dart';
-import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/add_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/order_screen_center.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/status_adopt.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_screen_center.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 

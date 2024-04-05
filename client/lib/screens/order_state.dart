@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
+import 'package:found_adoption_application/screens/chart_folder/chart_revenue_screen.dart';
+import 'package:found_adoption_application/screens/review_rating_screen.dart';
+import 'package:found_adoption_application/screens/user_screens/feedback.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:found_adoption_application/utils/error.dart';
+import 'package:found_adoption_application/utils/fomatPrice.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:intl/intl.dart';
 
@@ -56,7 +61,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             Order order = snapshot.data as Order;
 
@@ -118,7 +123,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.price} đ',
+                                  '${formatPrice(order.price)} đ',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -139,7 +144,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                         ),
                                       ),
                                       Text(
-                                        '-${order.voucherProduct} đ',
+                                        '-${formatPrice(order.voucherProduct)} đ',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13.0,
@@ -159,7 +164,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.transportFee} đ',
+                                  '${formatPrice(order.transportFee)} đ',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -180,7 +185,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                         ),
                                       ),
                                       Text(
-                                        '-${order.voucherProduct} đ',
+                                        '-${formatPrice(order.voucherProduct)} đ',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13.0,
@@ -200,7 +205,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.totalFee} đ',
+                                  '${formatPrice(order.totalFee)} đ',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13.0,
@@ -221,7 +226,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                         ),
                                       ),
                                       Text(
-                                        '-${order.voucherTotal} đ',
+                                        '-${formatPrice(order.voucherTotal)} đ',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13.0,
@@ -240,7 +245,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   ),
                                 ),
                                 Text(
-                                  '${order.totalPayment} đ',
+                                  '${formatPrice(order.totalPayment)} đ',
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 13.0,
@@ -379,7 +384,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                         TrackingStep(
                           date: order.createdAt,
                           icon: FontAwesomeIcons.cartShopping,
-                          title: 'Order Placed',
+                          title: 'Ngày đặt hàng',
                           isFirstStep: true,
                           isCurrentStep: true,
                           isLastStep: false,
@@ -387,7 +392,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                         TrackingStep(
                           date: order.dateConfirm,
                           icon: Icons.home,
-                          title: 'Order Dispatched',
+                          title: 'Ngày xác nhận đơn hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateConfirm != null ? true : false,
@@ -396,7 +401,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                         TrackingStep(
                           date: order.dateDelivering,
                           icon: Icons.delivery_dining,
-                          title: 'Order in Transit',
+                          title: 'Ngày chuyển hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateDelivering != null ? true : false,
@@ -405,7 +410,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                         TrackingStep(
                           date: order.dateCompleted,
                           icon: Icons.done,
-                          title: 'Delivered Successfully',
+                          title: 'Ngày hoàn thành đơn hàng',
                           isFirstStep: false,
                           isCurrentStep:
                               order.dateCompleted != null ? true : false,
@@ -440,6 +445,40 @@ class _TrackingOrderState extends State<TrackingOrder> {
                           child: const Center(
                             child: Text(
                               "Hủy đơn hàng",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox(),
+                  order.statusOrder == "COMPLETED"
+                  ? Positioned(
+                      left: 105,
+                      bottom: 30,
+                      child: GestureDetector(
+                        onTap: ()  {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddFeedBackScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 180,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.orange,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Đánh giá",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -604,7 +643,7 @@ class TrackingStep extends StatelessWidget {
                     ),
                   ),
                   date != null
-                      ? Text(DateFormat('MMM d, y | HH:mm')
+                      ? Text(DateFormat('EEEE, d/M/y | HH:mm')
                           .format(date!)
                           .toString())
                       : const Text("Chờ cập nhật")

@@ -8,6 +8,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/profile_ce
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:intl/intl.dart';
@@ -60,7 +61,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Please try again later'));
+            return const errorWidget();
           } else {
             Pet pet = snapshot.data as Pet;
 

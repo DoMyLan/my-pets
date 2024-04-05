@@ -6,6 +6,7 @@ import 'package:found_adoption_application/screens/new_post_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
+import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
 class PostScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _PostScreenState extends State<PostScreen> {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
-                return const Center(child: Text('Please try again later'));
+                return const errorWidget();
               } else {
                 Post? post = snapshot.data;
 
