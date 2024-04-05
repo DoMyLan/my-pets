@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/chart_folder/chart_revenue_screen.dart';
 import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/add_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/order_screen_center.dart';
@@ -44,6 +45,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+     
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -67,7 +69,8 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
     4: TheOrdersCenter(),
     // 5: StatusAdopt(),
     5: VoucherScreen(),
-    6: NotificationPage()
+    // 6: NotificationPage(),
+    7: RevenueChartPage(),
   };
 
   late List<Widget> screenSnapshot;
