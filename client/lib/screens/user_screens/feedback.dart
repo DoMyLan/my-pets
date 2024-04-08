@@ -5,8 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
-import 'package:found_adoption_application/screens/review_rating_screen.dart' as reviewRating;
-import 'package:found_adoption_application/screens/testRating.dart' as testRating;
+import 'package:found_adoption_application/screens/review_rating_screen.dart'
+    as reviewRating;
+import 'package:found_adoption_application/screens/testRating.dart'
+    as testRating;
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/services/post/review.dart';
 import 'package:found_adoption_application/services/upload_video/upload_video.dart';
@@ -28,6 +30,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
   final CarouselController carouselController = CarouselController();
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
+  Order? order;
 
   late String videoPath = '';
 
@@ -61,6 +64,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
   @override
   void initState() {
     super.initState();
+    order = widget.order;
     _controller = VideoPlayerController.asset('assets/video/sample_video.mp4')
       ..initialize().then((_) {
         setState(() {
@@ -75,7 +79,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
     _controller.dispose();
     _commentController.clear();
     finalResult.clear();
-    videoPath ='';
+    videoPath = '';
   }
 
   void _playVideo() async {
@@ -87,7 +91,6 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
     if (result != null) {
       File file = File(result.files.single.path!);
       createAudioUpload('${result.files.single.path!}');
-      print('test đường dẫn video: ${result.files.single.path!}');
       await _controller.pause();
       await _controller.dispose();
       setState(() {
@@ -125,22 +128,21 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
     // Kiểm tra trạng thái mounted trước khi gọi setState
     if (mounted) {
       await addReview(
-        widget.order.buyer.id.toString(),
-        widget.order.seller.typeSeller.toString(),
-        // widget.order.seller.centerId.toString(),
-        // 'abc',
-        widget.order.seller.centerId!.id.toString(),
-        widget.order.petId.id.toString(),
-        currentRating.toInt(),
-        _commentController.text.toString(),
-        finalResult.toList(),
-        videoPath
-      );
+          widget.order.buyer.id.toString(),
+          widget.order.seller.typeSeller.toString(),
+          // widget.order.seller.centerId.toString(),
+          // 'abc',
+          widget.order.seller.centerId!.id.toString(),
+          widget.order.petId.id.toString(),
+          currentRating.toInt(),
+          _commentController.text.toString(),
+          finalResult.toList(),
+          videoPath,
+          order!.id);
     }
     setState(() {
       imageFileList = [];
-    _commentController.clear();
-
+      _commentController.clear();
     });
   }
 
@@ -149,24 +151,51 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color.fromRGBO(48, 96, 96, 1.0)),
+          icon: const Icon(Icons.arrow_back,
+              color: Color.fromRGBO(48, 96, 96, 1.0)),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Đánh giá sản phẩm'),
+        title: const Text('Đánh giá sản phẩm'),
         actions: [
           TextButton(
-            onPressed: () {
-              postFeedBack();
+            onPressed: () async {
+              if (_commentController.text.toString() == "") {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Thông báo'),
+                      content: const Text(
+                          'Bạn chưa cho chúng tôi biết cảm nhận của bạn về thú cưng!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Đóng'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                return;
+              } else {
+                Loading(context);
+                await postFeedBack();
+                Navigator.of(context).pop();
                 Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => reviewRating.ReviewProfileScreen(),
-            ),
-          );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => reviewRating.ReviewProfileScreen(
+                      centerId: widget.order.seller.centerId!.id,
+                    ),
+                  ),
+                );
+              }
             },
-            child: Text(
+            child: const Text(
               'Gửi',
               style: TextStyle(
                 color: Color.fromRGBO(48, 96, 96, 1.0),

@@ -323,7 +323,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ReviewProfileScreen()));
+                                                        ReviewProfileScreen(centerId: pet.centerId!.id)));
                                           },
                                           child: Row(
                                             children: [
@@ -694,7 +694,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ReviewProfileScreen()));
+                                                        ReviewProfileScreen(centerId: pet.centerId!.id,)));
                                           },
                                           child: Row(
                                             children: [

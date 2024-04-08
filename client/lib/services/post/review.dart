@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:found_adoption_application/models/review.dart';
 import 'package:found_adoption_application/services/api.dart';
 
 import 'package:found_adoption_application/utils/messageNotifi.dart';
-
 
 Future<void> addReview(
     String buyer,
@@ -13,9 +13,8 @@ Future<void> addReview(
     int rating,
     String comment,
     List<dynamic> imagePaths,
-    String videoPath) async {
-
-
+    String videoPath,
+    String orderId) async {
   try {
     Map<String, dynamic> encodeSeller(String type, String centerId) {
       return {
@@ -33,16 +32,15 @@ Future<void> addReview(
       "comment": comment,
       "images": imagePaths,
       "video": videoPath,
+      "orderId": orderId
     });
 
     final response = await api('review', 'POST', body);
 
     print('test response: $response');
- 
 
     if (response['success']) {
       notification(response['message'], false);
-      
     } else {
       notification(response['message'], true);
     }
@@ -50,4 +48,20 @@ Future<void> addReview(
     print('error when add review: $e');
     //  notification(e.toString(), true);
   }
+}
+
+Future<List<Review>> getAllReviewOfCenter(centerId) async {
+  var responseData;
+  List<Review> reviews = [];
+  try {
+    responseData = await api('review/all/$centerId', 'GET', '');
+    List<dynamic> reviewList = List.empty();
+
+    reviewList = responseData['data'] ?? List.empty();
+    reviews = reviewList.map((json) => Review.fromJson(json)).toList();
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  return reviews;
 }

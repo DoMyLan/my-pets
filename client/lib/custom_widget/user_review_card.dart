@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/user_view_card_image.dart';
+import 'package:found_adoption_application/models/review.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class UserReviewCard extends StatefulWidget {
-  const UserReviewCard({super.key});
+  final Review review;
+  const UserReviewCard({super.key, required this.review});
 
   @override
   State<UserReviewCard> createState() => _UserReviewCardState();
 }
 
 class _UserReviewCardState extends State<UserReviewCard> {
-  final List<String> imageUrls = [
-    'https://www.morganstanley.com/content/dam/msdotcom/ideas/pet-care/tw-pet-care.jpg',
-    'https://thumbor.forbes.com/thumbor/fit-in/900x510/https://www.forbes.com/advisor/wp-content/uploads/2023/03/happy_dog_being_held_by_woman.jpeg.jpg',
-    'https://static.foxbusiness.com/foxbusiness.com/content/uploads/2022/04/iStock-1324099927.jpg',
-    'https://www.morganstanley.com/content/dam/msdotcom/ideas/pet-care/tw-pet-care.jpg',
-    'https://www.morganstanley.com/content/dam/msdotcom/ideas/pet-care/tw-pet-care.jpg',
-  ];
   bool isExpanded = false;
+  Review get review => widget.review;
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -33,29 +30,28 @@ class _UserReviewCardState extends State<UserReviewCard> {
           children: [
             Row(
               children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/Lan.jpg'),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(review.buyer.avatar),
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 Text(
-                  'Đặng Văn Tuấn',
+                  '${review.buyer.firstName} ${review.buyer.lastName}',
                   style: Theme.of(context).textTheme.titleMedium,
                 )
               ],
             ),
             GestureDetector(
               onTap: () {
-                // Mở đến bài đăng về pet đã bán               
+                // Mở đến bài đăng về pet đã bán
               },
               child: Container(
-                padding: EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(6.0),
                 decoration: BoxDecoration(
-                  color: Colors.yellow.shade700, 
-                  borderRadius: BorderRadius.only(
-                    topLeft:
-                        Radius.circular(16.0), 
+                  color: Colors.yellow.shade700,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16.0),
                     bottomRight: Radius.circular(0),
                   ),
                   boxShadow: [
@@ -63,11 +59,11 @@ class _UserReviewCardState extends State<UserReviewCard> {
                       color: Colors.grey.withOpacity(0.5), // Màu của bóng đổ
                       spreadRadius: 2, // Khoảng lan rộng của bóng đổ
                       blurRadius: 5, // Độ mờ của bóng đổ
-                      offset: Offset(0, 3), // Độ lệch của bóng đổ
+                      offset: const Offset(0, 3), // Độ lệch của bóng đổ
                     ),
                   ],
                 ),
-                child: Text(
+                child: const Text(
                   'Xem chi tiết bài đăng', // Văn bản trong thẻ
                   style: TextStyle(
                     fontSize: 11.0,
@@ -84,19 +80,19 @@ class _UserReviewCardState extends State<UserReviewCard> {
         ),
         Row(
           children: [
-            const TRatingBar(rating: 4),
+            TRatingBar(rating: double.parse(review.rating.toString())),
             const SizedBox(
               width: 10,
             ),
             Text(
-              '22-08-2023 10:39',
+              DateFormat('dd/MM/yyyy | HH:mm:ss').format(review.createdAt),
               style: Theme.of(context).textTheme.bodyMedium,
             )
           ],
         ),
         Row(
           children: [
-            Text(
+            const Text(
               'Phân loại: ',
               style: TextStyle(
                 fontSize: 14.0,
@@ -104,8 +100,8 @@ class _UserReviewCardState extends State<UserReviewCard> {
               ),
             ),
             Text(
-              'Bunny - Corgi, 1 tháng tuổi - 3,4 kg',
-              style: TextStyle(
+              '${review.petId.namePet} - ${review.petId.breed}, ${AgePet.convertAge(review.petId.birthday!)} tuổi - ${review.petId.weight} kg',
+              style: const TextStyle(
                 fontSize: 14.0,
               ),
             ),
@@ -115,16 +111,19 @@ class _UserReviewCardState extends State<UserReviewCard> {
         const SizedBox(
           height: 10,
         ),
-        ReadMoreText(
-          'Em nó nhận về rất đúng với mô tả, rất dễ thương ngoan ngoãn và mạnh khỏe.',
-          trimLines: 2,
-          trimMode: TrimMode.Line,
-          trimExpandedText: 'show less',
-          trimCollapsedText: 'show more',
-          moreStyle: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
-          lessStyle: TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ReadMoreText(
+            review.comment,
+            trimLines: 2,
+            trimMode: TrimMode.Line,
+            trimExpandedText: '...Ẩn bớt',
+            trimCollapsedText: '...Xem thêm',
+            moreStyle: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+            lessStyle: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
         ),
         const SizedBox(
           height: 3,
@@ -132,17 +131,17 @@ class _UserReviewCardState extends State<UserReviewCard> {
 
         //list image
 
-        _buildImages(imageUrls),
+        _buildImages(review.images as List<dynamic>),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '28-02-2024 20:32',
-              style: TextStyle(fontSize: 12),
+              review.createdAt.toString(),
+              style: const TextStyle(fontSize: 12),
             ),
             Row(children: [
-              Text(
+              const Text(
                 'Phản hồi của người bán',
                 style: TextStyle(fontSize: 12),
               ),
@@ -174,11 +173,14 @@ class _UserReviewCardState extends State<UserReviewCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Trung tâm Miami',
-                        style: TextStyle(fontSize: 13),
+                        review.seller.centerId != null
+                            ? review.seller.centerId!.name
+                            : review.seller.userId!.firstName +
+                                review.seller.userId!.lastName,
+                        style: const TextStyle(fontSize: 13),
                       ),
                       Text(
-                        'Cảm ơn sự tin tưởng của bạn, đây sẽ là động lực cho chúng tôi phát triển chất lượng phục vụ sau này =))',
+                        'Cảm ơn sự tin tưởng của bạn, đây sẽ là động lực cho chúng tôi phát triển chất lượng phục vụ sau này!',
                         style: TextStyle(
                             fontSize: 12.5, color: Colors.grey.shade700),
                       ),
@@ -192,7 +194,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
             : []),
 
         Container(
-          padding: EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Divider(
             color: Colors.grey.shade300,
             thickness: 10,
@@ -203,7 +205,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
     );
   }
 
-  Widget _buildImages(List<String> urls) {
+  Widget _buildImages(List<dynamic> urls) {
     List<Widget> imageWidgets = [];
     int maxTotalImages = 4; // Số ảnh tối đa cần hiển thị
     int displayedImages = 0; // Số ảnh đã hiển thị
@@ -215,7 +217,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return FullScreenDialogImage(urls: urls, initialIndex: i);
+                return FullScreenDialogImage(urls: urls, initialIndex: i, review: review,);
               },
             );
           },
@@ -234,7 +236,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
                   Positioned.fill(
                     child: Container(
                       color: Colors.black.withOpacity(0.5),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           '+1',
                           style: TextStyle(
@@ -260,5 +262,31 @@ class _UserReviewCardState extends State<UserReviewCard> {
       crossAxisSpacing: 4.0, // Khoảng cách giữa các cột
       children: imageWidgets,
     );
+  }
+}
+class AgePet {
+  static String convertAge(DateTime birthday) {
+    String age = '';
+    DateTime now = DateTime.now();
+    int months = now.month - birthday.month + 12 * (now.year - birthday.year);
+    if (now.day < birthday.day) {
+      months--;
+    }
+
+    if (months < 1) {
+      // If age is less than 1 month, calculate in weeks
+      int weeks = (now.difference(birthday).inDays / 7).floor();
+      age = '$weeks tuần';
+    } else if (months < 12) {
+      // If age is less than 1 year, calculate in months
+      age = '$months tháng';
+    } else {
+      // If age is 1 year or more, calculate in years and months
+      int years = months ~/ 12;
+      months %= 12;
+      age = '$years năm $months tháng';
+    }
+
+    return age;
   }
 }

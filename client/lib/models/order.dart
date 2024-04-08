@@ -169,6 +169,7 @@ class Order {
   final DateTime? dateDelivering;
   final DateTime? dateCompleted;
   final DateTime? dateCancel;
+  final bool rating;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -192,6 +193,7 @@ class Order {
     this.dateDelivering,
     this.dateCompleted,
     this.dateCancel,
+    required this.rating,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -229,6 +231,7 @@ class Order {
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['dateCancel']))
               .add(const Duration(hours: 7))
           : null,
+      rating: json['rating'] as bool,
       createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['createdAt']))
           .add(const Duration(hours: 7)),
       updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['updatedAt']))
