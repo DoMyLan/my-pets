@@ -465,7 +465,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddFeedBackScreen(),
+                              builder: (context) => AddFeedBackScreen(order: order,),
                             ),
                           );
                         },

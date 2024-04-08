@@ -405,7 +405,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          AddFeedBackScreen(),
+                                                          AddFeedBackScreen(order: orders[index],),
                                                     ),
                                                   );
                                                 },
