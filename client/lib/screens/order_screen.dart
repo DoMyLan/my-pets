@@ -238,7 +238,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                           width: 10,
                                         ),
                                         SizedBox(
-                                          width: 200,
+                                          width: 170,
                                           child: Text(
                                             orders[index].seller.centerId !=
                                                     null
@@ -398,40 +398,66 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : SizedBox(),
-                                        orders[index].statusOrder == "COMPLETED"
+                                        orders[index].statusOrder ==
+                                                    "COMPLETED" &&
+                                                orders[index].rating == false
                                             ? GestureDetector(
                                                 onTap: () {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          AddFeedBackScreen(order: orders[index],),
+                                                          AddFeedBackScreen(
+                                                        order: orders[index],
+                                                      ),
                                                     ),
                                                   );
                                                 },
-                                                child: Container(
-                                                  width: 120,
-                                                  height: 40,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.blueGrey,
-                                                  ),
-                                                  child: const Center(
-                                                    child: Text(
-                                                      "Đánh giá",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.white,
+                                                child: GestureDetector(
+                                                  onTap: () {},
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.blueGrey,
+                                                    ),
+                                                    child: const Center(
+                                                      child: Text(
+                                                        "Đánh giá",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               )
-                                            : SizedBox(),
+                                            : Container(
+                                                width: 120,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.grey[200],
+                                                ),
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Bạn đã đánh giá",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
                                       ],
                                     ),
                                     const SizedBox(
@@ -451,4 +477,3 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
         });
   }
 }
-

@@ -86,6 +86,8 @@ class Pet {
                   .add(const Duration(hours: 7)),
             )
           : null,
+      centerId_id:
+          json['centerId'] != null ? json['centerId']['_id'] as String : null,
       giver: json['giver'] != null
           ? User(
               id: json['giver']['_id'] as String,
