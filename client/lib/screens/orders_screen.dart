@@ -19,14 +19,6 @@ class _OrdersState extends State<Orders> {
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-
-
-
-
-
-
-
-
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
