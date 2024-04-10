@@ -163,7 +163,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
         ...(!isExpanded
             ? [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.85,
+                  width: deviceWidth * 0.85,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(10),
