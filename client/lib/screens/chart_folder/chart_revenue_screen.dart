@@ -92,6 +92,8 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextButton(
               onPressed: () {
@@ -113,56 +115,10 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
                     fontSize: 13, color: Color.fromRGBO(48, 96, 96, 1.0)),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //chọn năm
-                  DropdownButton<int>(
-                    value: selectedYear,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedYear = value!;
-                      });
-                    },
-                    items: List.generate(5, (index) {
-                      return DropdownMenuItem<int>(
-                        value: DateTime.now().year - index,
-                        child: Text((DateTime.now().year - index).toString()),
-                      );
-                    }),
-                  ),
-
-                  //lựa chọn tháng trong năm
-                  if (!showYearDropdownOnly)
-                    DropdownButton<int>(
-                      value: selectedMonth,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedMonth = value!;
-                        });
-                      },
-                      items: List.generate(12, (index) {
-                        return DropdownMenuItem<int>(
-                          value: index + 1,
-                          child: Text(monthNames[index]),
-                        );
-                      }),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
             Expanded(
-              child: selectedMonth == 0
-                  ? YearlyRevenueChart(selectedYear: selectedYear)
-                  : MonthlyRevenueChart(
-                      selectedMonth: selectedMonth,
-                      selectedYear: selectedYear,
-                    ),
-            ),
+                child: showYearDropdownOnly
+                    ? YearlyRevenueChart()
+                    : MonthlyRevenueChart()),
           ],
         ),
       ),

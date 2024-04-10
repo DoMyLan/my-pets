@@ -4,11 +4,6 @@ import 'package:found_adoption_application/services/order/statisticalApi.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MonthlyRevenueChart extends StatefulWidget {
-  final int selectedMonth;
-  final int selectedYear;
-  MonthlyRevenueChart(
-      {required this.selectedMonth, required this.selectedYear});
-
   @override
   State<MonthlyRevenueChart> createState() => _MonthlyRevenueChartState();
 }
@@ -17,71 +12,145 @@ class _MonthlyRevenueChartState extends State<MonthlyRevenueChart> {
   late List<SalesData> chartData;
   late dynamic data;
 
+  int selectedYear = DateTime.now().year;
+  int selectedMonth = DateTime.now().month;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   chartData = generateSalesData(selectedMonth, selectedYear);
+  //   data = getStatisticalMonth(selectedYear, selectedMonth);
+  //   print('month: $selectedMonth -  year: $selectedYear');
+  // }
+
   @override
   void initState() {
     super.initState();
-    chartData = generateSalesData(widget.selectedMonth, widget.selectedYear);
-    data = getStatisticalMonth(widget.selectedYear, widget.selectedMonth);
-  
+    _updateData(); // Call a method to initialize data
+  }
+
+  void _updateData() {
+    setState(() {
+      chartData = generateSalesData(selectedMonth, selectedYear);
+      data = getStatisticalMonth(selectedYear, selectedMonth);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateData();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: data,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return const Center(
-            child: Text('Error'),
-          );
-        } else {
-          List<StatisticalMonth> statisticalMonth = snapshot.data as List<StatisticalMonth>;
-          chartData = statisticalMonth
-              .map((e) => SalesData(e.day, e.total))
-              .toList();
-        return Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Biểu đồ doanh thu theo tháng:',
-                style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                width: MediaQuery.of(context).size.width,
+        future: data,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          } else {
+            List<StatisticalMonth> statisticalMonth =
+                snapshot.data as List<StatisticalMonth>;
+            chartData =
+                statisticalMonth.map((e) => SalesData(e.day, e.total)).toList();
+            return Scaffold(
+              body: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Tháng ${widget.selectedMonth} - Năm ${widget.selectedYear}',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //chọn năm
+                          DropdownButton<int>(
+                            value: selectedYear,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedYear = value!;
+                                _updateData();
+                              });
+                            },
+                            items: List.generate(5, (index) {
+                              return DropdownMenuItem<int>(
+                                value: DateTime.now().year - index,
+                                child: Text(
+                                    (DateTime.now().year - index).toString()),
+                              );
+                            }),
+                          ),
+                
+                          //lựa chọn tháng trong năm
+                
+                          DropdownButton<int>(
+                            value: selectedMonth,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedMonth = value!;
+                                _updateData();
+                              });
+                            },
+                            items: List.generate(12, (index) {
+                              return DropdownMenuItem<int>(
+                                value: index + 1,
+                                child: Text(monthNames[index]),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(
-                      height: 15,
+                    const Text(
+                      'Biểu đồ doanh thu theo tháng:',
+                      style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
                     ),
-                    SfCartesianChart(
-                        primaryXAxis: CategoryAxis(),
-                        series: <CartesianSeries>[
-                          LineSeries<SalesData, String>(
-                              dataSource: chartData,
-                              xValueMapper: (SalesData sales, _) => 'Ngày ${sales.day.toString()}',
-                              yValueMapper: (SalesData sales, _) => sales.sales)
-                        ]),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 30),
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tháng ${selectedMonth} - Năm ${selectedYear}',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          SfCartesianChart(
+                              primaryXAxis: CategoryAxis(),
+                              series: <CartesianSeries>[
+                                LineSeries<SalesData, String>(
+                                    dataSource: chartData,
+                                    xValueMapper: (SalesData sales, _) =>
+                                        'Ngày ${sales.day.toString()}',
+                                    yValueMapper: (SalesData sales, _) =>
+                                        sales.sales)
+                              ]),
+                        ],
+                      ),
+                    ),
+                
+                   const SizedBox(height: 20,)
                   ],
                 ),
               ),
-            ],
-          ),
-        );
-      }
-  });
+            );
+          }
+        });
   }
 
   List<SalesData> generateSalesData(int month, int year) {
@@ -140,6 +209,21 @@ class SalesData {
   final int day;
   final int sales;
 }
+
+final List<String> monthNames = [
+  'Tháng 1',
+  'Tháng 2',
+  'Tháng 3',
+  'Tháng 4',
+  'Tháng 5',
+  'Tháng 6',
+  'Tháng 7',
+  'Tháng 8',
+  'Tháng 9',
+  'Tháng 10',
+  'Tháng 11',
+  'Tháng 12',
+];
 
 // void main() {
 //   runApp(MaterialApp(
