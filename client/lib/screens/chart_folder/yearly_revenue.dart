@@ -4,8 +4,7 @@ import 'package:found_adoption_application/services/order/statisticalApi.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class YearlyRevenueChart extends StatefulWidget {
-  final int selectedYear;
-  YearlyRevenueChart({required this.selectedYear});
+
 
   @override
   State<YearlyRevenueChart> createState() => _YearlyRevenueChartState();
@@ -13,10 +12,24 @@ class YearlyRevenueChart extends StatefulWidget {
 
 class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
   late dynamic data;
+  int selectedYear = DateTime.now().year;
+
   @override
   void initState() {
     super.initState();
-    data = getStatisticalYear(widget.selectedYear.toString());
+    _updateData(); // Call a method to initialize data
+  }
+
+  void _updateData() {
+    setState(() {
+      data = getStatisticalYear(selectedYear.toString());
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateData();
   }
 
   @override
@@ -48,8 +61,8 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
               child: Text('Error'),
             );
           } else {
-
-            List<StatisticalYear> statisticalYear = snapshot.data as List<StatisticalYear>;
+            List<StatisticalYear> statisticalYear =
+                snapshot.data as List<StatisticalYear>;
             chartData = statisticalYear
                 .map((e) => SalesData(e.month, e.total))
                 .toList();
@@ -57,22 +70,48 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
             return Scaffold(
                 body: Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //chọn năm
+                        DropdownButton<int>(
+                          value: selectedYear,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedYear = value!;
+                              _updateData();
+                            });
+                          },
+                          items: List.generate(5, (index) {
+                            return DropdownMenuItem<int>(
+                              value: DateTime.now().year - index,
+                              child: Text(
+                                  (DateTime.now().year - index).toString()),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ),
                   const Text(
-                    'Biểu đồ doanh thu theo năm',
+                    'Biểu đồ doanh thu theo năm:',
                     style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
                   ),
                   Container(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 30),
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Năm ${widget.selectedYear}',
+                            'Năm $selectedYear',
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
@@ -87,13 +126,18 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
                                 LineSeries<SalesData, String>(
                                     // Changed the generic type to String
                                     dataSource: chartData,
-                                    xValueMapper: (SalesData sales, _) =>
-                                        sales.month.toString(), // Now returns a String
+                                    xValueMapper: (SalesData sales, _) => sales
+                                        .month
+                                        .toString(), // Now returns a String
                                     yValueMapper: (SalesData sales, _) =>
                                         sales.sales)
                               ]),
                         ],
                       )),
+
+                      SizedBox(height: 20,)
+
+                      
                 ],
               ),
             ));
