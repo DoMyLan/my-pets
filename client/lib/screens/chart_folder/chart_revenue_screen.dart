@@ -47,6 +47,7 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
               if (currentClient.role == 'USER') {
                 // ignore: use_build_context_synchronously
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                     builder: (context) => MenuFrameUser(
@@ -57,6 +58,7 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
               } else if (currentClient.role == 'CENTER') {
                 // ignore: use_build_context_synchronously
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
@@ -72,13 +74,13 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
             color: Color.fromRGBO(48, 96, 96, 1.0),
           ),
         ),
-        title: Text(
+        title: const Text(
           'THỐNG KÊ DOANH THU',
           style: TextStyle(
             fontSize: 20,
           ),
         ),
-        actions: [
+        actions: const [
           Icon(
             size: 40,
             Icons.show_chart, // Thay bằng icon mong muốn
@@ -107,12 +109,12 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
                 showYearDropdownOnly
                     ? 'Thống kê doanh thu theo năm (Nhấn để thay đổi)'
                     : 'Thống kê doanh thu theo tháng (Nhấn để thay đổi)',
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 13, color: Color.fromRGBO(48, 96, 96, 1.0)),
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(30,0,30,0),
+              padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,29 +134,27 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
                       );
                     }),
                   ),
-              
+
                   //lựa chọn tháng trong năm
-                   if (!showYearDropdownOnly)
-                DropdownButton<int>(
-                  value: selectedMonth,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedMonth = value!;
-                    });
-                  },
-                  items: List.generate(12, (index) {
-                    return DropdownMenuItem<int>(
-                      value: index + 1,
-                      child: Text(monthNames[index]),
-                    );
-                  }),
-                ),
+                  if (!showYearDropdownOnly)
+                    DropdownButton<int>(
+                      value: selectedMonth,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedMonth = value!;
+                        });
+                      },
+                      items: List.generate(12, (index) {
+                        return DropdownMenuItem<int>(
+                          value: index + 1,
+                          child: Text(monthNames[index]),
+                        );
+                      }),
+                    ),
                 ],
               ),
             ),
-      
-           
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: selectedMonth == 0
                   ? YearlyRevenueChart(selectedYear: selectedYear)
@@ -171,16 +171,16 @@ class _RevenueChartPageState extends State<RevenueChartPage> {
 }
 
 final List<String> monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
+  'Tháng 1',
+  'Tháng 2',
+  'Tháng 3',
+  'Tháng 4',
+  'Tháng 5',
+  'Tháng 6',
+  'Tháng 7',
+  'Tháng 8',
+  'Tháng 9',
+  'Tháng 10',
+  'Tháng 11',
+  'Tháng 12',
 ];
