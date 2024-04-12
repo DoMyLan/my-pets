@@ -6,8 +6,8 @@ import 'package:found_adoption_application/services/order/paymentApi.dart';
 import 'package:found_adoption_application/utils/consts.dart';
 
 class PaymentMethod extends StatefulWidget {
-  final String success;
-  PaymentMethod({Key? key, required this.success}) : super(key: key);
+  // final String success;
+  PaymentMethod({Key? key}) : super(key: key);
 
   @override
   State<PaymentMethod> createState() => _PaymentMethodState();
@@ -20,7 +20,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
   @override
   void initState() {
     super.initState();
-    invoiceDetail = getInvoice(widget.success);
+    // invoiceDetail = getInvoice(widget.success);
   }
 
   @override

@@ -279,21 +279,30 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
                                     //Đã mua + đánh giá ở screen Review
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         //Số lượng thú cưng đang đăng bán
-                                        const Icon(
-                                          Icons.done,
-                                          color: Colors.green,
-                                          weight: 20,
-                                          fill: 0.8,
-                                        ),
-                                        const Text(
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.done,
+                                              color: Colors.green,
+                                              weight: 20,
+                                              fill: 0.8,
+                                            ),
+
+                                            const Text(
                                           ' Đã mua',
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: Colors.black,
                                           ),
                                         ),
+                                          ],
+                                        ),
+                                        
                                         const SizedBox(
                                           width: 20,
                                         ),
