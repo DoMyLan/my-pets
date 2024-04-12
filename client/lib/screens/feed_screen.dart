@@ -258,9 +258,17 @@ class _FeedScreenState extends State<FeedScreen>
                 itemCount: visibleVideos.length,
                 scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  return VideoApp(
-                    videoPost: visibleVideos[index],
-                  );
+                  if (!isLoadingVideo) {
+                    return VideoApp(
+                      videoPost: visibleVideos[index],
+                    );
+                  } else if (isLoadingVideo) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return Container(); // Hiển thị một widget trống khi không có thêm dữ liệu
+                  }
                 },
               )),
         ),
