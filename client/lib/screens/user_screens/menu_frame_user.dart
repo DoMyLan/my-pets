@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/add_short_video.dart';
 
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
@@ -57,7 +58,11 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     3: FavoriteScreen(),
     4: const TheOrders(),
     5: StatusAdoptUser(),
-    6: NotificationPage()
+
+    // 6: NotificationPage()
+    6: ShortVideo()
+
+    // 6: NotificationPage()
   };
 
   late List<Widget> screenSnapshot;
