@@ -150,6 +150,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
     'Đã xác nhận',
     'Đang vận chuyển',
     'Giao thành công',
+    'Bị hủy'
   ];
   final List<String> statusOrderButton = [
     'Xác nhận',
