@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
+import 'package:found_adoption_application/custom_widget/video_widget.dart';
 import 'package:found_adoption_application/models/post.dart';
+import 'package:found_adoption_application/models/short_video.dart';
 import 'package:found_adoption_application/screens/new_post_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/short_video.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -15,21 +18,51 @@ class FeedScreen extends StatefulWidget {
   State<FeedScreen> createState() => _FeedScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _FeedScreenState extends State<FeedScreen>
+    with SingleTickerProviderStateMixin {
+  TabController? _tabController;
+
   List<Post> allPosts = [];
   List<Post> visiblePosts = [];
+
+  List<ShortVideo> allVideos = [];
+  List<ShortVideo> visibleVideos = [];
 
   int itemsPerPage = 10;
   int currentPage = 1;
   int countScroll = 0;
   int totalPages = 1;
 
+  int itemsPerPageVideo = 10;
+  int currentPageVideo = 1;
+  int countScrollVideo = 0;
+  int totalPagesVideo = 1;
+
   bool isLoading = true;
+
+  bool isLoadingVideo = true;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _loadPosts();
+    _loadPostsVideo();
+  }
+
+  Future<void> _loadPostsVideo() async {
+    try {
+      setState(() {
+        isLoadingVideo = true;
+      });
+      setState(() {
+        _loadVisiblePostsVideo();
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingVideo = false;
+      });
+    }
   }
 
   Future<void> _loadPosts() async {
@@ -45,6 +78,23 @@ class _FeedScreenState extends State<FeedScreen> {
         isLoading = false;
       });
     }
+  }
+
+  Future<void> _loadVisiblePostsVideo() async {
+    VideoResult postReturn =
+        await getShortVideo(currentPageVideo, itemsPerPageVideo);
+    List<ShortVideo> newPosts = postReturn.posts;
+    totalPagesVideo = postReturn.totalPages;
+    if (mounted) {
+      setState(() {
+        visibleVideos.addAll(newPosts);
+        countScrollVideo = 0;
+      });
+    }
+
+    setState(() {
+      isLoadingVideo = false;
+    });
   }
 
   Future<void> _loadVisiblePosts() async {
@@ -68,6 +118,9 @@ class _FeedScreenState extends State<FeedScreen> {
       visiblePosts.clear();
       currentPage = 1;
       _loadPosts();
+      visibleVideos.clear();
+      currentPageVideo = 1;
+      _loadPostsVideo();
     });
   }
 
@@ -80,10 +133,26 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
+  Future<void> _loadMoreItemsVideo() async {
+    if (!isLoadingVideo) {
+      setState(() {
+        currentPageVideo++;
+        _loadVisiblePostsVideo();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Stories'),
+            Tab(text: 'Short videos'),
+          ],
+        ),
         backgroundColor: Colors.white,
         title: const Text(
           'Pet stories',
@@ -136,38 +205,66 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (scrollInfo is ScrollEndNotification &&
-                scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
-              countScroll++;
-              if (countScroll == 1) {
-                if (currentPage <= totalPages) {
-                  _loadMoreItems();
+      body: TabBarView(controller: _tabController, children: [
+        RefreshIndicator(
+          onRefresh: _refresh,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo is ScrollEndNotification &&
+                  scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent) {
+                countScroll++;
+                if (countScroll == 1) {
+                  if (currentPage <= totalPages) {
+                    _loadMoreItems();
+                  }
                 }
               }
-            }
-            return true;
-          },
-          child: ListView.builder(
-            itemCount: visiblePosts.length + (isLoading ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (!isLoading) {
-                return PostCard(snap: visiblePosts[index]);
-              } else if (isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return Container(); // Hiển thị một widget trống khi không có thêm dữ liệu
-              }
+              return true;
             },
+            child: ListView.builder(
+              itemCount: visiblePosts.length + (isLoading ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (!isLoading) {
+                  return PostCard(snap: visiblePosts[index]);
+                } else if (isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return Container(); // Hiển thị một widget trống khi không có thêm dữ liệu
+                }
+              },
+            ),
           ),
         ),
-      ),
+        RefreshIndicator(
+          onRefresh: _refresh,
+          child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo is ScrollEndNotification &&
+                    scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.maxScrollExtent) {
+                  countScrollVideo++;
+                  if (countScroll == 1) {
+                    if (currentPageVideo <= totalPagesVideo) {
+                      _loadMoreItemsVideo();
+                    }
+                  }
+                }
+                return true;
+              },
+              child: PageView.builder(
+                itemCount: visibleVideos.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (BuildContext context, int index) {
+                  return VideoApp(
+                    videoPost: visibleVideos[index],
+                  );
+                },
+              )),
+        ),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -187,40 +284,3 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 }
-
-// RefreshIndicator(
-//           onRefresh: _refresh,
-//           child: FutureBuilder<PostResult>(
-//             future: getAllPost(1, 10),
-//             builder: (context, snapshot) {
-//               if (snapshot.connectionState == ConnectionState.waiting) {
-//                 return const Center(
-//                   child: CircularProgressIndicator(),
-//                 );
-//               } else if (snapshot.hasError) {
-//                 return const Center(child: Text('Please try again later'));
-//               } else {
-//                 List<Post>? postList = snapshot.data!.posts;
-
-//                 if (postList != null) {
-//                   return ListView.builder(
-//                     itemCount: postList.length,
-//                     itemBuilder: (context, index) =>
-//                         PostCard(snap: postList[index]),
-//                   );
-//                 } else {
-//                   // Xử lý trường hợp postList là null
-//                   return const Scaffold(
-//                     body: Center(
-//                       child: Icon(
-//                         Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
-//                         size: 48.0,
-//                         color: Colors.grey,
-//                       ),
-//                     ),
-//                   );
-//                 }
-//               }
-//             },
-//           ),
-//         ));

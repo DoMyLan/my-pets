@@ -6,8 +6,13 @@ import 'package:found_adoption_application/services/order/paymentApi.dart';
 import 'package:found_adoption_application/utils/consts.dart';
 
 class PaymentMethod extends StatefulWidget {
+
   // final String success;
-  PaymentMethod({Key? key}) : super(key: key);
+  // PaymentMethod({Key? key}) : super(key: key);
+
+  final String? success;
+  PaymentMethod({Key? key, this.success}) : super(key: key);
+
 
   @override
   State<PaymentMethod> createState() => _PaymentMethodState();

@@ -74,6 +74,7 @@ dependencies:
   syncfusion_flutter_charts: ^25.1.38
   video_player: ^2.8.5
   file_picker: ^8.0.0+1
+  # cached_video_player: ^2.0.4
 
 
 
