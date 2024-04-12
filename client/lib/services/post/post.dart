@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:found_adoption_application/models/post.dart';
+import 'package:found_adoption_application/models/short_video.dart';
+import 'package:found_adoption_application/screens/short_video.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
@@ -18,10 +20,24 @@ class PostResult {
       required this.page});
 }
 
+class VideoResult {
+  final List<ShortVideo> posts;
+  final int totalPages;
+  final int totalPost;
+  final int page;
+
+  VideoResult(
+      {required this.posts,
+      required this.totalPages,
+      required this.totalPost,
+      required this.page});
+}
+
 Future<PostResult> getAllPost(page, limit) async {
   var responseData = {};
   try {
-    responseData = await api('post/?limit=$limit&page=$page', 'GET', '');
+    responseData =
+        await api('post/?limit=$limit&page=$page&type=NORMAL', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -64,7 +80,7 @@ Future<String> changeStatusPost(String postId, String status) async {
 Future<List<Post>> getAllPostPersonal(var id) async {
   var responseData;
   try {
-    responseData = await api('post/personal/${id}', 'GET', '');
+    responseData = await api('post/personal/$id?type=NORMAL', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -171,4 +187,23 @@ Future<List<Post>> getPostPet(String petId) async {
   var postList = responseData['data'] as List<dynamic>;
   List<Post> post = postList.map((json) => Post.fromJson(json)).toList();
   return post;
+}
+
+Future<VideoResult> getShortVideo(page, limit) async {
+  var responseData = {};
+  try {
+    responseData =
+        await api('post/?limit=$limit&page=$page&type=VIDEO', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var postList = responseData['data'] as List<dynamic>;
+  List<ShortVideo> posts =
+      postList.map((json) => ShortVideo.fromJson(json)).toList();
+  return VideoResult(
+      posts: posts,
+      totalPages: responseData['totalPages'],
+      totalPost: responseData['totalPost'],
+      page: responseData['page']);
 }

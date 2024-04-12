@@ -25,7 +25,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     'Order',
     // 'Manage Adopt',
     ' Add Voucher',
-    // 'Notify',
+    'Notify',
     // 'Messages',
 
     'Revenue '
@@ -39,7 +39,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     FontAwesomeIcons.firstOrder,
     // FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.moneyBill,
-    // FontAwesomeIcons.bell,
+    FontAwesomeIcons.bell,
     // FontAwesomeIcons.envelope,
 
     Icons.show_chart_sharp

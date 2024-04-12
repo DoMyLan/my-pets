@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
+import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
@@ -422,29 +423,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     width: 4,
                   ),
 
-                  Text(
-                    'Phương thức thanh toán (Nhấn để chọn)',
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Color.fromARGB(255, 99, 182, 124),
-                    ),
-                  ),
-
-                  // TextButton(
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: ((context) => PaymentMethod())));
-                  //   },
-                  //   child: const Text(
-                  //     'Phương thức thanh toán (Nhấn để chọn)',
-                  //     style: TextStyle(
-                  //       fontSize: 14.0,
-                  //       color: Color.fromARGB(255, 99, 182, 124),
-                  //     ),
+                  // Text(
+                  //   'Phương thức thanh toán (Nhấn để chọn)',
+                  //   style: TextStyle(
+                  //     fontSize: 14.0,
+                  //     color: Color.fromARGB(255, 99, 182, 124),
                   //   ),
                   // ),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => PaymentMethod())));
+                    },
+                    child: const Text(
+                      'Phương thức thanh toán (Nhấn để chọn)',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Color.fromARGB(255, 99, 182, 124),
+                      ),
+                    ),
+                  ),
                 ] //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
                     ),
                 const SizedBox(height: 20.0),

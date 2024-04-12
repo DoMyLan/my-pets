@@ -438,26 +438,31 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                   ),
                                                 ),
                                               )
-                                            : Container(
-                                                width: 120,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.grey[200],
-                                                ),
-                                                child: const Center(
-                                                  child: Text(
-                                                    "Bạn đã đánh giá",
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.grey,
+                                            : orders[index].statusOrder ==
+                                                        "COMPLETED" &&
+                                                    orders[index].rating == true
+                                                ? Container(
+                                                    width: 120,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.grey[200],
                                                     ),
-                                                  ),
-                                                ),
-                                              )
+                                                    child: const Center(
+                                                      child: Text(
+                                                        "Bạn đã đánh giá",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : SizedBox()
                                       ],
                                     ),
                                     const SizedBox(
