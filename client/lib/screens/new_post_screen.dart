@@ -61,7 +61,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   Future<void> _post() async {
     if (mounted) {
-      await addPost(_captionController.text.toString(), finalResult, dropdownValue);
+      await addPost(_captionController.text.toString(), finalResult, dropdownValue, 'NORMAL', '');
       setState(() {
         _captionController.clear();
         imageFileList.clear();
@@ -236,7 +236,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
               const SizedBox(height: 50),
 
-              const Text("Liên kết voi một thú cưng",
+              const Text("Liên kết với một thú cưng",
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

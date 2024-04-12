@@ -2,8 +2,15 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
+import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/upload_video/upload_video.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
@@ -23,6 +30,8 @@ class _ShortVideoState extends State<ShortVideo> {
   List<PetCustom> pets = [];
   Future<List<PetCustom>>? petFuture;
   String? dropdownValue;
+
+  TextEditingController contentController = TextEditingController();
 
   @override
   void initState() {
@@ -47,10 +56,37 @@ class _ShortVideoState extends State<ShortVideo> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () async {
+            var currentClient = await getCurrentClient();
+
+            if (currentClient != null) {
+              if (currentClient.role == 'USER') {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MenuFrameUser(
+                      userId: currentClient.id,
+                    ),
+                  ),
+                );
+              } else if (currentClient.role == 'CENTER') {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        MenuFrameCenter(centerId: currentClient.id),
+                  ),
+                );
+              }
+            }
           },
+          icon: const Icon(
+            FontAwesomeIcons.bars,
+            size: 25,
+            color: Color.fromRGBO(48, 96, 96, 1.0),
+          ),
         ),
         title: Text('Thước phim mới'),
       ),
@@ -150,14 +186,11 @@ class _ShortVideoState extends State<ShortVideo> {
                       CircleAvatar(
                         backgroundImage: NetworkImage(
                             'https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/432743255_3650243288584838_926608697568740804_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_ohc=Lbu3y4i21N8Ab4JGggX&_nc_ht=scontent.fsgn5-3.fna&oh=00_AfA0uCd-2oVWkYmf9Ryn-0_jqWeZtCm93E-ek8xULUAsVw&oe=661F2B25'),
-                        radius: 20, 
+                        radius: 20,
                       ),
-                      SizedBox(
-                          width: 10), 
+                      SizedBox(width: 10),
                       Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start, 
-                          
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,12 +202,12 @@ class _ShortVideoState extends State<ShortVideo> {
                                 ),
                               ),
 
-                              SizedBox(width: 10,),
-
-                           
+                              SizedBox(
+                                width: 10,
+                              ),
 
                               //Tạo dropdown Liên kết với thú cưng
-                             Text("Liên kết với một thú cưng",
+                              Text("Liên kết với một thú cưng",
                                   style: TextStyle(
                                     fontSize: 16.0,
                                     color: Colors.grey.shade400,
@@ -193,6 +226,7 @@ class _ShortVideoState extends State<ShortVideo> {
                     ],
                   ),
                   TextField(
+                    controller: contentController,
                     decoration: InputDecoration(
                       hintText: 'Viết chú thích hay thêm mô tả...',
                       border: InputBorder.none,
@@ -212,13 +246,15 @@ class _ShortVideoState extends State<ShortVideo> {
                   color: Theme.of(context).primaryColor,
                   minWidth: 180,
                   height: 50,
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => EditPetScreen(pet: pet),
-                    //   ),
-                    // );
+                  onPressed: () async {
+                    if (videoPath == '') {
+                      return;
+                    } else {
+                      Loading(context);
+                      await addPost(
+                          contentController.text, [], null, 'VIDEO', videoPath);
+                      Navigator.pop(context);
+                    }
                   },
                   // defining the shape
                   shape: RoundedRectangleBorder(
@@ -248,11 +284,14 @@ class _ShortVideoState extends State<ShortVideo> {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      createAudioUpload('${result.files.single.path!}');
+      Loading(context);
+      String url = await createAudioUpload('${result.files.single.path!}');
+      print("url: $url");
+      Navigator.pop(context);
       await _controller.pause();
       await _controller.dispose();
       setState(() {
-        videoPath = result.files.single.path!;
+        videoPath = url;
         _controller = VideoPlayerController.file(file)
           ..initialize().then((_) {
             setState(() {
