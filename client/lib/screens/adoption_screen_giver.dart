@@ -105,22 +105,22 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                 ),
               );
             }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddPetScreenPersonal(),
-            ),
-          );
-        },
-        backgroundColor: Theme.of(context).primaryColor,
-        child: const Icon(
-          Icons.add,
-          size: 30,
-          color: Colors.white,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => const AddPetScreenPersonal(),
+      //       ),
+      //     );
+      //   },
+      //   backgroundColor: Theme.of(context).primaryColor,
+      //   child: const Icon(
+      //     Icons.add,
+      //     size: 30,
+      //     color: Colors.white,
+      //   ),
+      // ),
     );
   }
 
@@ -144,7 +144,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
 
   Widget buildAnimalTypes() {
     return SizedBox(
-      height: 65,
+      height: 45,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 24),
         scrollDirection: Axis.horizontal,
@@ -156,31 +156,31 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
     );
   }
 
-  Widget buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: _currentIndex,
-      onTap: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      selectedItemColor:
-          Theme.of(context).primaryColor, // Màu khi mục được chọn
-      unselectedItemColor: Colors.grey, // Màu khi mục không được chọn
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(
-            FontAwesomeIcons.paw,
-          ),
-          label: 'Pet Center',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.user),
-          label: 'Personal',
-        ),
-      ],
-    );
-  }
+  // Widget buildBottomNavigationBar() {
+  //   return BottomNavigationBar(
+  //     currentIndex: _currentIndex,
+  //     onTap: (index) {
+  //       setState(() {
+  //         _currentIndex = index;
+  //       });
+  //     },
+  //     selectedItemColor:
+  //         Theme.of(context).primaryColor, // Màu khi mục được chọn
+  //     unselectedItemColor: Colors.grey, // Màu khi mục không được chọn
+  //     items: const [
+  //       BottomNavigationBarItem(
+  //         icon: Icon(
+  //           FontAwesomeIcons.paw,
+  //         ),
+  //         label: 'Pet Center',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: Icon(FontAwesomeIcons.user),
+  //         label: 'Personal',
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget buildAnimalIcon(int index) {
     return Padding(
@@ -200,7 +200,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
           elevation: 8,
           borderRadius: BorderRadius.circular(10),
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -362,13 +362,13 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                 icon: Icon(Icons.filter_alt_outlined),
                 color: Colors.blue,
                 onPressed: showFilterDialog,
-                iconSize: 35,
+                iconSize: 30,
               ),
               Text(
                 'Filter',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -421,7 +421,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
             text: inforDetail,
             style: TextStyle(
               fontStyle: FontStyle.italic,
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,
             ),
@@ -472,7 +472,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 8, right: 8, left: 10),
+            padding: const EdgeInsets.only(bottom: 6, right: 4, left: 12),
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
@@ -524,7 +524,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                                     // '      2350000.vnd',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
-                                      fontSize: 15,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context).primaryColor,
                                     ),
@@ -537,7 +537,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                                   Icon(
                                     FontAwesomeIcons.mapMarkerAlt,
                                     color: Theme.of(context).primaryColor,
-                                    size: 16.0,
+                                    size: 14.0,
                                   ),
                                   const SizedBox(width: 1),
                                   Text(
@@ -566,7 +566,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                                         return Text(
                                           '$distanceString km',
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             color:
                                                 Theme.of(context).primaryColor,
                                             fontWeight: FontWeight.w800,
@@ -594,7 +594,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                         tag: animal.namePet,
                         child: Image(
                           image: NetworkImage(animal.images.first),
-                          height: 170,
+                          height: 160,
                           width: deviceWidth * 0.4,
                           fit: BoxFit.cover,
                         ),
