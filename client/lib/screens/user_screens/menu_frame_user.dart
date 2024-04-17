@@ -38,7 +38,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
-      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+      // Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -60,7 +60,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     5: StatusAdoptUser(),
 
     // 6: NotificationPage()
-    6: ShortVideo()
+  
 
     // 6: NotificationPage()
   };

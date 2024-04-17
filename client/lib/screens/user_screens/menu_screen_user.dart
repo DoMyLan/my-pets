@@ -27,7 +27,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     // 'Favorite',
     // 'Messages',
 
-    'Short Videos'
+    // 'Short Videos'
   ];
 
   List<IconData> icons = [
@@ -40,7 +40,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     FontAwesomeIcons.bell,
     // FontAwesomeIcons.heart,
     // FontAwesomeIcons.envelope,
-    FontAwesomeIcons.radio
+    // FontAwesomeIcons.radio
   ];
 
   Widget buildMenuRow(int index) {
