@@ -251,7 +251,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     }
 
     // Call the API to post content with image paths
-    addPost(_captionController.text.toString(), imagePaths, "");
+    // addPost(_captionController.text.toString(), imagePaths, "");
 
     setState(() {
       _images = [];

@@ -27,16 +27,9 @@ Future<String> createAudioUpload(String fileUrl) async {
 
     final response = await request.send();
     var responseBody = await response.stream.bytesToString();
-    
+
     responseData = json.decode(responseBody);
-
-    
-
-    if (response.statusCode == 200) {
-      print('Success, $response');
-    } else {
-      print('Failed due to:${response.reasonPhrase}');
-    }
+    return responseData['url'];
   } catch (e) {
     // notification(e.toString(), true);
     print('error: $e');

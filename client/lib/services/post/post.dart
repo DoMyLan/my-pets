@@ -91,13 +91,15 @@ Future<List<Post>> getAllPostPersonal(var id) async {
   return posts;
 }
 
-Future<bool> addPost(
-    String content, List<dynamic> imagePaths, String? petId) async {
+Future<bool> addPost(String content, List<dynamic> imagePaths, String? petId,
+    String type, String? video) async {
   var responseData = {};
   var body = jsonEncode({
     "content": content,
     "images": imagePaths,
     "petId": petId,
+    "type": type,
+    "video": video
   });
   try {
     responseData = await api('post', 'POST', body);
