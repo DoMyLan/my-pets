@@ -6,6 +6,7 @@ import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/order_screen.dart';
 import 'package:found_adoption_application/screens/pet_favorites.dart';
+import 'package:found_adoption_application/screens/user_screens/backup_file_adoption/test_provider.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/screens/user_screens/status_adopt.dart';
@@ -58,9 +59,10 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     3: FavoriteScreen(),
     4: const TheOrders(),
     5: StatusAdoptUser(),
+    6: MyTabbedScreen(),
 
     // 6: NotificationPage()
-    6: ShortVideo()
+  
 
     // 6: NotificationPage()
   };

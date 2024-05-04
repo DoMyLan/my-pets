@@ -2,144 +2,97 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/adoption_screen_giver.dart';
+import 'package:found_adoption_application/screens/user_screens/add_pet_personal_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+import 'package:motion_tab_bar/MotionTabBar.dart';
+import 'package:motion_tab_bar/MotionTabBarController.dart';
+import 'package:provider/provider.dart';
 
-  final ValueNotifier<int> pageIndex = ValueNotifier(0);
-  final ValueNotifier<String> title = ValueNotifier('Messages');
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
-  final pages = const [
-    AdoptionScreen(centerId: null,),
-    AdoptionScreenGiver(),
-  ];
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
-  final pageTitle = const [
-    'Pet Center',
-    'Personal',
-  ];
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  MotionTabBarController? _motionTabBarController;
 
-  void _onNavigationItemSelected(index) {
-    title.value = pageTitle[index];
-    pageIndex.value = index;
+  @override
+  void initState() {
+    super.initState();
+    _motionTabBarController = MotionTabBarController(
+      initialIndex: 0,
+      length: 3,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _motionTabBarController!.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ValueListenableBuilder(
-          valueListenable: pageIndex,
-          builder: (BuildContext context, int value, _) {
-            return pages[value];
-          },
+      bottomNavigationBar: MotionTabBar(
+        controller: _motionTabBarController,
+        initialSelectedTab: "Pet Center",
+        useSafeArea: true,
+        labels: const ["Pet Center", "Add Pet", "Personal"],
+        icons: const [Icons.pets, Icons.add, FontAwesomeIcons.user],
+        tabSize: 50,
+        tabBarHeight: 50,
+        textStyle: const TextStyle(
+          fontSize: 12,
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
         ),
-        bottomNavigationBar: _BottomNavigationBar(
-          onItemSelected: _onNavigationItemSelected,
-        ));
-  }
-}
-
-class _BottomNavigationBar extends StatefulWidget {
-  const _BottomNavigationBar({required this.onItemSelected});
-
-  final ValueChanged<int> onItemSelected;
-
-  @override
-  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<_BottomNavigationBar> {
-  var selectedIndex = 0;
-
-  void handleItemSelected(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-    widget.onItemSelected(index);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    final brightness = Theme.of(context).brightness;
-
-    return Card(
-      color: (brightness == Brightness.light) ? Colors.transparent: null,
-      elevation: 0,
-      margin: const EdgeInsets.all(0),
-      child: SafeArea(
-        top: false,
-        bottom: true,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 8, right: 8 ),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavigationBarItem(
-                  index: 0,
-                  lable: 'Pet Center',
-                  icon: Icons.pets,
-                  isSelected: (selectedIndex == 0),
-                  onTap: handleItemSelected,
-                ),
-                _NavigationBarItem(
-                  index: 1,
-                  lable: 'Personal',
-                  icon: FontAwesomeIcons.user,
-                  isSelected: (selectedIndex == 1),
-                  onTap: handleItemSelected,
-                ),
-              ],
+        tabIconColor: Theme.of(context).primaryColor,
+        tabIconSize: 18.0,
+        tabIconSelectedSize: 16.0,
+        tabSelectedColor: Theme.of(context).primaryColor,
+        tabIconSelectedColor: Colors.white,
+        tabBarColor: Colors.white,
+        onTabItemSelected: (int value) {
+          setState(() {
+            _motionTabBarController!.index = value;
+          });
+        },
+      ),
+      body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _motionTabBarController,
+        children: [
+          ChangeNotifierProvider(
+            create: (_) => Tab2Data(),
+            child: AdoptionScreen(
+              centerId: null,
             ),
-        ),
+          ),
+          AddPetScreenPersonal(),
+          ChangeNotifierProvider(
+            create: (_) => Tab2Data(),
+            child: AdoptionScreenGiver(),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _NavigationBarItem extends StatelessWidget {
-  const _NavigationBarItem(
-      {required this.index,
-      required this.lable,
-      required this.icon,
-      this.isSelected = false,
-      required this.onTap});
+class Tab2Data extends ChangeNotifier {
+  //dữ liệu chưa đc fetch
+  bool _dataFetched = false;
 
-  final int index;
-  final String? lable;
-  final IconData? icon;
-  final bool isSelected;
-  final ValueChanged<int> onTap;
+  //cho phép các wiget khác truy cập _dataFetched
+  bool get dataFetched => _dataFetched;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        onTap(index);
-      },
-      child: SizedBox(
-        width: 70,
-        height: 70,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: isSelected ? Theme.of(context).primaryColor : null,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              lable!,
-              style: TextStyle(
-                  fontSize: 11,
-                  color: isSelected ? Theme.of(context).primaryColor : null,
-                  fontWeight: isSelected ? FontWeight.bold : null),
-            ),
-          ],
-        ),
-      ),
-    );
+  // Phương thức để cập nhật trạng thái dữ liệu
+  void updateDataFetched(bool fetched) {
+    _dataFetched = fetched;
+    notifyListeners();
   }
 }

@@ -44,7 +44,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
-      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+      // Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
      
     ];
 
@@ -70,7 +70,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
     // 5: StatusAdopt(),
     5: VoucherScreen(),
     6: NotificationPage(),
-    7: RevenueChartPage(),
+    // 7: RevenueChartPage(),
   };
 
   late List<Widget> screenSnapshot;

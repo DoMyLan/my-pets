@@ -39,7 +39,7 @@ dependencies:
   http: 0.13.3
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  intl: ^0.18.1
+  intl: ^0.17.0
   carousel_slider: ^4.2.1
   image_picker: ^0.8.4
   comment_box: ^0.0.18
@@ -75,8 +75,13 @@ dependencies:
   video_player: ^2.8.5
   file_picker: ^8.0.0+1
   # cached_video_player: ^2.0.4
+  vnpay_flutter: ^1.0.0
+  flutter_launcher_icons: ^0.13.1
+  motion_tab_bar: ^2.0.4
+  provider: ^6.1.2
 
-
+dependency_overrides:
+ intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
@@ -111,8 +116,13 @@ flutter:
     - assets/images/welcome.png
     - assets/images/dog_banner.png
     - assets/images/success.mp3
+    - assets/images/logo.jpg
 
   #   - images/a_dot_ham.jpeg
+flutter_launcher_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/images/logo.jpg'
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

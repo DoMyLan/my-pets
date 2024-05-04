@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
+import 'package:found_adoption_application/screens/setting.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:hive/hive.dart';
 
@@ -25,10 +26,10 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     'Order',
     // 'Manage Adopt',
     ' Add Voucher',
-    'Notify',
+    
     // 'Messages',
 
-    'Revenue '
+  
   ];
 
   List<IconData> icons = [
@@ -39,10 +40,10 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     FontAwesomeIcons.firstOrder,
     // FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.moneyBill,
-    FontAwesomeIcons.bell,
+ 
     // FontAwesomeIcons.envelope,
 
-    Icons.show_chart_sharp
+ 
   ];
 
   Widget buildMenuRow(int index) {
@@ -202,20 +203,64 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                         .toList(),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.logout_rounded,
-                          color: Colors.white.withOpacity(0.5)),
-                      TextButton(
-                          onPressed: () async {
-                            _showLogoutDialog(context);
-                          },
-                          child: Text(
-                            '   Log out',
-                            style: TextStyle(
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600),
-                          ))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(Icons.logout_rounded,
+                                color: Colors.white.withOpacity(0.5)),
+                            TextButton(
+                                onPressed: () async {
+                                  _showLogoutDialog(context);
+                                },
+                                child: Text(
+                                  'Log out',
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                )),
+                          ],
+                        ),
+                      ),
+
+                      Text(
+                        '||',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+
+                      //Phần SETTING
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Row(
+                          children: [
+                            Icon(Icons.settings,
+                                color: Colors.white.withOpacity(0.5)),
+                            TextButton(
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SettingScreen()),
+                                  );
+                                },
+                                child: Text(
+                                  'Setting',
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                )),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],

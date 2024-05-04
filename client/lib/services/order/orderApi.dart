@@ -110,3 +110,17 @@ Future<void> changeStatusOrder(orderId, statusOrder) async {
     //  notification(e.toString(), true);
   }
 }
+
+Future<List<Order>> getRevenue(centerId, status) async {
+  var responseData;
+  try {
+    responseData = await api('order/$centerId/payment?status=$status', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var orderList = responseData['data'] as List<dynamic>;
+  List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
+  print(orders);
+  return orders;
+}

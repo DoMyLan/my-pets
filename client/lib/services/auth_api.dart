@@ -22,10 +22,10 @@ Future<String> refreshAccessToken() async {
   // final refreshToken = userBox.get('currentUser').refreshToken;
   final refreshToken = currentClient.refreshToken;
   final apiUrl = Uri.parse(
-      "$BASE_URL_LOCAL/auth/refresh-token");
+      "$BASE_URL/auth/refresh-token");
 
   final response = await http.post(apiUrl, headers: {
-    'Authorization': 'Bearer ${refreshToken}',
+    'Authorization': 'Bearer $refreshToken',
     'Content-Type': 'application/json',
   });
 
