@@ -14,7 +14,7 @@ Future<dynamic> api(path, method, body) async {
 };
 
   try {
-    final apiUrl = Uri.parse("$BASE_URL_LOCAL/$path");
+    final apiUrl = Uri.parse("$BASE_URL/$path");
     if (method == "GET") {
       var response = await http.get(apiUrl, headers:headers);
       responseData = await json.decode(response.body);
