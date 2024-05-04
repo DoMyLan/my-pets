@@ -21,7 +21,9 @@ class AddPetScreenPersonal extends StatefulWidget {
   _AddPetScreenState createState() => _AddPetScreenState();
 }
 
-class _AddPetScreenState extends State<AddPetScreenPersonal> {
+class _AddPetScreenState extends State<AddPetScreenPersonal> with AutomaticKeepAliveClientMixin{
+  bool get wantKeepAlive => true;
+  
   final _namePetController = TextEditingController();
   final _breedController = TextEditingController();
 

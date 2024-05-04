@@ -79,14 +79,12 @@ class _PaidTabState extends State<PaidTab> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-           
             children: [
               Icon(
                 FontAwesomeIcons.paw,
                 size: 20,
                 color: Color.fromRGBO(48, 96, 96, 1.0),
               ),
-             
               Text(
                 'Trung Tâm Miami',
                 style: TextStyle(
@@ -96,18 +94,16 @@ class _PaidTabState extends State<PaidTab> {
               TextButton(
                 onPressed: () {
                   Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: ((context) =>
-                                       RevenueChartPage())));
+                      context,
+                      MaterialPageRoute(
+                          builder: ((context) => RevenueChartPage())));
                 },
                 child: Text(
                   '(Biểu đồ doanh thu)',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic
-                  ),
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic),
                 ),
               ),
             ],
