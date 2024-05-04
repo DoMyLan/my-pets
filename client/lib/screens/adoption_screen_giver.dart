@@ -1,18 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/custom_widget/age.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/user_screens/add_pet_personal_screen.dart';
-import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:found_adoption_application/screens/filter_dialog.dart';
-
-import 'package:hive/hive.dart';
+import '../custom_widget/back_to_home.dart';
 
 class AdoptionScreenGiver extends StatefulWidget {
   const AdoptionScreenGiver({super.key});
@@ -21,7 +19,8 @@ class AdoptionScreenGiver extends StatefulWidget {
   State<AdoptionScreenGiver> createState() => _AdoptionScreenGiverState();
 }
 
-class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
+class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
+    with AutomaticKeepAliveClientMixin {
   late List<Pet> animals = [];
   List<Pet> filteredAnimals = [];
   late var currentClient;
@@ -39,8 +38,14 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
     FontAwesomeIcons.cat,
     FontAwesomeIcons.dog,
   ];
-
   int _currentIndex = 0;
+
+  //Provider
+  @override
+  bool get wantKeepAlive => true;
+  late List<Pet> previousPets = []; // Dữ liệu của pets trước đó
+  late bool dataFetched =
+      false; // Biến trạng thái để kiểm tra liệu dữ liệu đã được fetch hay chưa
 
   @override
   void initState() {
@@ -48,13 +53,14 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
 
     _searchController.clear();
 
-    getClient() as dynamic;
+    // getClient() as dynamic;
     _searchController.addListener(_performSearch);
-    futurePets = getAllPetPersonal();
+    fetchPets();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: isLoading
           ? const CircularProgressIndicator()
@@ -105,23 +111,30 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
                 ),
               );
             }),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => const AddPetScreenPersonal(),
-      //       ),
-      //     );
-      //   },
-      //   backgroundColor: Theme.of(context).primaryColor,
-      //   child: const Icon(
-      //     Icons.add,
-      //     size: 30,
-      //     color: Colors.white,
-      //   ),
-      // ),
     );
+  }
+
+  Future<void> fetchPets() async {
+    try {
+      var temp = await getCurrentClient();
+      setState(() {
+        currentClient = temp;
+        isLoading = false;
+      });
+
+      var pets = await getAllPetPersonal();
+      if (!listEquals(pets, previousPets)) {
+        // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
+        setState(() {
+          previousPets = List.from(pets);
+          animals = List.from(pets);
+          dataFetched =
+              true; // Đặt biến trạng thái thành true sau khi dữ liệu đã được fetch
+        });
+      }
+    } catch (error) {
+      // Xử lý lỗi
+    }
   }
 
   Widget buildSearchAndAnimalTypes() {
@@ -155,32 +168,6 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
       ),
     );
   }
-
-  // Widget buildBottomNavigationBar() {
-  //   return BottomNavigationBar(
-  //     currentIndex: _currentIndex,
-  //     onTap: (index) {
-  //       setState(() {
-  //         _currentIndex = index;
-  //       });
-  //     },
-  //     selectedItemColor:
-  //         Theme.of(context).primaryColor, // Màu khi mục được chọn
-  //     unselectedItemColor: Colors.grey, // Màu khi mục không được chọn
-  //     items: const [
-  //       BottomNavigationBarItem(
-  //         icon: Icon(
-  //           FontAwesomeIcons.paw,
-  //         ),
-  //         label: 'Pet Center',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: Icon(FontAwesomeIcons.user),
-  //         label: 'Personal',
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget buildAnimalIcon(int index) {
     return Padding(
@@ -264,13 +251,13 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
     });
   }
 
-  Future<void> getClient() async {
-    var temp = await getCurrentClient();
-    setState(() {
-      currentClient = temp;
-      isLoading = false;
-    });
-  }
+  // Future<void> getClient() async {
+  //   var temp = await getCurrentClient();
+  //   setState(() {
+  //     currentClient = temp;
+  //     isLoading = false;
+  //   });
+  // }
 
   Future<void> showFilterDialog() async {
     final Future<List<Pet>>? result = await showDialog<Future<List<Pet>>>(
@@ -382,26 +369,24 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
   Widget buildAnimalAdopt() {
     return Container(
       color: Theme.of(context).primaryColor.withOpacity(0.06),
-      child: FutureBuilder<List<Pet>>(
-        future: futurePets,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+      child: dataFetched
+          ? FutureBuilder<List<Pet>>(
+              future: futurePets,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return errorWidget();
+                } else {
+                  return buildAnimalList(animals, filteredAnimals);
+                }
+              },
+            )
+          : const Center(
               child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return const errorWidget();
-          } else {
-            animals = snapshot.data ?? [];
-            return Column(
-              // Wrap Expanded with a Column
-              children: [
-                Expanded(child: buildAnimalList(animals, filteredAnimals)),
-              ],
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 
@@ -636,56 +621,6 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver> {
   }
 }
 
-class TBackHomePage extends StatelessWidget {
-  const TBackHomePage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      child: const Icon(
-        FontAwesomeIcons.bars,
-        size: 25,
-        color: Color.fromRGBO(48, 96, 96, 1.0),
-      ),
-      onTap: () async {
-        var userBox = await Hive.openBox('userBox');
-        var centerBox = await Hive.openBox('centerBox');
-
-        var currentUser = userBox.get('currentUser');
-        var currentCenter = centerBox.get('currentCenter');
-
-        var currentClient = currentUser != null && currentUser.role == 'USER'
-            ? currentUser
-            : currentCenter;
-
-        if (currentClient != null) {
-          if (currentClient.role == 'USER') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MenuFrameUser(
-                  userId: currentClient.id,
-                ),
-              ),
-            );
-          } else if (currentClient.role == 'CENTER') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MenuFrameCenter(
-                  centerId: currentClient.id,
-                ),
-              ),
-            );
-          }
-        }
-      },
-    );
-  }
-}
-
 class TuserQuickInfor extends StatelessWidget {
   const TuserQuickInfor({
     super.key,
@@ -738,47 +673,5 @@ class TuserQuickInfor extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class AgePet {
-  static String convertAge(DateTime birthday) {
-    String age = '';
-    DateTime now = DateTime.now();
-    int months = now.month - birthday.month + 12 * (now.year - birthday.year);
-    if (now.day < birthday.day) {
-      months--;
-    }
-
-    if (months < 1) {
-      // If age is less than 1 month, calculate in weeks
-      int weeks = (now.difference(birthday).inDays / 7).floor();
-      age = weeks.toString() + ' weeks';
-    } else if (months < 12) {
-      // If age is less than 1 year, calculate in months
-      age = months.toString() + ' months';
-    } else {
-      // If age is 1 year or more, calculate in years and months
-      int years = months ~/ 12;
-      months %= 12;
-      age = years.toString() + ' years ' + months.toString() + ' months';
-    }
-
-    return age;
-  }
-}
-
-class AgeConverter {
-  static String convertAge(double humanAge) {
-    if (humanAge * 12 < 1) {
-      // Nếu tuổi dưới 1 tháng, tính theo tuần
-      return '${(humanAge * 52).toInt()} weeks';
-    } else if (humanAge < 1) {
-      // Nếu tuổi dưới 1 năm, tính theo tháng
-      return '${(humanAge * 12).toInt()} months';
-    } else {
-      // Tuổi 1 năm trở lên, tính theo năm
-      return '${humanAge.toInt()} years';
-    }
   }
 }
