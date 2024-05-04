@@ -83,7 +83,7 @@ class _VoucherState extends State<VoucherScreen>
           SliverToBoxAdapter(
             child: TabView(
               tabController: _tabController,
-              centerId: currentClient.id,
+              centerId: currentClient!.id,
             ),
           )
         ],
