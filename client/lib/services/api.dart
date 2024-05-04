@@ -10,7 +10,7 @@ Future<dynamic> api(path, method, body) async {
   Map<String, dynamic> responseData = {};
 
   try {
-    final apiUrl = Uri.parse("$BASE_URL/$path");
+    final apiUrl = Uri.parse("$BASE_URL_LOCAL/$path");
     if (method == "GET") {
       var response = await http.get(apiUrl, headers: {
         'Authorization': 'Bearer ${accessToken}',

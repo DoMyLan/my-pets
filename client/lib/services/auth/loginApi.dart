@@ -25,7 +25,7 @@ Future<void> login(
   var body = jsonEncode(<String, String>{'email': email, 'password': password});
   try {
     final apiUrl = Uri.parse(
-        "$BASE_URL/auth/sign-in");
+        "$BASE_URL_LOCAL/auth/sign-in");
     var response = await http.post(apiUrl,
         headers: {
           'Content-Type': 'application/json',

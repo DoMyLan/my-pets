@@ -18,7 +18,7 @@ Future<String> createAudioUpload(String fileUrl) async {
 
     var responseData = {};
 
-    final apiUrl = Uri.parse("$BASE_URL/upload/video");
+    final apiUrl = Uri.parse("$BASE_URL_LOCAL/upload/video");
 
     var request = http.MultipartRequest('POST', apiUrl)
       ..headers['Authorization'] = 'Bearer $accessToken'
