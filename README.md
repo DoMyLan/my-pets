@@ -34,7 +34,7 @@ Tóm lại, ứng dụng này không chỉ đơn giản là một cửa hàng tr
     <td align="center"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/home.jpg?raw=true" alt="Mô tả ảnh 2"></td>
     <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/Screenshot_2024-05-06-09-42-43-395_com.example.found_adoption_application.jpg?raw=true" alt="Mô tả ảnh 3"></td>
     <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/pet_detail.jpg?raw=true" alt="Mô tả ảnh 4"></td>
-     <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/favorite_pet.jpg?raw=true" alt="Mô tả ảnh 5"></td>
+    
     
     
   </tr>
