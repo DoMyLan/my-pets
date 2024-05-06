@@ -6,7 +6,6 @@ import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/short_video.dart';
 import 'package:found_adoption_application/screens/new_post_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/short_video.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';

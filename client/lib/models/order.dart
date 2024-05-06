@@ -169,6 +169,7 @@ class Order {
   final DateTime? dateDelivering;
   final DateTime? dateCompleted;
   final DateTime? dateCancel;
+  final DateTime? datePaid;
   final bool rating;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -193,6 +194,7 @@ class Order {
     this.dateDelivering,
     this.dateCompleted,
     this.dateCancel,
+    this.datePaid,
     required this.rating,
     required this.createdAt,
     required this.updatedAt,
@@ -229,6 +231,10 @@ class Order {
           : null,
       dateCancel: json['dateCancel'] != null
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['dateCancel']))
+              .add(const Duration(hours: 7))
+          : null,
+      datePaid: json['datePaid'] != null
+          ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['datePaid']))
               .add(const Duration(hours: 7))
           : null,
       rating: json['rating'] as bool,

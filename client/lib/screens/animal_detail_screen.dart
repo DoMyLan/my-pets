@@ -29,7 +29,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   dynamic currentClient;
   bool _isExpanded = false;
   int maxlines = 3;
-  bool isFavorite = false;
+  late bool isFavorite = false;
   Future<Pet>? petFuture;
 
   final CarouselController carouselController = CarouselController();
@@ -39,14 +39,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     super.initState();
     currentClient = widget.currentId;
     petFuture = getPet(widget.petId);
-
-    // for (var element in pet.favorites!) {
-    //   if (element == currentClient.id) {
-    //     setState(() {
-    //       isFavorite = true;
-    //     });
-    //   }
-    // }
   }
 
   @override
@@ -64,6 +56,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             return const errorWidget();
           } else {
             Pet pet = snapshot.data as Pet;
+
+            for (var element in pet.favorites!) {
+              if (element == currentClient.id) {
+                isFavorite = true;
+              }
+            }
 
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -279,11 +277,13 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
                                     //Đã mua + đánh giá ở screen Review
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         //Số lượng thú cưng đang đăng bán
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             const Icon(
@@ -292,17 +292,16 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               weight: 20,
                                               fill: 0.8,
                                             ),
-
                                             const Text(
-                                          ' Đã mua',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
-                                          ),
-                                        ),
+                                              ' Đã mua',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black,
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                        
+
                                         const SizedBox(
                                           width: 20,
                                         ),
@@ -325,14 +324,17 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           ),
                                         ),
 
-                                      GestureDetector(
+                                        GestureDetector(
                                           onTap: () {
                                             // Chuyển đến Trang ReviewProfileScreen
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ReviewProfileScreen(centerId: pet.centerId!.id)));
+                                                        ReviewProfileScreen(
+                                                            centerId: pet
+                                                                .centerId!
+                                                                .id)));
                                           },
                                           child: Row(
                                             children: [
@@ -703,7 +705,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ReviewProfileScreen(centerId: pet.centerId!.id,)));
+                                                        ReviewProfileScreen(
+                                                          centerId:
+                                                              pet.centerId!.id,
+                                                        )));
                                           },
                                           child: Row(
                                             children: [
@@ -926,6 +931,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   });
                                   Loading(context);
                                   await favoritePet(pet.id);
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).pop();
                                 },
                                 child: Material(

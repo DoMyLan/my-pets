@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/like_model.dart';
+import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/screens/comment_screen.dart';
 import 'package:found_adoption_application/screens/edit_post_screen.dart';
 import 'package:found_adoption_application/screens/like_screen.dart';
@@ -26,7 +27,7 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  late var clientPost;
+  late Post clientPost;
   late int quantityLike = 0;
   late bool liked = false;
   late String selectedOption = '';
@@ -64,7 +65,7 @@ class _PostCardState extends State<PostCard> {
         quantityLike = likes.length;
       });
     }
-    likes.forEach((element) {
+    for (var element in likes) {
       if (element.centerId?.id == currentClient.id ||
           element.userId?.id == currentClient.id) {
         if (mounted) {
@@ -73,7 +74,7 @@ class _PostCardState extends State<PostCard> {
           });
         }
       }
-    });
+    }
   }
 
   final CarouselController carouselController = CarouselController();
@@ -86,7 +87,7 @@ class _PostCardState extends State<PostCard> {
     return Card(
       color: Colors.white,
       elevation: 5,
-      margin: EdgeInsets.only(left: 0, top: 0, bottom: 1),
+      margin: const EdgeInsets.only(left: 0, top: 0, bottom: 1),
       child: Column(
         children: [
           Container(
@@ -107,7 +108,7 @@ class _PostCardState extends State<PostCard> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProfilePage(
-                                  userId: clientPost.userId
+                                  userId: clientPost.userId!
                                       .id) // Thay thế bằng tên lớp tương ứng
                               ));
                     } else {
@@ -116,7 +117,8 @@ class _PostCardState extends State<PostCard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProfileCenterPage(
-                              centerId: clientPost.petCenterId.id, petId: null),
+                              centerId: clientPost.petCenterId!.id,
+                              petId: null),
                         ),
                       );
                     }
@@ -128,8 +130,8 @@ class _PostCardState extends State<PostCard> {
                         backgroundColor: Colors.transparent,
                         backgroundImage: NetworkImage(
                           clientPost.userId != null
-                              ? '${clientPost.userId!.avatar}'
-                              : '${clientPost.petCenterId.avatar}',
+                              ? clientPost.userId!.avatar
+                              : clientPost.petCenterId!.avatar,
                         ),
                       ),
                       isOnline
@@ -139,13 +141,13 @@ class _PostCardState extends State<PostCard> {
                               child: Container(
                                 width: 10.0,
                                 height: 10.0,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.green, // Green color
                                   shape: BoxShape.circle, // Circular shape
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -161,12 +163,13 @@ class _PostCardState extends State<PostCard> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ProfilePage(
-                                      userId: clientPost.userId.id)))
+                                      userId: clientPost.userId!.id)))
                           : Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProfileCenterPage(
-                                    centerId: clientPost.petCenterId.id, petId: null),
+                                    centerId: clientPost.petCenterId!.id,
+                                    petId: null),
                               ),
                             );
                     },
@@ -180,17 +183,17 @@ class _PostCardState extends State<PostCard> {
                               Text(
                                 clientPost.userId != null
                                     ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
-                                    : clientPost.petCenterId.name,
+                                    : clientPost.petCenterId!.name,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               clientPost.userId == null
-                                  ? Icon(FontAwesomeIcons.paw,
+                                  ? const Icon(FontAwesomeIcons.paw,
                                       size: 12, color: Colors.grey)
-                                  : Icon(FontAwesomeIcons.user,
+                                  : const Icon(FontAwesomeIcons.user,
                                       size: 12, color: Colors.grey)
                             ],
                           ),
@@ -206,7 +209,7 @@ class _PostCardState extends State<PostCard> {
                             ),
                           ),
                           Text(
-                            '${timeago.format(clientPost.createdAt!.subtract(const Duration(seconds: 10)), locale: 'en_short')} ago',
+                            '${timeago.format(clientPost.createdAt.subtract(const Duration(seconds: 10)), locale: 'en_short')} ago',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 12,
@@ -222,6 +225,7 @@ class _PostCardState extends State<PostCard> {
                       var currentClient = await getCurrentClient();
                       // ignore: use_build_context_synchronously
                       showDialog(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         builder: (context) => Dialog(
                           child: ListView(
@@ -279,8 +283,11 @@ class _PostCardState extends State<PostCard> {
                                                         clientPost.id,
                                                         'POST',
                                                         'Violates community standards');
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.pop(context);
                                                   },
                                                 ),
@@ -295,8 +302,11 @@ class _PostCardState extends State<PostCard> {
                                                         clientPost.id,
                                                         'POST',
                                                         'Misleading language');
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
@@ -310,8 +320,11 @@ class _PostCardState extends State<PostCard> {
                                                         clientPost.id,
                                                         'POST',
                                                         'Violence');
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
@@ -326,8 +339,11 @@ class _PostCardState extends State<PostCard> {
                                                         clientPost.id,
                                                         'POST',
                                                         'Inappropriate content');
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
+                                                    // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
@@ -370,12 +386,15 @@ class _PostCardState extends State<PostCard> {
                                                                     reasonController
                                                                         .text
                                                                         .toString());
+                                                                // ignore: use_build_context_synchronously
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
+                                                                // ignore: use_build_context_synchronously
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
+                                                                // ignore: use_build_context_synchronously
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
@@ -394,12 +413,12 @@ class _PostCardState extends State<PostCard> {
                                       }
                                       // Add other logic for handling other options
                                     },
-                                    child: Container(
+                                    child: SizedBox(
                                       height: 70,
                                       child: ListTile(
                                         title: Text(
                                           item['text'] as String,
-                                          style: TextStyle(fontSize: 12),
+                                          style: const TextStyle(fontSize: 12),
                                         ),
                                         leading: Icon(
                                           item['icon'] as IconData?,
@@ -422,20 +441,60 @@ class _PostCardState extends State<PostCard> {
             height: 4,
           ),
 
-          if (clientPost.images != null && clientPost.images.isNotEmpty)
-            clientPost.images.length == 1
+          if (clientPost.images != null && clientPost.images!.isNotEmpty)
+            clientPost.images!.length == 1
                 ? Image.network(
-                    clientPost.images.first,
+                    clientPost.images!.first,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       // Return an Icon widget when there's an error
-                      return Icon(Icons.image_not_supported, color: Colors.red);
+                      return const Icon(Icons.image_not_supported,
+                          color: Colors.red);
                     },
                   )
                 : _slider(clientPost.images)
           else
             const SizedBox(),
+
+          clientPost.petId != null
+              ? Container(
+                  color: Colors.grey.shade100,
+                  width: MediaQuery.of(context).size.width,
+                  height: 70,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          Container(
+                            width: MediaQuery.of(context).size.width - 20,
+                            color: Colors.white,
+                            child: Row(
+                              children: [
+                                Image(
+                                    image: NetworkImage(
+                                        clientPost.petId!.images[0]),
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover),
+                                const SizedBox(width: 10),
+                                Text(clientPost.petId!.namePet,
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox(),
+          const SizedBox(),
 
           //LIKE+COMMENT SECTION
           Row(
@@ -508,13 +567,11 @@ class _PostCardState extends State<PostCard> {
                             builder: (context) =>
                                 LikeScreen(postId: clientPost.id)));
                   },
-                  child: Container(
-                    child: Text(
-                      '${quantityLike} likes',
-                      style: const TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Color.fromARGB(255, 146, 144, 144)),
-                    ),
+                  child: Text(
+                    '$quantityLike likes',
+                    style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Color.fromARGB(255, 146, 144, 144)),
                   ),
                 ),
                 InkWell(
@@ -526,7 +583,7 @@ class _PostCardState extends State<PostCard> {
                                 CommentScreen(postId: clientPost.id)));
                   },
                   child: Text(
-                    'View all ${clientPost.comments.length} comments',
+                    'View all ${clientPost.comments!.length} comments',
                     style: const TextStyle(
                         fontSize: 15,
                         color: Color.fromARGB(255, 146, 144, 144),
@@ -546,7 +603,7 @@ class _PostCardState extends State<PostCard> {
                           TextSpan(
                             text: clientPost.userId != null
                                 ? '${clientPost.userId!.firstName} ${clientPost.userId!.lastName}'
-                                : clientPost.petCenterId.name,
+                                : clientPost.petCenterId!.name,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           // TextSpan(
@@ -592,11 +649,11 @@ class _PostCardState extends State<PostCard> {
     );
   }
 
-  Widget _slider(List imageList) {
+  Widget _slider(List? imageList) {
     return Stack(
       children: [
         CarouselSlider(
-          items: imageList
+          items: imageList!
               .map(
                 (item) => Image.network(
                   item,
@@ -604,7 +661,8 @@ class _PostCardState extends State<PostCard> {
                   width: double.infinity,
                   errorBuilder: (context, error, stackTrace) {
                     // Return an Icon widget when there's an error
-                    return Icon(Icons.image_not_supported, color: Colors.red);
+                    return const Icon(Icons.image_not_supported,
+                        color: Colors.red);
                   },
                 ),
               )

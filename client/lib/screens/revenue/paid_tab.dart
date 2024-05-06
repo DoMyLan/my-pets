@@ -216,7 +216,7 @@ class _PaidTabState extends State<PaidTab> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        RevenueDetailScreen()));
+                                        RevenueDetailScreen(orderId: item.id,)));
                           },
                           child: ListItemWidget(
                             imageUrl: item.petId.images[0],
