@@ -113,6 +113,25 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
+                                  'Mã đơn hàng',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  order.id.toUpperCase(),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
                                   'Giá sản phẩm',
                                   style: TextStyle(
                                     color: Colors.grey,
@@ -274,7 +293,8 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                                   order.paymentMethods == "COD"
                                       ? "Thanh toán khi nhận hàng"
                                       : "VNPAY",
-                                  style: const TextStyle(fontSize: 14),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.blue),
                                 )
                               ],
                             ),
@@ -292,7 +312,11 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                                   order.statusPayment == "PENDING"
                                       ? "Chờ thanh toán"
                                       : "Đã thanh toán",
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: order.statusPayment == "PENDING"
+                                          ? Colors.orange
+                                          : Colors.green),
                                 )
                               ],
                             )

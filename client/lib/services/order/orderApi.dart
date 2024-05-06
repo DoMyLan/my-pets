@@ -15,7 +15,8 @@ Future<String?> createOrder(
     voucherShipping,
     voucherTotal,
     totalFee,
-    totalPayment) async {
+    totalPayment,
+    paymentMethods) async {
   try {
     var body = jsonEncode({
       "buyer": buyer,
@@ -34,7 +35,7 @@ Future<String?> createOrder(
       "voucherShipping": voucherShipping,
       "voucherTotal": voucherTotal,
       "totalPayment": totalPayment,
-      "paymentMethods": "COD"
+      "paymentMethods": paymentMethods
     });
     var responseData = await api('order', 'POST', body);
     return responseData['message'];
@@ -114,7 +115,8 @@ Future<void> changeStatusOrder(orderId, statusOrder) async {
 Future<List<Order>> getRevenue(centerId, status) async {
   var responseData;
   try {
-    responseData = await api('order/$centerId/payment?status=$status', 'GET', '');
+    responseData =
+        await api('order/$centerId/payment?status=$status', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);
@@ -123,4 +125,13 @@ Future<List<Order>> getRevenue(centerId, status) async {
   List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
   print(orders);
   return orders;
+}
+
+Future<void> confirmPayment(orderId) async {
+  try {
+    await api('order/$orderId/payment', 'PUT', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_VNPAY.dart';
-import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
@@ -742,7 +741,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 voucherShipping,
                                 voucherTotal,
                                 totalFee,
-                                totalPayment);
+                                totalPayment,
+                                _paymentMethod == 0
+                                    ? "COD"
+                                    : "ONLINE");
                             Navigator.of(context).pop();
                             if (message != "Create order successfully!") {
                               setState(() {

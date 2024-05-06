@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
-import 'package:found_adoption_application/screens/chart_folder/chart_revenue_screen.dart';
-import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/feedback.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
@@ -42,7 +40,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
               color: Color.fromRGBO(48, 96, 96, 1.0),
             )),
         title: const Text(
-          'Order Detail',
+          'Chi tiết đơn hàng',
           style: TextStyle(
               color: Color.fromRGBO(
                 48,
@@ -112,6 +110,25 @@ class _TrackingOrderState extends State<TrackingOrder> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Mã đơn hàng',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                Text(
+                                  order.id.toUpperCase(),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ],
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -277,7 +294,7 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   order.paymentMethods == "COD"
                                       ? "Thanh toán khi nhận hàng"
                                       : "VNPAY",
-                                  style: const TextStyle(fontSize: 14),
+                                  style: const TextStyle(fontSize: 14, color: Colors.blue),
                                 )
                               ],
                             ),
@@ -295,7 +312,11 @@ class _TrackingOrderState extends State<TrackingOrder> {
                                   order.statusPayment == "PENDING"
                                       ? "Chờ thanh toán"
                                       : "Đã thanh toán",
-                                  style: const TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: order.statusPayment == "PENDING"
+                                          ? Colors.orange
+                                          : Colors.green),
                                 )
                               ],
                             )

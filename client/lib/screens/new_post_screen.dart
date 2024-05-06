@@ -273,7 +273,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                             dropdownValue = newValue;
                           });
                         },
-                        items: pets?.map<DropdownMenuItem<String>>(
+                        items: pets.map<DropdownMenuItem<String>>(
                                 (PetCustom pet) {
                               return DropdownMenuItem<String>(
                                 value: pet.id,

@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/screens/order_state.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/feedback.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
@@ -101,7 +100,7 @@ class _TheOrdersState extends State<TheOrders>
                 Tab(text: 'Chờ xác nhận'),
                 Tab(text: 'Đã xác nhận'),
                 Tab(text: 'Đang vận chuyển'),
-                Tab(text: 'Giao thành công'),
+                Tab(text: 'Giao hàng'),
                 Tab(text: 'Bị hủy'),
               ],
             ),
@@ -256,23 +255,17 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const Spacer(),
                                         Text(
-                                          orders[index].statusOrder == 'PENDING'
-                                              ? 'Chờ xác nhận'
-                                              : orders[index].statusOrder ==
-                                                      'CONFIRMED'
-                                                  ? 'Đã xác nhận'
-                                                  : orders[index].statusOrder ==
-                                                          'DELIVERING'
-                                                      ? 'Đang vận chuyển'
-                                                      : orders[index]
-                                                                  .statusOrder ==
-                                                              'COMPLETED'
-                                                          ? 'Giao thành công'
-                                                          : 'Bị hủy',
-                                          style: const TextStyle(
-                                              color: Colors.orange),
+                                          orders[index].statusPayment ==
+                                                  'PENDING'
+                                              ? 'Chờ thanh toán'
+                                              : 'Đã thanh toán ${orders[index].paymentMethods}',
+                                          style: TextStyle(
+                                              color:
+                                                  orders[index].statusPayment ==
+                                                          'PENDING'
+                                                      ? Colors.orange
+                                                      : Colors.green),
                                         ),
                                       ],
                                     ),
@@ -398,41 +391,37 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : SizedBox(),
-                                        orders[index].statusOrder ==
-                                                    "COMPLETED" &&
-                                                orders[index].rating == false
+                                        orders[index].statusOrder == "DELIVERED"
                                             ? GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AddFeedBackScreen(
-                                                        order: orders[index],
-                                                      ),
-                                                    ),
-                                                  );
+                                                onTap: () async {
+                                                  Loading(context);
+                                                  await changeStatusOrder(
+                                                      orders[index].id,
+                                                      'COMPLETED');
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    orders[index].statusOrder =
+                                                        'COMPLETED';
+                                                  });
                                                 },
-                                                child: GestureDetector(
-                                                  onTap: () {},
-                                                  child: Container(
-                                                    width: 120,
-                                                    height: 40,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      color: Colors.blueGrey,
-                                                    ),
-                                                    child: const Center(
-                                                      child: Text(
-                                                        "Đánh giá",
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.white,
-                                                        ),
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.green[400],
+                                                  ),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Đã nhận hàng",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
                                                       ),
                                                     ),
                                                   ),
@@ -440,29 +429,84 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                               )
                                             : orders[index].statusOrder ==
                                                         "COMPLETED" &&
-                                                    orders[index].rating == true
-                                                ? Container(
-                                                    width: 120,
-                                                    height: 40,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      color: Colors.grey[200],
-                                                    ),
-                                                    child: const Center(
-                                                      child: Text(
-                                                        "Bạn đã đánh giá",
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.grey,
+                                                    orders[index].rating ==
+                                                        false
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddFeedBackScreen(
+                                                            order:
+                                                                orders[index],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: GestureDetector(
+                                                      onTap: () {},
+                                                      child: Container(
+                                                        width: 90,
+                                                        height: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color:
+                                                              Colors.blueGrey,
+                                                        ),
+                                                        child: const Center(
+                                                          child: Text(
+                                                            "Đánh giá",
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   )
-                                                : SizedBox()
+                                                : orders[index].statusOrder ==
+                                                            "COMPLETED" &&
+                                                        orders[index].rating ==
+                                                            true
+                                                    ? GestureDetector(
+                                                        onTap: () {},
+                                                        child: Container(
+                                                          width: 120,
+                                                          height: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            color: Colors
+                                                                .grey[200],
+                                                          ),
+                                                          child: const Center(
+                                                            child: Text(
+                                                              "Bạn đã đánh giá",
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color:
+                                                                    Colors.grey,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : SizedBox()
                                       ],
                                     ),
                                     const SizedBox(

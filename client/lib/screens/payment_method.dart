@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:found_adoption_application/custom_widget/exchange_rate.dart';
 import 'package:found_adoption_application/models/invoice.dart';
-import 'package:found_adoption_application/services/order/paymentApi.dart';
-import 'package:found_adoption_application/utils/consts.dart';
 
 class PaymentMethod extends StatefulWidget {
 
@@ -34,7 +31,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
         future: invoiceDetail,
         builder: (BuildContext context, AsyncSnapshot<Invoice> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           }
@@ -45,11 +42,11 @@ class _PaymentMethodState extends State<PaymentMethod> {
             builder:
                 (BuildContext context, AsyncSnapshot<double> amountSnapshot) {
               if (amountSnapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (amountSnapshot.hasError) {
                 return Text('Error: ${amountSnapshot.error}');
               }
-              final double convertedAmount = amountSnapshot.data!;
+              // final double convertedAmount = amountSnapshot.data!;
 
               return TextButton(
                 onPressed: () {
