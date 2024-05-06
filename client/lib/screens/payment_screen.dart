@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
+import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/payment_method.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
@@ -34,6 +35,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var voucherShipping = 0;
   var voucherTotal = 0;
   var totalPayment = 0;
+  late int _paymentMethod = 0;
 
   TextEditingController voucherText = TextEditingController();
 
@@ -70,7 +72,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text('Thanh toán'),
+        title: const Text('Thông tin đơn hàng'),
       ),
       body: SafeArea(
         child: Stack(children: [
@@ -414,40 +416,75 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 20.0),
-                Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  const Icon(
-                    Icons.monetization_on_outlined,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-
-                  // Text(
-                  //   'Phương thức thanh toán (Nhấn để chọn)',
-                  //   style: TextStyle(
-                  //     fontSize: 14.0,
-                  //     color: Color.fromARGB(255, 99, 182, 124),
-                  //   ),
-                  // ),
-
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => PaymentMethod())));
-                    },
-                    child: const Text(
-                      'Phương thức thanh toán (Nhấn để chọn)',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Color.fromARGB(255, 99, 182, 124),
+                Column(
+                  children: <Widget>[
+                    const Row(
+                      children: [
+                        Icon(
+                          Icons.monetization_on_outlined,
+                          color: Colors.red,
+                        ),
+                        Text(
+                          'Chọn phương thức thanh toán',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color.fromARGB(255, 99, 182, 124),
+                          ),
+                        ),
+                      ],
+                    ),
+                    RadioListTile(
+                      value: 0,
+                      groupValue: _paymentMethod,
+                      title: const Text(
+                        "Thanh toán bằng tiền mặt",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _paymentMethod = value!;
+                        });
+                      },
                     ),
-                  ),
-                ] //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
+                    RadioListTile(
+                      value: 1,
+                      groupValue: _paymentMethod,
+                      title: const Text(
+                        "Thanh toán bằng VNPAY",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _paymentMethod = value!;
+                        });
+                      },
                     ),
+                  ],
+                ),
+
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: ((context) => PaymentMethod())));
+                //   },
+                //   child: const Text(
+                //     'Phương thức thanh toán (Nhấn để chọn)',
+                //     style: TextStyle(
+                //       fontSize: 14.0,
+                //       color: Color.fromARGB(255, 99, 182, 124),
+                //     ),
+                //   ),
+                // ),
+//ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
+
                 const SizedBox(height: 20.0),
                 Divider(
                   color: Colors.grey.shade300,
@@ -468,7 +505,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       width: 4,
                     ),
                     Text(
-                      'Chi tiết thanh toán',
+                      'Chi tiết đơn hàng',
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
@@ -714,6 +751,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 voucherTotal = 0;
                                 totalPayment = totalFee;
                               });
+                            }
+                            if (message == "Create order successfully!" && _paymentMethod == 1) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VNPAY()));
                             }
 
                             if (message != null) {
