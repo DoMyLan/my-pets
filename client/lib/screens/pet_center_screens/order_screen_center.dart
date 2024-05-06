@@ -142,14 +142,14 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
     'PENDING',
     'CONFIRMED',
     'DELIVERING',
-    'COMPLETED',
+    'DELIVERED',
     'CANCEL',
   ];
   final List<String> statusOrderText = [
     'Chờ xác nhận',
     'Đã xác nhận',
     'Đang vận chuyển',
-    'Giao thành công',
+    'Giao hàng',
     'Bị hủy'
   ];
   final List<String> statusOrderButton = [
@@ -280,9 +280,16 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         ),
                                         const Spacer(),
                                         Text(
-                                          statusOrderText[widget.tabIndex],
-                                          style: const TextStyle(
-                                              color: Colors.orange),
+                                          orders[index].statusPayment ==
+                                                  'PENDING'
+                                              ? 'Chờ thanh toán'
+                                              : 'Đã thanh toán ${orders[index].paymentMethods}',
+                                          style: TextStyle(
+                                              color:
+                                                  orders[index].statusPayment ==
+                                                          'PENDING'
+                                                      ? Colors.orange
+                                                      : Colors.green),
                                         ),
                                       ],
                                     ),
@@ -400,6 +407,81 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                         const SizedBox(
                                           width: 10,
                                         ),
+                                        widget.tabIndex == 2 &&
+                                                orders[index].paymentMethods ==
+                                                    'COD' &&
+                                                orders[index].statusPayment ==
+                                                    "PENDING"
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  Loading(context);
+                                                  //Xác nhận thanh toán COD
+                                                  await confirmPayment(
+                                                      orders[index].id);
+                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    orders[index]
+                                                        .statusPayment = "PAID";
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.blue,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      'Thanh toán COD',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : widget.tabIndex == 2 &&
+                                                    orders[index]
+                                                            .paymentMethods ==
+                                                        'COD' &&
+                                                    orders[index]
+                                                            .statusPayment ==
+                                                        "PAID"
+                                                ? GestureDetector(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      width: 120,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color:
+                                                            Colors.greenAccent,
+                                                      ),
+                                                      child: const Center(
+                                                        child: Text(
+                                                          'Đã thanh toán',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
                                         widget.tabIndex < 3
                                             ? GestureDetector(
                                                 onTap: () async {
@@ -416,8 +498,8 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                   });
                                                 },
                                                 child: Container(
-                                                  width: 100,
-                                                  height: 40,
+                                                  width: 85,
+                                                  height: 30,
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -429,7 +511,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                       statusOrderButton[
                                                           widget.tabIndex],
                                                       style: const TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color: Colors.white,

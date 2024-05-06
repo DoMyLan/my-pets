@@ -163,8 +163,8 @@ class Order {
   final int totalFee;
   final int totalPayment;
   final String paymentMethods;
-  final String statusOrder;
-  final String statusPayment;
+  late String statusOrder;
+  late String? statusPayment;
   final DateTime? dateConfirm;
   final DateTime? dateDelivering;
   final DateTime? dateCompleted;
@@ -174,7 +174,7 @@ class Order {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const Order({
+  Order({
     required this.id,
     required this.seller,
     required this.buyer,
@@ -189,7 +189,7 @@ class Order {
     required this.totalPayment,
     required this.paymentMethods,
     required this.statusOrder,
-    required this.statusPayment,
+    this.statusPayment,
     this.dateConfirm,
     this.dateDelivering,
     this.dateCompleted,

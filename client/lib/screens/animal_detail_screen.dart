@@ -27,7 +27,7 @@ class AnimalDetailScreen extends StatefulWidget {
 class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   int currentIndex = 0;
   dynamic currentClient;
-  bool _isExpanded = false;
+  // bool _isExpanded = false;
   int maxlines = 3;
   late bool isFavorite = false;
   Future<Pet>? petFuture;
