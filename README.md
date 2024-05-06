@@ -31,17 +31,30 @@ Tóm lại, ứng dụng này không chỉ đơn giản là một cửa hàng tr
 <table style="border-collapse: collapse;">
   <tr>
     <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/flask_welcome.jpg?raw=true" alt="Mô tả ảnh 1"></td>
-    <td align="center"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/home.jpg?raw=true" alt="Mô tả ảnh 2"></td>
-    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/Screenshot_2024-05-06-09-42-43-395_com.example.found_adoption_application.jpg?raw=true" alt="Mô tả ảnh 3"></td>
-    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/pet_detail.jpg?raw=true" alt="Mô tả ảnh 4"></td>
-    
-    
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/home.jpg?raw=true" alt="Mô tả ảnh 2"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/Screenshot_2024-05-06-09-42-43-395_com.example.found_adoption_application.jpg?raw=true" alt="Mô tả ảnh 3"></td> 
     
   </tr>
   <tr>
-    <td align="center"><img src="link ảnh 4" alt="Mô tả ảnh 4"></td>
-    <td align="center"><img src="link ảnh 5" alt="Mô tả ảnh 5"></td>
-    <td align="center"><img src="link ảnh 6" alt="Mô tả ảnh 6"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/pet_detail.jpg?raw=true" alt="Mô tả ảnh 4"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/favorite_pet.jpg?raw=true" alt="Mô tả ảnh 5"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/thanhtoan.jpg?raw=true" alt="Mô tả ảnh 6"></td>
+  </tr>
+  <tr>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/order.jpg?raw=true" alt="Mô tả ảnh 4"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/order_detail.jpg?raw=true" alt="Mô tả ảnh 5"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/feedback.jpg?raw=true" alt="Mô tả ảnh 6"></td>
+  </tr>
+
+  <tr>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/profile.jpg?raw=true" alt="Mô tả ảnh 4"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/change_password.jpg?raw=true" alt="Mô tả ảnh 5"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/social_network.jpg?raw=true" alt="Mô tả ảnh 6"></td>
+  </tr>
+  <tr>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/voucher.jpg?raw=true" alt="Mô tả ảnh 4"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/revenue_report.jpg?raw=true" alt="Mô tả ảnh 5"></td>
+    <td align="center" style="border: none;"><img src="https://github.com/DoMyLan/LabAWS_RDS/blob/main/images/revenue_chart.jpg?raw=true" alt="Mô tả ảnh 6"></td>
   </tr>
 </table>
 
