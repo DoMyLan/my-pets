@@ -25,7 +25,7 @@ Widget bannerCard() {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Text(
-              'Find the best pet near you and adopt your favorite one',
+              'Find the best pet near you and quickly buy your favorite one',
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,

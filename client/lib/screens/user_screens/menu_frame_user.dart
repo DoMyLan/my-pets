@@ -39,7 +39,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
-      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+    
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -58,10 +58,10 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     2: FeedScreen(),
     3: FavoriteScreen(),
     4: const TheOrders(),
-    5: StatusAdoptUser(),
-    6: MyTabbedScreen(),
+    // 5: StatusAdoptUser(),
+  
 
-    // 6: NotificationPage()
+    5: NotificationPage()
   
 
     // 6: NotificationPage()
