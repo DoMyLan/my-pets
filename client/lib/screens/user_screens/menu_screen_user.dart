@@ -17,18 +17,17 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
-    'Adoption',
+    'Buy Pet',
     'Profile',
     'Pet Stories',
     'Favorites',
     'Order',
-    'Manage Adopt',
-    // 'Notify',
+    // 'Manage Adopt',
+    'Notify',
     // 'Favorite',
     // 'Messages',
 
     // 'Short Videos'
-    'test Provider'
   ];
 
   List<IconData> icons = [
@@ -36,13 +35,12 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.newspaper,
     FontAwesomeIcons.heart,
-    // FontAwesomeIcons.heart,
+
     FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.bell,
-    // FontAwesomeIcons.heart,
+
     // FontAwesomeIcons.envelope,
     // FontAwesomeIcons.radio
-    FontAwesomeIcons.a
   ];
 
   Widget buildMenuRow(int index) {

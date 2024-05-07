@@ -19,7 +19,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
-    'Adoption',
+    'Buy Pet',
     'Pet Story',
     'Profile',
     'Add pet',
@@ -205,39 +205,9 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                    //Phần SETTING
                       Padding(
                         padding: const EdgeInsets.only(right: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.logout_rounded,
-                                color: Colors.white.withOpacity(0.5)),
-                            TextButton(
-                                onPressed: () async {
-                                  _showLogoutDialog(context);
-                                },
-                                child: Text(
-                                  'Log out',
-                                  style: TextStyle(
-                                      color: Colors.white.withOpacity(0.5),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                )),
-                          ],
-                        ),
-                      ),
-
-                      Text(
-                        '||',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                      ),
-
-                      //Phần SETTING
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30),
                         child: Row(
                           children: [
                             Icon(Icons.settings,
@@ -261,6 +231,37 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                           ],
                         ),
                       ),
+
+                      Text(
+                        '||',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(Icons.logout_rounded,
+                                color: Colors.white.withOpacity(0.5)),
+                            TextButton(
+                                onPressed: () async {
+                                  _showLogoutDialog(context);
+                                },
+                                child: Text(
+                                  'Log out',
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.5),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                )),
+                          ],
+                        ),
+                      ),
+                      
                     ],
                   ),
                 ],
