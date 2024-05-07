@@ -19,8 +19,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final userId;
-  ProfilePage({super.key, required this.userId});
+  const ProfilePage({super.key, required this.userId});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -29,6 +30,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   Future<List<Post>>? petStoriesPosts;
   late Future<InfoUser>? userFuture;
+  // ignore: prefer_typing_uninitialized_variables
   var currentClient;
   late bool isLoading = true;
 
@@ -65,6 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (currentClient != null) {
                 if (currentClient.role == 'USER') {
                   Navigator.push(
+                    // ignore: use_build_context_synchronously
                     context,
                     MaterialPageRoute(
                         builder: (context) => MenuFrameUser(
@@ -73,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 } else if (currentClient.role == 'CENTER') {
                   Navigator.push(
+                    // ignore: use_build_context_synchronously
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
@@ -126,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     InfoUser user = snapshot.data!;
                     if (user.status == 'HIDDEN') {
                       if (currentClient.id != widget.userId) {
-                        return Center(
+                        return const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -136,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.grey,
                               ),
                               Text(
-                                'This user is hidden',
+                                'Tài khoản này đã bị ẩn',
                                 style:
                                     TextStyle(fontSize: 20, color: Colors.grey),
                               )
@@ -146,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       }
                     }
                     return SingleChildScrollView(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -166,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       child: CircleAvatar(
                                         radius: 40.0,
                                         backgroundImage:
-                                            NetworkImage('${user.avatar}'),
+                                            NetworkImage(user.avatar),
                                       ),
                                     ),
                                   ),
@@ -179,20 +183,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                               "Feature under development",
                                               false);
                                         },
-                                        icon: Icon(Icons.person_add,
+                                        icon: const Icon(Icons.person_add,
                                             color: Colors.white),
-                                        label: Text('Follow'),
+                                        label: const Text('Theo dõi'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
                                         ),
                                       ),
-                                      SizedBox(width: 8.0),
+                                      const SizedBox(width: 8.0),
                                       currentClient.id == widget.userId
                                           ? PopupMenuButton<int>(
                                               itemBuilder: (context) => [
                                                 PopupMenuItem(
                                                   value: 1,
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     width: 175,
                                                     child: ElevatedButton.icon(
                                                       onPressed: () {
@@ -201,12 +205,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        EditProfileScreen()));
+                                                                        const EditProfileScreen()));
                                                       },
-                                                      icon: Icon(Icons.edit,
+                                                      icon: const Icon(Icons.edit,
                                                           color: Colors.white),
                                                       label:
-                                                          Text('Edit profile'),
+                                                          const Text('Sửa thông tin'),
                                                       style: ElevatedButton
                                                           .styleFrom(
                                                         foregroundColor: Colors.white, backgroundColor: Theme.of(context)
@@ -219,7 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 //Update Password
                                                 PopupMenuItem(
                                                   value: 1,
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     width: 175,
                                                     child: ElevatedButton.icon(
                                                       onPressed: () {
@@ -230,10 +234,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                     (context) =>
                                                                         UpdatePasswordScreen()));
                                                       },
-                                                      icon: Icon(Icons.password,
+                                                      icon: const Icon(Icons.password,
                                                           color: Colors.white),
-                                                      label: Text(
-                                                          'Change Password'),
+                                                      label: const Text(
+                                                          'Đổi mật khẩu'),
                                                       style: ElevatedButton
                                                           .styleFrom(
                                                         foregroundColor: Colors.white, backgroundColor: Theme.of(context)
@@ -244,7 +248,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ),
                                                 PopupMenuItem(
                                                   value: 2,
-                                                  child: Container(
+                                                  child: SizedBox(
                                                     width: 175,
                                                     child: ElevatedButton.icon(
                                                       onPressed: () {
@@ -252,11 +256,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                             user.id,
                                                             user.status);
                                                       },
-                                                      icon: Icon(
+                                                      icon: const Icon(
                                                           Icons.change_circle,
                                                           color: Colors.white),
                                                       label:
-                                                          Text('Change status'),
+                                                          const Text('Thay đổi trạng thái'),
                                                       style: ElevatedButton
                                                           .styleFrom(
                                                         foregroundColor: Colors.white, backgroundColor: Theme.of(context)
@@ -269,10 +273,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                               onSelected: (value) {
                                                 // Handle your logic based on selected value
                                               },
-                                              icon: Icon(Icons.more_vert,
+                                              icon: const Icon(Icons.more_vert,
                                                   color: Colors.grey),
                                             )
-                                          : SizedBox(width: .0),
+                                          : const SizedBox(width: .0),
                                     ],
                                   ),
                                 ],
@@ -285,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   // User's name
                                   Text(
                                     '${user.firstName} ${user.lastName} ',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -300,10 +304,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 8.0),
+                              const SizedBox(height: 8.0),
 
                               // Contact me
-                              buildSectionHeader('Contact me', Icons.mail),
+                              buildSectionHeader('Thông tin liên hệ', Icons.mail),
                               buildContactInfo(
                                   user.phoneNumber, Icons.phone, 'phone'),
                               buildContactInfo(
@@ -313,30 +317,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                   const IconData(0xe3ab,
                                       fontFamily: 'MaterialIcons'),
                                   'address'),
-                              SizedBox(height: 16.0),
+                              const SizedBox(height: 16.0),
 
                               // About me
-                              buildSectionHeader('About me', Icons.info),
+                              buildSectionHeader('Thông tin về tôi', Icons.info),
                               buildInfo(user.aboutMe),
-                              SizedBox(height: 16.0),
+                              const SizedBox(height: 16.0),
 
                               // Experience
-                              buildSectionHeader('Experience', Icons.work),
+                              buildSectionHeader('Kinh nghiệm', Icons.work),
                               buildInfo(user.experience
-                                  ? "Has been Experience"
-                                  : "No Experience"),
-                              SizedBox(height: 16.0),
+                                  ? "Có"
+                                  : "Không có thông tin kinh nghiệm"),
+                              const SizedBox(height: 16.0),
 
                               Container(
                                 width: double.infinity,
                                 height: 8.0,
                                 color: const Color.fromARGB(255, 176, 175, 175),
-                                margin: EdgeInsets.symmetric(vertical: 16.0),
+                                margin: const EdgeInsets.symmetric(vertical: 16.0),
                               ),
 
                               // List các bài viết đã đăng
                               buildSectionHeader(
-                                  'Article posted', Icons.library_books),
+                                  'Bài đăng', Icons.library_books),
                               // Dùng ListView để hiển thị danh sách các bài viết
                               DefaultTabController(
                                   length: 1,
@@ -345,8 +349,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     TabBar(
                                       labelColor:
                                           Theme.of(context).primaryColor,
-                                      tabs: [
-                                        Tab(text: 'Pet Stories'),
+                                      tabs: const [
+                                        Tab(text: 'Bài viết'),
                                       ],
                                     ),
                                     // TabBarView để hiển thị nội dung tương ứng với từng tab
@@ -367,7 +371,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _refresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       petStoriesPosts = getAllPostPersonal(widget.userId);
       userFuture = getProfile(context, widget.userId);
@@ -395,7 +399,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             } else {
               // Xử lý trường hợp postList là null
-              return Scaffold(
+              return const Scaffold(
                 body: Center(
                   child: Icon(
                     Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
@@ -413,7 +417,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       children: [
         Icon(icon, size: 24.0, color: Theme.of(context).primaryColor),
-        SizedBox(width: 8.0),
+        const SizedBox(width: 8.0),
         Text(
           title,
           style: TextStyle(
@@ -439,11 +443,12 @@ class _ProfilePageState extends State<ProfilePage> {
           if (type == 'email') {
             launchEmail(info);
           } else if (type == 'phone') {
-            makePhoneCall('tel:${info}');
+            makePhoneCall('tel:$info');
           } else if (type == 'address') {
             LatLng coordinate = await convertAddressToLatLng(info);
             //xử lý bản đồ
             Navigator.push(
+              // ignore: use_build_context_synchronously
               context,
               MaterialPageRoute(
                   builder: (context) => MapPage(pDestination: coordinate)),
@@ -458,11 +463,11 @@ class _ProfilePageState extends State<ProfilePage> {
               alignment: Alignment.topLeft,
               child: Icon(icon, size: 16.0),
             ),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Flexible(
               child: Text(
                 info,
-                style: TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
+                style: const TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
                 softWrap: true,
               ),
             ),
@@ -473,7 +478,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildInfo(String info) {
     return Text(
       info,
-      style: TextStyle(fontSize: 16.0),
+      style: const TextStyle(fontSize: 16.0),
     );
   }
 
@@ -484,7 +489,7 @@ class _ProfilePageState extends State<ProfilePage> {
         body: Center(
           child: Hero(
             tag: 'avatarTag',
-            child: Image.network('${image}'),
+            child: Image.network('$image'),
           ),
         ),
       ),
@@ -493,19 +498,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Hàm để mở ứng dụng email với địa chỉ được cung cấp
   void launchEmail(String email) async {
-    final Uri _emailLaunchUri = Uri(
+    final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: email,
     );
-    if (await canLaunch(_emailLaunchUri.toString())) {
-      await launch(_emailLaunchUri.toString());
+    // ignore: deprecated_member_use
+    if (await canLaunch(emailLaunchUri.toString())) {
+      // ignore: deprecated_member_use
+      await launch(emailLaunchUri.toString());
     } else {
       throw 'Không thể mở ứng dụng email';
     }
   }
 
   void makePhoneCall(String phoneNumber) async {
+    // ignore: deprecated_member_use
     if (await canLaunch(phoneNumber)) {
+      // ignore: deprecated_member_use
       await launch(phoneNumber);
     } else {
       throw 'Không thể gọi điện thoại';

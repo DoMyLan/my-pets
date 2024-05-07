@@ -33,9 +33,15 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('My Profile', style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0), fontSize: 23,),),
+        title: const Text(
+          'Trang cá nhân',
+          style: TextStyle(
+            color: Color.fromRGBO(48, 96, 96, 1.0),
+            fontSize: 23,
+          ),
+        ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Color.fromRGBO(48, 96, 96, 1.0),
           ),
@@ -54,6 +60,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
             if (currentClient != null) {
               if (currentClient.role == 'USER') {
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                       builder: (context) => MenuFrameUser(
@@ -62,6 +69,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                 );
               } else if (currentClient.role == 'CENTER') {
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                       builder: (context) => MenuFrameCenter(
@@ -75,7 +83,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
         actions: [
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.settings,
                 color: Colors.white,
               ))
@@ -96,7 +104,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
               // If data is successfully fetched, display the form
               InfoCenter center = snapshot.data!;
               return Container(
-                padding: EdgeInsets.only(left: 15, top: 20, right: 15),
+                padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
                 child: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -145,7 +153,7 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                                         border: Border.all(
                                             width: 4, color: Colors.white),
                                         color: Theme.of(context).primaryColor),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.edit,
                                       color: Colors.white,
                                     ),
@@ -154,28 +162,28 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
 
                       //Thực hiện các inputField
 
-                      buildTextField('Name', center.name, false),
-                      buildTextField("Phone Number", center.phoneNumber, false),
+                      buildTextField('Tên', center.name, false),
+                      buildTextField("Số điện thoại", center.phoneNumber, false),
                       buildTextField("Email", center.email, true),
-                      buildTextField("Role", center.role, true),
-                      buildTextField("Address", center.address, false),
+                      buildTextField("Loại tài khoản", center.role, true),
+                      buildTextField("Địa chỉ", center.address, false),
 
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: 'Tell us about yourself',
-                            helperText: 'Keep it short, this is just demo',
-                            labelText: 'Life Story'),
+                            hintText: 'Nói cho chúng tôi biết thêm về bạn',
+                            helperText: 'Ví dụ: Sở thích, kỹ năng, ...',
+                            labelText: 'Giới thiệu'),
                         maxLines: 4,
                       ),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
 
@@ -188,18 +196,18 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                               textPhoneNumber.text = "";
                               textAddress.text = "";
                             },
-                            child: Text(
-                              'CANCEL',
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Hủy',
                               style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 2,
                                   color: Colors.black),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
                             ),
                           ),
                           ElevatedButton(
@@ -226,18 +234,18 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
                                 textAddress.text = '';
                               });
                             },
-                            child: Text(
-                              'SAVE',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  letterSpacing: 2,
-                                  color: Colors.white),
-                            ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).primaryColor,
                               padding: EdgeInsets.symmetric(horizontal: 30),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
+                            ),
+                            child: const Text(
+                              'Lưu',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  letterSpacing: 2,
+                                  color: Colors.white),
                             ),
                           )
                         ],
@@ -253,20 +261,20 @@ class _EditProfileCenterScreenState extends State<EditProfileCenterScreen> {
 
   Widget buildTextField(String labelText, String placeholder, bool isReadOnly) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 30),
       child: TextField(
-        controller: labelText == "Name"
+        controller: labelText == "Tên"
             ? textName
-            : (labelText == "Phone Number"
+            : (labelText == "Số điện thoại"
                 ? textPhoneNumber
-                : (labelText == "Address" ? textAddress : null)),
+                : (labelText == "Địa chỉ" ? textAddress : null)),
         readOnly: isReadOnly,
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(bottom: 5),
+            contentPadding: const EdgeInsets.only(bottom: 5),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintText: placeholder,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
       ),
     );

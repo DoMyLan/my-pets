@@ -127,7 +127,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                       PopupMenuItem<String>(
                                         value: 'edit',
                                         child: Text(
-                                          'Edit',
+                                          'Chỉnh sửa',
                                           style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -137,7 +137,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                       PopupMenuItem<String>(
                                         value: 'delete',
                                         child: Text(
-                                          'Delete',
+                                          'Xóa',
                                           style: TextStyle(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -263,7 +263,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                   width: 1),
                                             ),
                                             child: Text(
-                                              'View User',
+                                              'Xem người dùng',
                                               style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColor,
@@ -350,7 +350,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               ),
                                               // Khoảng cách giữa icon và text
                                               Text(
-                                                'VIEW ALL',
+                                                'Xem đánh giá',
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold,
@@ -559,11 +559,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            pet.statusAdopt == 'HAS_ONE_OWNER'
-                                                ? pet.foundOwner!.avatar
-                                                : pet.centerId == null
-                                                    ? pet.giver!.avatar
-                                                    : pet.centerId!.avatar,
+                                            pet.centerId!.avatar
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -590,13 +586,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                     );
                                                   },
                                                   child: Text(
-                                                    pet.statusAdopt ==
-                                                            'HAS_ONE_OWNER'
-                                                        ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                        : pet.centerId == null
-                                                            ? '${pet.giver!.firstName} ${pet.giver!.lastName}'
-                                                            : pet
-                                                                .centerId!.name,
+                                                    pet.centerId!.name,
                                                     style: TextStyle(
                                                       color: Theme.of(context)
                                                           .primaryColor,
@@ -644,7 +634,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 width: 1),
                                           ),
                                           child: Text(
-                                            'View Center',
+                                            'Xem trung tâm',
                                             style: TextStyle(
                                                 color: Theme.of(context)
                                                     .primaryColor,
@@ -724,7 +714,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               ),
                                               // Khoảng cách giữa icon và text
                                               Text(
-                                                'VIEW ALL',
+                                                'Xem đánh giá',
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold,
@@ -907,11 +897,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         ),
 
                   Spacer(),
-                  if (currentClient.role == "USER" && pet.foundOwner == null)
+                  if (currentClient.role == "USER" && pet.statusPaid == 'NOTHING')
                     Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Container(
-                        height: 60,
+                        height: 50,
                         decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -939,7 +929,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   elevation: 4,
                                   color: Theme.of(context).primaryColor,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.all(15.0),
                                     child: Icon(
                                       isFavorite
                                           ? FontAwesomeIcons.solidHeart
@@ -983,13 +973,85 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     elevation: 4,
                                     color: Theme.of(context).primaryColor,
                                     child: const Padding(
-                                      padding: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(15.0),
                                       child: Text(
-                                        'Buy Pets',
+                                        'Mua ngay',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 18),
+                                            fontSize: 15),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (currentClient.role == "USER" && pet.statusPaid != 'NOTHING')
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        height: 50,
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(30),
+                              topLeft: Radius.circular(30),
+                            )),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 22),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    isFavorite = !isFavorite;
+                                  });
+                                  Loading(context);
+                                  await favoritePet(pet.id);
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.of(context).pop();
+                                },
+                                child: Material(
+                                  borderRadius: BorderRadius.circular(20),
+                                  elevation: 4,
+                                  color: Colors.amber,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(15.0),
+                                    child: Icon(
+                                      isFavorite
+                                          ? FontAwesomeIcons.solidHeart
+                                          : FontAwesomeIcons.heart,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                  },
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(20),
+                                    elevation: 4,
+                                    color: Colors.amber,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(15.0),
+                                      child: Text(
+                                        'Đã bán',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
@@ -1004,7 +1066,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   //HIỂN THỊ 2 BUTTON CỦA USER
 
                   if (currentClient.role == 'CENTER' &&
-                      pet.statusAdopt != 'HAS_ONE_OWNER')
+                      pet.statusPaid != 'NOTHING')
                     MaterialButton(
                       color: Theme.of(context).primaryColor,
                       minWidth: double.infinity,
@@ -1022,7 +1084,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           side: BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10)),
                       child: const Text(
-                        "Edit Pet",
+                        "Chỉnh sửa",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 18,
@@ -1033,19 +1095,18 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   //     height: 0,
                   //   ),
 
-                  else if (currentClient.role == 'CENTER' &&
-                      pet.statusAdopt == 'HAS_ONE_OWNER')
+                  else if (pet.statusPaid == 'PAID')
                     MaterialButton(
                       color: Colors.white,
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
 
                       onPressed: () {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPetScreen(pet: pet),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReviewProfileScreen(
+                                      centerId: pet.centerId!.id,
+                                    )));
                       },
                       // defining the shape
                       shape: RoundedRectangleBorder(
@@ -1081,7 +1142,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Chi tiết sản phẩm',
+                  'Chi tiết thú cưng',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -1204,22 +1265,22 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Description'),
+          title: const Text('Mô tả'),
           content: TextField(
             controller: infoController,
-            decoration: const InputDecoration(hintText: 'Description'),
+            decoration: const InputDecoration(hintText: 'Mô tả thú cưng'),
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Đóng dialog
               },
-              child: const Text('Cancel'),
+              child: const Text('Hủy'),
             ),
             TextButton(
               onPressed: () async {
                 if (infoController.text.toString().isEmpty) {
-                  notification('Description not empty!', true);
+                  notification('Mô tả không được để trống!', true);
                   return;
                 }
                 Loading(context);
@@ -1352,14 +1413,14 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete this pet?'),
+          title: const Text('Xác nhận xóa'),
+          content: const Text('Bạn có chắc muốn xóa thú cưng không?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Hủy'),
             ),
             TextButton(
               onPressed: () async {
@@ -1370,7 +1431,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 // Navigator.of(context).pop();
                 // Navigator.of(context).pop();
               },
-              child: const Text('Delete'),
+              child: const Text('Xóa'),
             ),
           ],
         );

@@ -42,8 +42,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
-          'My profiles',
+        title: const Text(
+          'Trang cá nhân',
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -51,7 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             size: 25,
             color: Color.fromRGBO(48, 96, 96, 1.0),
@@ -78,7 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
 
               return Container(
-                padding: EdgeInsets.only(left: 15, top: 20, right: 15),
+                padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
                 child: GestureDetector(
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -127,7 +127,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         border: Border.all(
                                             width: 4, color: Colors.white),
                                         color: Theme.of(context).primaryColor),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.edit,
                                       color: Colors.white,
                                     ),
@@ -136,22 +136,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
 
                       //Thực hiện các inputField
 
-                      buildTextField('First Name', user.firstName, false),
-                      buildTextField('Last Name', user.lastName, false),
-                      buildTextField("Phone Number", user.phoneNumber, false),
+                      buildTextField('Họ', user.firstName, false),
+                      buildTextField('Tên', user.lastName, false),
+                      buildTextField("Số điện thoại", user.phoneNumber, false),
                       buildTextField("Email", user.email, true),
-                      buildTextField("Role", user.role, true),
-                      buildTextField("Address", user.address, false),
+                      buildTextField("Loại tài khoản", user.role, true),
+                      buildTextField("Địa chỉ", user.address, false),
                       Container(
                         alignment: Alignment.topLeft,
-                        child: Text(
-                          'Experiences: ',
+                        child: const Text(
+                          'Kinh nghiệm: ',
                           style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -169,8 +169,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               onChanged: (val) {
                                 setSelectedRadio(val!);
                               }),
-                          Text('Yes'),
-                          SizedBox(
+                          const Text('Có'),
+                          const SizedBox(
                             width: 50,
                           ),
                           Radio(
@@ -179,21 +179,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               onChanged: (val) {
                                 setSelectedRadio(val!);
                               }),
-                          Text('No'),
+                          const Text('Không'),
                         ],
                       ),
 
                       TextFormField(
                         controller: auboutMeController,
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                             hintText: 'Tell us about yourself',
                             helperText: 'Keep it short, this is just demo',
                             labelText: user.aboutMe),
                         maxLines: 4,
                       ),
 
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
 
@@ -209,18 +209,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               setSelectedRadio(user.experience);
                               auboutMeController.text = "";
                             },
-                            child: Text(
-                              'CANCEL',
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text(
+                              'Hủy',
                               style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 2,
                                   color: Colors.black),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
                             ),
                           ),
                           ElevatedButton(
@@ -254,18 +254,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 textPhoneNumber.text = "";
                               });
                             },
-                            child: Text(
-                              'SAVE',
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                            child: const Text(
+                              'Lưu',
                               style: TextStyle(
                                   fontSize: 15,
                                   letterSpacing: 2,
                                   color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              padding: EdgeInsets.symmetric(horizontal: 30),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
                             ),
                           )
                         ],
@@ -281,30 +281,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget buildTextField(String labelText, String placeholder, bool isReadOnly) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 30),
       child: TextField(
         // obscureText: isReadOnly ? isObsecurePassword : false,
-        controller: labelText == "First Name"
+        controller: labelText == "Họ"
             ? textFisrtName
-            : (labelText == "Last Name"
+            : (labelText == "Tên"
                 ? textLastName
-                : (labelText == "Phone Number"
+                : (labelText == "Số điện thoại"
                     ? textPhoneNumber
-                    : (labelText == "Address" ? textAddress : null))),
+                    : (labelText == "Địa chỉ" ? textAddress : null))),
         readOnly: isReadOnly,
         enabled: !isReadOnly,
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(bottom: 5),
+            contentPadding: const EdgeInsets.only(bottom: 5),
             labelText: labelText,
             labelStyle: TextStyle(
                 fontSize: 18,
-                color: (labelText == 'Email' || labelText == 'Role')
+                color: (labelText == 'Email' || labelText == 'Loại tài khoản')
                     ? Colors.grey
-                    : Color.fromRGBO(48, 96, 96, 1.0),
+                    : const Color.fromRGBO(48, 96, 96, 1.0),
                 fontWeight: FontWeight.bold),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintText: placeholder,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey)),
       ),
     );

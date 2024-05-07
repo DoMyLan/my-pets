@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/models/order.dart';
+import 'package:found_adoption_application/screens/order_screen.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 
 class VNPAY extends StatefulWidget {
@@ -33,25 +34,41 @@ class _ExampleState extends State<VNPAY> {
       vnPayHashType: VNPayHashType
           .HMACSHA512, //hash type. Default is HmacSHA512, you can chang it in: https://sandbox.vnpayment.vn/merchantv2
     );
-    
+
     VNPAYFlutter.instance.show(
       paymentUrl: paymentUrl,
       onPaymentSuccess: (params) {
+        closeInAppWebView();
         setState(() async {
           responseCode = params['vnp_ResponseCode'];
-          if (responseCode == '00') {
+          if (responseCode.toString() == '00') {
             await confirmPayment(widget.orderId);
-          } else {
-            // Do something
           }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TheOrders(),
+            ),
+          );
         });
       },
       onPaymentError: (params) {
+        closeInAppWebView();
         setState(() {
           responseCode = 'Error';
         });
       },
+      onWebPaymentComplete: () {
+        closeInAppWebView();
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TheOrders(),
+            ),
+          );
+      },
     );
+    // closeInAppWebView();R
   }
 
   @override
@@ -61,10 +78,10 @@ class _ExampleState extends State<VNPAY> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Response Code: $responseCode'),
+            const Text('Thanh toán đơn hàng'),
             TextButton(
               onPressed: onPayment,
-              child: const Text('20.0000'),
+              child: const Text('Thanh toán'),
             ),
           ],
         ),

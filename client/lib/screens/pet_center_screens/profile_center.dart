@@ -23,7 +23,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
 
 class ProfileCenterPage extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final centerId;
+  // ignore: prefer_typing_uninitialized_variables
   final petId;
   const ProfileCenterPage(
       {super.key, required this.centerId, required this.petId});
@@ -39,6 +41,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
   late Future<InfoCenter> centerFuture;
   late Future<List<Pet>?> petsFuture;
   late List<Pet> animals = [];
+  // ignore: prefer_typing_uninitialized_variables
   var currentClient;
   late bool isLoading = true;
 
@@ -98,6 +101,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
             if (currentClient != null) {
               if (currentClient.role == 'USER') {
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                       builder: (context) => MenuFrameUser(
@@ -106,6 +110,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                 );
               } else if (currentClient.role == 'CENTER') {
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
@@ -140,7 +145,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
               InfoCenter center = snapshot.data!;
               if (center.status == 'HIDDEN') {
                 if (currentClient.id != widget.centerId) {
-                  return Center(
+                  return const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -150,7 +155,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                           color: Colors.grey,
                         ),
                         Text(
-                          'This center is hidden',
+                          'Trung tâm đã ẩn thông tin của mình',
                           style: TextStyle(fontSize: 20, color: Colors.grey),
                         )
                       ],
@@ -159,7 +164,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                 }
               }
               return SingleChildScrollView(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -176,7 +181,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                             tag: 'avatarTag',
                             child: CircleAvatar(
                               radius: 40.0,
-                              backgroundImage: NetworkImage('${center.avatar}'),
+                              backgroundImage: NetworkImage(center.avatar),
                             ),
                           ),
                         ),
@@ -189,21 +194,21 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                 notification(
                                     "Feature under development", false);
                               },
-                              icon: Icon(Icons.person_add, color: Colors.white),
-                              label: Text('Follow'),
+                              icon: const Icon(Icons.person_add, color: Colors.white),
+                              label: const Text('Theo dõi'),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Theme.of(context)
                                     .primaryColor, // Đổi màu văn bản của nút
                               ),
                             ),
-                            SizedBox(width: 3.0),
+                            const SizedBox(width: 3.0),
                             currentClient.id == widget.centerId
                                 ? PopupMenuButton<int>(
                                     itemBuilder: (context) => [
                                       PopupMenuItem(
                                         value: 1,
-                                        child: Container(
+                                        child: SizedBox(
                                           width: 175,
                                           child: ElevatedButton.icon(
                                             onPressed: () {
@@ -211,11 +216,11 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          EditProfileCenterScreen()));
+                                                          const EditProfileCenterScreen()));
                                             },
-                                            icon: Icon(Icons.edit,
+                                            icon: const Icon(Icons.edit,
                                                 color: Colors.white),
-                                            label: Text('Edit profile'),
+                                            label: const Text('Sửa thông tin'),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
@@ -227,7 +232,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                       //Update Password
                                       PopupMenuItem(
                                         value: 1,
-                                        child: Container(
+                                        child: SizedBox(
                                           width: 175,
                                           child: ElevatedButton.icon(
                                             onPressed: () {
@@ -237,9 +242,9 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                       builder: (context) =>
                                                           UpdatePasswordScreen()));
                                             },
-                                            icon: Icon(Icons.password,
+                                            icon: const Icon(Icons.password,
                                                 color: Colors.white),
-                                            label: Text('Change Password'),
+                                            label: const Text('Đổi mật khẩu'),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
@@ -249,16 +254,16 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                       ),
                                       PopupMenuItem(
                                         value: 2,
-                                        child: Container(
+                                        child: SizedBox(
                                           width: 175,
                                           child: ElevatedButton.icon(
                                             onPressed: () {
                                               _showBottomSheet(
                                                   center.id, center.status);
                                             },
-                                            icon: Icon(Icons.change_circle,
+                                            icon: const Icon(Icons.change_circle,
                                                 color: Colors.white),
-                                            label: Text('Change status'),
+                                            label: const Text('Thay đổi trạng thái'),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white, backgroundColor: Theme.of(context)
                                                   .primaryColor,
@@ -270,15 +275,15 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                     onSelected: (value) {
                                       // Handle your logic based on selected value
                                     },
-                                    icon: Icon(Icons.more_vert,
+                                    icon: const Icon(Icons.more_vert,
                                         color: Colors.grey),
                                   )
-                                : SizedBox(width: .0),
+                                : const SizedBox(width: .0),
                           ],
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // Họ và Tên
                     Row(
@@ -286,7 +291,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                         // User's name
                         Text(
                           '${center.name} ',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         // Status icon
@@ -300,7 +305,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                         ),
                       ],
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
 
                     // Contact me
                     buildSectionHeader('Contact center', Icons.mail),
@@ -310,24 +315,24 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                         center.address,
                         const IconData(0xe3ab, fontFamily: 'MaterialIcons'),
                         'address'),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     // About me
                     buildSectionHeader('About center', Icons.info),
                     buildInfo(center.aboutMe),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
 
                     Container(
                       width: double.infinity,
                       height: 8.0,
                       color: const Color.fromARGB(255, 176, 175, 175),
-                      margin: EdgeInsets.symmetric(vertical: 16.0),
+                      margin: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
 
                     // List các bài viết đã đăng
-                    buildSectionHeader('Articles posted', Icons.library_books),
+                    buildSectionHeader('Bài viết đã đăng', Icons.library_books),
 
                     // Widget chứa TabBar và TabBarView
                     DefaultTabController(
@@ -337,9 +342,9 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                           // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
                           TabBar(
                             labelColor: Theme.of(context).primaryColor,
-                            tabs: [
-                              Tab(text: 'Pet Stories'),
-                              Tab(text: 'Pet Adoption'),
+                            tabs: const [
+                              Tab(text: 'Bài viết cá nhân'),
+                              Tab(text: 'Thú cưng'),
                             ],
                           ),
                           // TabBarView để hiển thị nội dung tương ứng với từng tab
@@ -389,7 +394,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
               );
             } else {
               // Xử lý trường hợp postList là null
-              return Scaffold(
+              return const Scaffold(
                 body: Center(
                   child: Icon(
                     Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
@@ -586,7 +591,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
         children: [
           TextSpan(
             text: '$infor: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13,
               color: Colors.grey,
@@ -610,7 +615,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
     return Row(
       children: [
         Icon(icon, size: 24.0, color: Theme.of(context).primaryColor),
-        SizedBox(width: 8.0),
+        const SizedBox(width: 8.0),
         Text(
           title,
           style: TextStyle(
@@ -636,12 +641,13 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
           if (type == 'email') {
             launchEmail(info);
           } else if (type == 'phone') {
-            makePhoneCall('tel:${info}');
+            makePhoneCall('tel:$info');
           } else if (type == 'address') {
             //địa chỉ map
             LatLng coordinate = await convertAddressToLatLng(info);
             //xử lý bản đồ
             Navigator.push(
+              // ignore: use_build_context_synchronously
               context,
               MaterialPageRoute(
                   builder: (context) => MapPage(pDestination: coordinate)),
@@ -656,11 +662,11 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
               alignment: Alignment.topLeft,
               child: Icon(icon, size: 16.0),
             ),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Flexible(
               child: Text(
                 info,
-                style: TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
+                style: const TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
                 softWrap: true,
               ),
             ),
@@ -671,7 +677,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
   Widget buildInfo(String info) {
     return Text(
       info,
-      style: TextStyle(fontSize: 16.0),
+      style: const TextStyle(fontSize: 16.0),
     );
   }
 
@@ -682,7 +688,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
         body: Center(
           child: Hero(
             tag: 'avatarTag',
-            child: Image.network('${image}'), // Thay đổi đường dẫn ảnh
+            child: Image.network(image), // Thay đổi đường dẫn ảnh
           ),
         ),
       ),
@@ -691,19 +697,23 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
 
   // Hàm để mở ứng dụng email với địa chỉ được cung cấp
   void launchEmail(String email) async {
-    final Uri _emailLaunchUri = Uri(
+    final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: email,
     );
-    if (await canLaunch(_emailLaunchUri.toString())) {
-      await launch(_emailLaunchUri.toString());
+    // ignore: deprecated_member_use
+    if (await canLaunch(emailLaunchUri.toString())) {
+      // ignore: deprecated_member_use
+      await launch(emailLaunchUri.toString());
     } else {
       throw 'Không thể mở ứng dụng email';
     }
   }
 
   void makePhoneCall(String phoneNumber) async {
+    // ignore: deprecated_member_use
     if (await canLaunch(phoneNumber)) {
+      // ignore: deprecated_member_use
       await launch(phoneNumber);
     } else {
       throw 'Không thể gọi điện thoại';

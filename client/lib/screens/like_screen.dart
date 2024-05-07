@@ -30,7 +30,7 @@ class _LikeScreenState extends State<LikeScreen> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            'Likes',
+            'Thích',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           leading: IconButton(
@@ -188,7 +188,7 @@ class _LikeScreenState extends State<LikeScreen> {
                                         },
                                         icon: Icon(Icons.person_add,
                                             color: Colors.white),
-                                        label: Text('Follow'),
+                                        label: Text('Theo dõi'),
                                         style: ElevatedButton.styleFrom(
                                           foregroundColor: Colors.white, backgroundColor: Theme.of(context).primaryColor,
                                         ),

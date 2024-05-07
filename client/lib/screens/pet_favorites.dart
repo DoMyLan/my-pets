@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
@@ -19,10 +20,20 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   Future<List<Pet>>? listPetFuture;
   List<Pet> listPet = [];
 
+  var currentClient;
+
   @override
   void initState() {
     super.initState();
     listPetFuture = getPetFavorite();
+    getClient();
+  }
+
+    Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   @override
@@ -73,7 +84,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     color: Color.fromRGBO(48, 96, 96, 1.0),
                   ),
                 ),
-                title: const Text('Favorite Pets'),
+                title: const Text('Yêu thích'),
               ),
               body: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,118 +99,132 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 itemCount:
                     listPet.length, // Số lượng item trong danh sách favorite
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      color: Colors.grey.shade200,
-                      elevation: 3, // Độ nâng của Card
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(8.0), // Bo góc của Card
-                      ),
-                      child: Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: double.infinity,
-                                height: MediaQuery.of(context).size.width *
-                                    0.4, // Chiếm 2/3 chiều cao của chiều rộng
-                                child: Image.network(
-                                  listPet[index].images[0],
-                                  fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AnimalDetailScreen(
+                            petId: listPet[index].id,
+                            currentId: currentClient,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Colors.grey.shade200,
+                        elevation: 3, // Độ nâng của Card
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(8.0), // Bo góc của Card
+                        ),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: MediaQuery.of(context).size.width *
+                                      0.4, // Chiếm 2/3 chiều cao của chiều rộng
+                                  child: Image.network(
+                                    listPet[index].images[0],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                child: Text(
-                                  listPet[index].namePet,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
-                                child: Text(listPet[index].centerId != null
-                                    ? listPet[index].centerId!.name
-                                    : '${listPet[index].giver!.firstName} ${listPet[index].giver!.lastName}'),
-                              ),
-                              Padding(
+                                const SizedBox(height: 8),
+                                Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 2),
                                   child: Text(
-                                    '${listPet[index].price} đ',
-                                  )),
-                            ],
-                          ),
-                          Positioned(
-                            right: -10,
-                            bottom: -10,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).primaryColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: const Offset(
-                                        0, 2), // changes position of shadow
+                                    listPet[index].namePet,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
+                                  child: Text(listPet[index].centerId != null
+                                      ? listPet[index].centerId!.name
+                                      : '${listPet[index].giver!.firstName} ${listPet[index].giver!.lastName}'),
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
+                                    child: Text(
+                                      '${listPet[index].price} đ',
+                                    )),
+                              ],
+                            ),
+                            Positioned(
+                              right: -10,
+                              bottom: -10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).primaryColor,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 1,
+                                      blurRadius: 2,
+                                      offset: const Offset(
+                                          0, 2), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
+                            ),
+                            Positioned(
+                              right: -10,
+                              top: -10,
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  Loading(context);
+                                  await favoritePet(listPet[index].id);
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    listPet.removeAt(index);
+                                  });
+                                },
                                 icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
+                                  FontAwesomeIcons.solidHeart,
+                                  color: Colors.red,
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            right: -10,
-                            top: -10,
-                            child: IconButton(
-                              onPressed: () async {
-                                Loading(context);
-                                await favoritePet(listPet[index].id);
-                                Navigator.pop(context);
-                                setState(() {
-                                  listPet.removeAt(index);
-                                });
-                              },
-                              icon: const Icon(
-                                FontAwesomeIcons.solidHeart,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                color: Colors.yellow,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8),
-                                  bottomRight: Radius.circular(8),
+                            Positioned(
+                              left: 0,
+                              top: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomRight: Radius.circular(8),
+                                  ),
+                                ),
+                                child: const Text(
+                                  '10%', // Mã giảm giá
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ),
-                              child: const Text(
-                                '10%', // Mã giảm giá
-                                style: TextStyle(color: Colors.black),
-                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

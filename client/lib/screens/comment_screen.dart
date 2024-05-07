@@ -134,7 +134,7 @@ class _CommentScreenState extends State<CommentScreen> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Post not found.')
+            return const Center(child: Text('Bài viết không tìm thấy.')
                 // Text('Error: ${snapshot.error}'),
                 );
           } else if (snapshot.hasData) {
@@ -256,7 +256,7 @@ class _CommentScreenState extends State<CommentScreen> {
                   );
                 });
           } else {
-            return const Center(child: Text('No comments yet.'));
+            return const Center(child: Text('Không có bình luận nào.'));
           }
         });
     //tất cả các cmt của 1 bài post
@@ -309,7 +309,7 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Comment',
+              'Bình luận',
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
@@ -342,8 +342,8 @@ class _CommentScreenState extends State<CommentScreen> {
                 userImage:
                     CommentBox.commentImageParser(imageURLorPath: avatarURL),
                 child: commentChild([]),
-                labelText: 'Write a comment...',
-                errorText: 'Comment cannot be blank',
+                labelText: 'Viết bình luận...',
+                errorText: 'Bình luận không được để trống!',
                 withBorder: false,
                 sendButtonMethod: () async {
                   if (formKey.currentState!.validate()) {
@@ -425,14 +425,14 @@ class _CommentScreenState extends State<CommentScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this comment?'),
+          title: Text('Xác nhận xóa bình luận'),
+          content: Text('Bạn có chắc chắn muốn xóa bình luận này không'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Hủy'),
             ),
             TextButton(
               onPressed: () async {
@@ -451,11 +451,11 @@ class _CommentScreenState extends State<CommentScreen> {
                       return comments;
                     });
                   });
-                  notification('The comment has been deleted', false);
+                  notification('Bình luận đã được xóa', false);
                 } else
                   notification(message, true);
               },
-              child: Text('Delete'),
+              child: Text('Xóa'),
             ),
           ],
         );

@@ -15,7 +15,7 @@ class _FilterDialogState extends State<FilterDialog> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'Select Pets',
+          'Chọn bộ lọc',
           style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
@@ -63,7 +63,7 @@ class _FilterScreenState extends State<FilterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Select breed:'),
+            Text('Chọn giống:'),
             DropdownButton<String>(
               value: selectedBreed,
               onChanged: (String? newValue) {
@@ -90,7 +90,7 @@ class _FilterScreenState extends State<FilterScreen> {
             ),
             SizedBox(height: 16.0),
             Text(
-                'Select old: ${selectedAgeRange.start.toInt()} - ${selectedAgeRange.end.toInt()} năm'),
+                'Chọn độ tuổi: ${selectedAgeRange.start.toInt()} - ${selectedAgeRange.end.toInt()} năm'),
             RangeSlider(
               activeColor: Theme.of(context).primaryColor,
               inactiveColor: Colors.grey,
@@ -104,7 +104,7 @@ class _FilterScreenState extends State<FilterScreen> {
               },
             ),
             SizedBox(height: 16.0),
-            Text('Select color:'),
+            Text('Chọn màu sắc:'),
             Column(
               children: allColors.map((String color) {
                 return CheckboxListTile(
@@ -142,7 +142,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 }
               },
               child: Text(
-                'Apply',
+                'Áp dụng',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),

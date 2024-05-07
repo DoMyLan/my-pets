@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/screens/add_short_video.dart';
-
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/order_screen.dart';
 import 'package:found_adoption_application/screens/pet_favorites.dart';
-import 'package:found_adoption_application/screens/user_screens/backup_file_adoption/test_provider.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
-import 'package:found_adoption_application/screens/user_screens/status_adopt.dart';
 
 class MenuFrameUser extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final userId;
   const MenuFrameUser({super.key, required this.userId});
 
@@ -22,7 +19,7 @@ class MenuFrameUser extends StatefulWidget {
 class _MenuFrameUserState extends State<MenuFrameUser>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  Duration duration = Duration(microseconds: 200);
+  Duration duration = const Duration(microseconds: 200);
   // late Animation<double> scaleAnimation, smallerScaleAnimation;
   bool menuOpen = true;
   late List<Animation<double>> scaleAnimations;
@@ -39,7 +36,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
-      Tween<double>(begin: 1.0, end: 0.0).animate(_animationController),
+    
     ];
 
     //hoạt ảnh chạy từ begin -> end
@@ -47,21 +44,21 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
     //sao chép danh sách screens vào screensnapshot
     screenSnapshot = screens.values.toList();
-    screens[2] = FeedScreen();
+    screens[2] = const FeedScreen();
   }
 
   //Map chứa cặp key-value (int - widget)
   Map<int, Widget> screens = {
-    0: HomeScreen(),
+    0: const HomeScreen(),
 
     1: ProfilePage(userId: null),
-    2: FeedScreen(),
-    3: FavoriteScreen(),
+    2: const FeedScreen(),
+    3: const FavoriteScreen(),
     4: const TheOrders(),
-    5: StatusAdoptUser(),
-    6: MyTabbedScreen(),
+    // 5: StatusAdoptUser(),
+  
 
-    // 6: NotificationPage()
+    5: const NotificationPage()
   
 
     // 6: NotificationPage()

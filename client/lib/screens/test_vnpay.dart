@@ -40,7 +40,7 @@ class _ExampleState extends State<Example> {
       orderInfo: 'Pay 30.000 VND', //order info, default is Pay Order
       amount: 30000,
       returnUrl:
-          'https://sandbox.vnpayment.vn/merchantv2/', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+          'https://sandbox.vnpayment.vn/merchant_webapi/merchant.html', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '59.153.254.38',
       vnpayHashKey: 'UNWJIMZPXWPGBPYFGXJKADCYSIQPDBVX', //vnpay hash key, get from vnpay
       vnPayHashType: VNPayHashType
@@ -52,6 +52,8 @@ class _ExampleState extends State<Example> {
         setState(() {
           print('aaa: $responseCode');
           responseCode = params['vnp_ResponseCode'];
+          // Navigator.pushReplacementNamed(context, '/returnUrl');
+          
         });
       },
       onPaymentError: (params) {

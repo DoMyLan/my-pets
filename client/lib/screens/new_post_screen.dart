@@ -145,7 +145,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_captionController.text.isEmpty) {
-                        notification('Please enter caption', true);
+                        notification('Vui lòng viết nội dung', true);
                         return;
                       }
                       Loading(context);
@@ -164,7 +164,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    child: const Text('Post'),
+                    child: const Text('Đăng'),
                   ),
                 ],
               ),
@@ -172,7 +172,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
               TextField(
                 controller: _captionController,
                 decoration: const InputDecoration(
-                  hintText: 'Write a caption...',
+                  hintText: 'Viết nội dung...',
                   border: InputBorder.none,
                   hintStyle: TextStyle(
                     fontSize: 16.0,
@@ -307,7 +307,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: const Text(
-                  "Cancel",
+                  "Hủy",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,

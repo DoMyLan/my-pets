@@ -35,6 +35,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var voucherTotal = 0;
   var totalPayment = 0;
   late int _paymentMethod = 0;
+  late String address = '';
 
   TextEditingController voucherText = TextEditingController();
 
@@ -51,6 +52,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     totalFee = int.parse(widget.pet.price) + transportFee;
     priceProduct = int.parse(widget.pet.price);
     totalPayment = int.parse(widget.pet.price) + transportFee;
+    address = widget.currentClient.address;
+
   }
 
   Future<void> getClient() async {
@@ -108,7 +111,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             width: MediaQuery.of(context).size.width *
                                 0.7, // Chiều rộng tối đa
                             child: Text(
-                              currentClient.address,
+                              address,
                               style: const TextStyle(
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w400,
@@ -272,14 +275,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               height: 4,
                             ),
                             Text(
-                              'Breed: ${widget.pet.breed}',
+                              'Giống: ${widget.pet.breed}',
                               style: const TextStyle(fontSize: 14.0),
                             ),
                             const SizedBox(
                               height: 4,
                             ),
                             Text(
-                              'Price: ${widget.pet.price} đ',
+                              'Giá: ${widget.pet.price} đ',
                               style: const TextStyle(fontSize: 14.0),
                             ),
                           ],
@@ -734,7 +737,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         ? null
                                         : widget.pet.giver.id,
                                 widget.pet,
-                                currentClient.address,
+                                address,
                                 transportFee,
                                 voucherText.text,
                                 voucherProduct,

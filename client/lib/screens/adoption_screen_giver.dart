@@ -29,8 +29,8 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
 
   List<String> animalTypes = [
     'All',
-    'Cat',
-    'Dog',
+    'Mèo',
+    'Chó',
   ];
 
   List<IconData?> animalIcons = [
@@ -318,7 +318,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                         ),
-                        hintText: 'Search pet to adopt',
+                        hintText: 'Tìm thú cưng',
                         contentPadding: EdgeInsets.symmetric(
                             vertical:
                                 8), // Giảm khoảng cách giữa các phần tử trong vùng nhập
@@ -352,7 +352,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                 iconSize: 30,
               ),
               Text(
-                'Filter',
+                'Bộ lọc',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 13,
@@ -479,7 +479,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  fieldInforPet('Name', animal.namePet),
+                                  fieldInforPet('Tên', animal.namePet),
                                   Icon(
                                     animal.gender == "FEMALE"
                                         ? FontAwesomeIcons.venus
@@ -488,13 +488,13 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              fieldInforPet('Breed', animal.breed),
+                              fieldInforPet('Giống', animal.breed),
                               const SizedBox(height: 2),
                               fieldInforPet(
-                                  'Age',
+                                  'Tuổi',
                                   animal.birthday != null
                                       ? AgePet.convertAge(animal.birthday!)
-                                      : "unknown"),
+                                      : "Không xác định"),
                               const SizedBox(height: 2),
                               Row(
                                 children: [
@@ -505,7 +505,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                                   ),
                                   const SizedBox(width: 1),
                                   Text(
-                                    '       ${animal.price}.vnd',
+                                    '       ${animal.price} VND',
                                     // '      2350000.vnd',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
@@ -526,7 +526,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                                   ),
                                   const SizedBox(width: 1),
                                   Text(
-                                    'Distance: ',
+                                    'Khoảng cách: ',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Theme.of(context).primaryColor,
@@ -636,7 +636,7 @@ class TuserQuickInfor extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Location  ',
+            'Vị trí  ',
             style: TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 18,
