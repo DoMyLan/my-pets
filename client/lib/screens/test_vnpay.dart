@@ -40,7 +40,7 @@ class _ExampleState extends State<Example> {
       orderInfo: 'Pay 30.000 VND', //order info, default is Pay Order
       amount: 30000,
       returnUrl:
-          'https://abc.com/return', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+          'https://sandbox.vnpayment.vn/merchantv2/', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '59.153.254.38',
       vnpayHashKey: 'UNWJIMZPXWPGBPYFGXJKADCYSIQPDBVX', //vnpay hash key, get from vnpay
       vnPayHashType: VNPayHashType

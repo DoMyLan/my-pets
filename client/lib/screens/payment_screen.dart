@@ -62,7 +62,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String? message;
+    String? orderId;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -724,7 +724,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           onPressed: () async {
                             Loading(context);
-                            message = await createOrder(
+                            orderId = await createOrder(
                                 currentClient.id,
                                 widget.pet.centerId != null ? true : false,
                                 widget.pet.centerId != null
@@ -742,11 +742,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 voucherTotal,
                                 totalFee,
                                 totalPayment,
-                                _paymentMethod == 0
-                                    ? "COD"
-                                    : "ONLINE");
+                                _paymentMethod == 0 ? "COD" : "ONLINE");
                             Navigator.of(context).pop();
-                            if (message != "Create order successfully!") {
+                            if (orderId != null) {
                               setState(() {
                                 voucherProduct = 0;
                                 voucherShipping = 0;
@@ -754,23 +752,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 totalPayment = totalFee;
                               });
                             }
-                            if (message == "Create order successfully!" && _paymentMethod == 1) {
+                            if (orderId != null && _paymentMethod == 1) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => VNPAY()));
+                                      builder: (context) => VNPAY(
+                                            orderId: orderId.toString(),
+                                            totalPayment: double.parse(
+                                                totalPayment.toString()),
+                                          )));
                             }
 
-                            if (message != null) {
+                            if (orderId != null) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text('Thông báo'),
-                                    content:
-                                        message == "Create order successfully!"
-                                            ? const Text("Đặt hàng thành công")
-                                            : const Text("Chưa thể đặt hàng"),
+                                    content: orderId != null
+                                        ? const Text("Đặt hàng thành công")
+                                        : const Text("Chưa thể đặt hàng"),
                                     actions: <Widget>[
                                       TextButton(
                                         child: const Text('Đóng'),

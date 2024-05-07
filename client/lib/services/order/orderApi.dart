@@ -38,7 +38,7 @@ Future<String?> createOrder(
       "paymentMethods": paymentMethods
     });
     var responseData = await api('order', 'POST', body);
-    return responseData['message'];
+    return responseData['orderId'];
   } catch (e) {
     // print(e.toString());
     notification("Order: ${e.toString()}", true);
