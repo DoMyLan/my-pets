@@ -29,246 +29,365 @@ class _TrackingOrderState extends State<TrackingOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Color.fromRGBO(48, 96, 96, 1.0),
-            )),
-        title: const Text(
-          'Chi tiết đơn hàng',
-          style: TextStyle(
-              color: Color.fromRGBO(
-                48,
-                96,
-                96,
-                1.0,
-              ),
-              fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Color.fromRGBO(48, 96, 96, 1.0),
+              )),
+          title: const Text(
+            'Chi tiết đơn hàng',
+            style: TextStyle(
+                color: Color.fromRGBO(
+                  48,
+                  96,
+                  96,
+                  1.0,
+                ),
+                fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: FutureBuilder(
-        future: orderFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return const errorWidget();
-          } else {
-            Order order = snapshot.data as Order;
+        body: FutureBuilder(
+          future: orderFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return const errorWidget();
+            } else {
+              Order order = snapshot.data as Order;
 
-            return Stack(children: [
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    petItem(order),
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    //chi tiết đơn hàng
-                    Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                      height: 1,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.list_alt,
-                            color: Color.fromARGB(255, 209, 191, 28),
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            'Chi tiết thanh toán',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+              return Stack(children: [
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      petItem(order),
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8),
-                      child: Column(
+
+                      //chi tiết đơn hàng
+                      Divider(
+                        color: Colors.grey.shade300,
+                        thickness: 1,
+                        height: 1,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.list_alt,
+                              color: Color.fromARGB(255, 209, 191, 28),
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Text(
+                              'Chi tiết thanh toán',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Mã đơn hàng',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    order.id.toUpperCase(),
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Giá sản phẩm',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${formatPrice(order.price)} đ',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              order.voucherProduct != 0
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Giảm giá sản phẩm',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '-${formatPrice(order.voucherProduct)} đ',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Phí vận chuyển',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${formatPrice(order.transportFee)} đ',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              order.voucherShipping != 0
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Giảm giá vận chuyển',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '-${formatPrice(order.voucherProduct)} đ',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Tổng đơn hàng',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${formatPrice(order.totalFee)} đ',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              order.voucherTotal != 0
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Giảm giá đơn hàng',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          '-${formatPrice(order.voucherTotal)} đ',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13.0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Thành tiền',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${formatPrice(order.totalPayment)} đ',
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Divider(
+                                color: Colors.grey.shade300,
+                                thickness: 1,
+                                height: 1,
+                                indent: 0,
+                                endIndent: 0,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "Phương thức thanh toán",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    order.paymentMethods == "COD"
+                                        ? "Thanh toán khi nhận hàng"
+                                        : "VNPAY",
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.blue),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    "Trạng thái thanh toán",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    order.statusPayment == "PENDING"
+                                        ? "Chờ thanh toán"
+                                        : "Đã thanh toán",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: order.statusPayment == "PENDING"
+                                            ? Colors.orange
+                                            : Colors.green),
+                                  )
+                                ],
+                              )
+                            ]),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        color: Colors.grey.shade300,
+                        thickness: 1,
+                        height: 1,
+                      ),
+
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            const Row(
                               children: [
-                                const Text(
-                                  'Mã đơn hàng',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
-                                  ),
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  color: Color.fromRGBO(48, 96, 96, 1.0),
                                 ),
                                 Text(
-                                  order.id.toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
+                                  "Địa chỉ nhận hàng",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(48, 96, 96, 1.0)),
+                                )
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Giá sản phẩm',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
-                                Text(
-                                  '${formatPrice(order.price)} đ',
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(
+                              height: 5,
                             ),
-                            order.voucherProduct != 0
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Giảm giá sản phẩm',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        '-${formatPrice(order.voucherProduct)} đ',
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Phí vận chuyển',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 25),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${order.buyer.firstName} ${order.buyer.lastName}",
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
                                   ),
-                                ),
-                                Text(
-                                  '${formatPrice(order.transportFee)} đ',
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
+                                  Text(
+                                    order.buyer.phoneNumber,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
                                   ),
-                                ),
-                              ],
-                            ),
-                            order.voucherShipping != 0
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Giảm giá vận chuyển',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        '-${formatPrice(order.voucherProduct)} đ',
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Tổng đơn hàng',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
+                                  Text(
+                                    order.buyer.address,
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
                                   ),
-                                ),
-                                Text(
-                                  '${formatPrice(order.totalFee)} đ',
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            order.voucherTotal != 0
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Giảm giá đơn hàng',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        '-${formatPrice(order.voucherTotal)} đ',
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13.0,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : SizedBox(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Thành tiền',
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                Text(
-                                  '${formatPrice(order.totalPayment)} đ',
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 10,
@@ -277,245 +396,184 @@ class _TrackingOrderState extends State<TrackingOrder> {
                               color: Colors.grey.shade300,
                               thickness: 1,
                               height: 1,
-                              indent: 0,
-                              endIndent: 0,
+                              indent: 90,
+                              endIndent: 90,
                             ),
                             const SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Phương thức thanh toán",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  order.paymentMethods == "COD"
-                                      ? "Thanh toán khi nhận hàng"
-                                      : "VNPAY",
-                                  style: const TextStyle(fontSize: 14, color: Colors.blue),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Trạng thái thanh toán",
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  order.statusPayment == "PENDING"
-                                      ? "Chờ thanh toán"
-                                      : "Đã thanh toán",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: order.statusPayment == "PENDING"
-                                          ? Colors.orange
-                                          : Colors.green),
-                                )
-                              ],
-                            )
-                          ]),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Colors.grey.shade300,
-                      thickness: 1,
-                      height: 1,
-                    ),
+                          ],
+                        ),
+                      ),
 
-                    const SizedBox(
-                      height: 10,
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5, right: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      //Progress Delivery
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: Color.fromRGBO(48, 96, 96, 1.0),
-                              ),
-                              Text(
-                                "Địa chỉ nhận hàng",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromRGBO(48, 96, 96, 1.0)),
-                              )
-                            ],
+                          TrackingStep(
+                            date: order.createdAt,
+                            icon: FontAwesomeIcons.cartShopping,
+                            title: 'Ngày đặt hàng',
+                            isFirstStep: true,
+                            isCurrentStep: true,
+                            isLastStep: false,
                           ),
-                          const SizedBox(
-                            height: 5,
+                          TrackingStep(
+                            date: order.dateConfirm,
+                            icon: Icons.home,
+                            title: 'Ngày xác nhận đơn hàng',
+                            isFirstStep: false,
+                            isCurrentStep:
+                                order.dateConfirm != null ? true : false,
+                            isLastStep: false,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${order.buyer.firstName} ${order.buyer.lastName}",
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.grey),
-                                ),
-                                Text(
-                                  order.buyer.phoneNumber,
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.grey),
-                                ),
-                                Text(
-                                  order.buyer.address,
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.grey),
-                                ),
-                              ],
-                            ),
+                          TrackingStep(
+                            date: order.dateDelivering,
+                            icon: Icons.delivery_dining,
+                            title: 'Ngày chuyển hàng',
+                            isFirstStep: false,
+                            isCurrentStep:
+                                order.dateDelivering != null ? true : false,
+                            isLastStep: false,
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Divider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
-                            height: 1,
-                            indent: 90,
-                            endIndent: 90,
-                          ),
-                          const SizedBox(
-                            height: 10,
+                          TrackingStep(
+                            date: order.dateCompleted,
+                            icon: Icons.done,
+                            title: 'Ngày hoàn thành đơn hàng',
+                            isFirstStep: false,
+                            isCurrentStep:
+                                order.dateCompleted != null ? true : false,
+                            isLastStep: true,
                           ),
                         ],
                       ),
-                    ),
-
-                    //Progress Delivery
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TrackingStep(
-                          date: order.createdAt,
-                          icon: FontAwesomeIcons.cartShopping,
-                          title: 'Ngày đặt hàng',
-                          isFirstStep: true,
-                          isCurrentStep: true,
-                          isLastStep: false,
-                        ),
-                        TrackingStep(
-                          date: order.dateConfirm,
-                          icon: Icons.home,
-                          title: 'Ngày xác nhận đơn hàng',
-                          isFirstStep: false,
-                          isCurrentStep:
-                              order.dateConfirm != null ? true : false,
-                          isLastStep: false,
-                        ),
-                        TrackingStep(
-                          date: order.dateDelivering,
-                          icon: Icons.delivery_dining,
-                          title: 'Ngày chuyển hàng',
-                          isFirstStep: false,
-                          isCurrentStep:
-                              order.dateDelivering != null ? true : false,
-                          isLastStep: false,
-                        ),
-                        TrackingStep(
-                          date: order.dateCompleted,
-                          icon: Icons.done,
-                          title: 'Ngày hoàn thành đơn hàng',
-                          isFirstStep: false,
-                          isCurrentStep:
-                              order.dateCompleted != null ? true : false,
-                          isLastStep: true,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 100,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              order.statusOrder == "PENDING"
-                  ? Positioned(
-                      left: 105,
-                      bottom: 30,
-                      child: GestureDetector(
-                        onTap: () async {
-                          Loading(context);
-                          await changeStatusOrder(order.id, 'CANCEL');
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          width: 180,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.orange,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Hủy đơn hàng",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+              ]);
+            }
+          },
+        ),
+        bottomNavigationBar: FutureBuilder(
+            future: orderFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return const errorWidget();
+              } else {
+                Order order = snapshot.data as Order;
+
+                return Padding(
+                  padding:
+                      const EdgeInsets.only(left: 30, right: 30, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      order.statusPayment == "PENDING" &&
+                              order.paymentMethods == "ONLINE" &&
+                              order.statusOrder != "CANCEL"
+                          ? GestureDetector(
+                              onTap: () async {},
+                              child: Container(
+                                width: 130,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.blue,
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'Thanh toán VNPAY',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-                  order.statusOrder == "COMPLETED"
-                  ? Positioned(
-                      left: 105,
-                      bottom: 30,
-                      child: GestureDetector(
-                        onTap: ()  {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddFeedBackScreen(order: order,),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 180,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.orange,
-                          ),
-                          child: const Center(
-                            child: Text(
-                              "Đánh giá",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                            )
+                          : const SizedBox(),
+                      const Spacer(),
+                      order.statusOrder == "PENDING"
+                          ? Positioned(
+                              left: 105,
+                              bottom: 30,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  Loading(context);
+                                  await changeStatusOrder(order.id, 'CANCEL');
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  width: 180,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.orange,
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Hủy đơn hàng",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-            ]);
-          }
-        },
-      ),
-    );
+                            )
+                          : SizedBox(),
+                      order.statusOrder == "COMPLETED" && order.rating == false
+                          ? Positioned(
+                              left: 105,
+                              bottom: 30,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddFeedBackScreen(
+                                        order: order,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 180,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.orange,
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      "Đánh giá",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                );
+              }
+            }));
   }
 
   Widget petItem(Order order) {
@@ -553,14 +611,14 @@ class _TrackingOrderState extends State<TrackingOrder> {
                     height: 8,
                   ),
                   Text(
-                    'Type: ${order.petId.petType}',
+                    'Loại thú cưng: ${order.petId.petType}',
                     style: const TextStyle(fontSize: 14.0),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    'Exp: Delivery by Sun, April 11',
+                    'Ngày đặt hàng: ${order.createdAt.toString().substring(0, 10)}',
                     style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey.shade400,

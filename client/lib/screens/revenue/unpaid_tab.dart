@@ -87,7 +87,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => RevenueChartPage())));
+                                  builder: ((context) => const RevenueChartPage())));
                         },
                         child: Text(
                           '(Biểu đồ doanh thu)',
@@ -100,7 +100,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                     ],
                   ),
 
-                  Text('Số tiền thanh toán (4 Th08 2023 - 16 Th08 2023)'),
+                  const Text('Số tiền thanh toán (4 Th08 2023 - 16 Th08 2023)'),
 
                   //BẮT ĐẦU + KẾT THÚC
                   Padding(
@@ -109,7 +109,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 120,
                           height: 40,
                           child: InkWell(
@@ -146,7 +146,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                             ),
                           ),
                         ),
-                        Column(
+                        const Column(
                           children: [
                             Icon(
                               Icons.minimize,
@@ -157,7 +157,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                             ),
                           ],
                         ),
-                        Container(
+                        SizedBox(
                           width: 120,
                           height: 40,
                           child: InkWell(

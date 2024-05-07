@@ -18,7 +18,7 @@ import 'package:video_player/video_player.dart';
 
 class AddFeedBackScreen extends StatefulWidget {
   final Order order;
-  AddFeedBackScreen({required this.order});
+  const AddFeedBackScreen({super.key, required this.order});
 
   @override
   State<AddFeedBackScreen> createState() => _AddFeedBackScreenState();
@@ -34,7 +34,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
 
   late String videoPath = '';
 
-  TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   //video
   late VideoPlayerController _controller;
@@ -49,14 +49,16 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
+    // ignore: use_build_context_synchronously
     Loading(context);
     var result = await uploadMultiImage(imageFileList);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
     if (mounted) {
       setState(() {
         finalResult = finalResult2;
-        print('object');
+        // print('object');
       });
     }
   }
@@ -90,7 +92,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      createAudioUpload('${result.files.single.path!}');
+      createAudioUpload(result.files.single.path!);
       await _controller.pause();
       await _controller.dispose();
       setState(() {
@@ -184,8 +186,10 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
               } else {
                 Loading(context);
                 await postFeedBack();
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
                 Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(
                     builder: (context) => reviewRating.ReviewProfileScreen(
@@ -213,19 +217,19 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: 40,
-              color: Color.fromARGB(255, 241, 241, 233),
+              color: const Color.fromARGB(255, 241, 241, 233),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
+                    const Icon(
                       FontAwesomeIcons.moneyBill1Wave,
                       size: 30,
                       color: Color.fromRGBO(48, 96, 96, 1.0),
                     ),
                     RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                         style: TextStyle(
                           fontSize: 14.0,
                           color: Colors.black,
@@ -251,7 +255,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -276,15 +280,15 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                           fit: BoxFit.cover, //vấn đề ở đây nè nha
                         ),
                       ),
-                      SizedBox(width: 20),
-                      Container(
+                      const SizedBox(width: 20),
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               widget.order.seller.centerId!.name.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
@@ -292,7 +296,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                             Text(
                               'Phân loại: ${widget.order.petId.petType} - ${widget.order.petId.breed} , ${widget.order.petId.namePet}  - ${widget.order.petId.price}',
                               maxLines: 2,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey,
                               ),
@@ -304,8 +308,8 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                   ),
 
                   Container(
-                    padding: EdgeInsets.only(bottom: 15, top: 15),
-                    child: Divider(
+                    padding: const EdgeInsets.only(bottom: 15, top: 15),
+                    child: const Divider(
                       color: Color.fromRGBO(48, 96, 96, 1.0),
                       thickness: 2,
                       height: 1,
@@ -316,9 +320,9 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           width: 100,
-                          child: Text(
+                          child: const Text(
                             'Chất lượng sản phẩm',
                             style: TextStyle(
                                 fontSize: 14,
@@ -329,18 +333,18 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                         initialRating: currentRating, // Số sao ban đầu
                         onRatingChanged: (rating) {
                           currentRating = rating;
-                          print('currentRating: $currentRating');
+                          // print('currentRating: $currentRating');
                         },
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
 
                   // Add IMAGE & VIDEO
                   Text(
-                    'Thêm 50 ký tự và 5 hình ảnh và 1 video để mang lại đánh giá tổng quan nhất',
+                    'Có thể thêm hình ảnh hoặc video để mang lại đánh giá tổng quan nhất',
                     style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
                   ),
                   const SizedBox(
@@ -358,7 +362,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                             fit: BoxFit.cover,
                           )
                         else
-                          Container(
+                          SizedBox(
                               height: 140,
                               width: 140,
                               child: _slider(finalResult))
@@ -366,7 +370,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                         Container(
                           height: 90,
                           width: 150,
-                          padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: Colors.grey),
@@ -375,13 +379,13 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               IconButton(
-                                  icon: Icon(
+                                  icon: const Icon(
                                     Icons.camera_alt,
                                     size: 30,
                                   ),
-                                  color: Color.fromRGBO(48, 96, 96, 1.0),
+                                  color: const Color.fromRGBO(48, 96, 96, 1.0),
                                   onPressed: selectImage),
-                              Text(
+                              const Text(
                                 'Thêm hình ảnh',
                                 style: TextStyle(
                                     fontSize: 14,
@@ -391,7 +395,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                           ),
                         ),
                       _isVideoLoaded
-                          ? Container(
+                          ? SizedBox(
                               width: 140,
                               height: 140,
                               child: AspectRatio(
@@ -415,7 +419,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                               ),
                             )
                           : Container(
-                              padding: EdgeInsets.fromLTRB(0, 12, 0, 8),
+                              padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(color: Colors.grey),
@@ -427,12 +431,12 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.video_camera_back,
+                                    icon: const Icon(Icons.video_camera_back,
                                         size: 32,
                                         color: Color.fromRGBO(48, 96, 96, 1.0)),
                                     onPressed: _playVideo,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Thêm Video',
                                     style: TextStyle(
                                         fontSize: 14,
@@ -450,7 +454,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
 
                   //Phần đánh giá
                   Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * 0.3,
                     decoration: BoxDecoration(
@@ -477,12 +481,12 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Hiển thị tên đăng nhập trên đánh giá này',
                               style: TextStyle(
                                   fontSize: 13, fontWeight: FontWeight.w500),
@@ -492,7 +496,7 @@ class _AddFeedBackScreenState extends State<AddFeedBackScreen> {
                             Text(
                               'Tên tài khoản của bạn sẽ hiển thị như ${widget.order.buyer.firstName} ${widget.order.buyer.lastName}',
                               style:
-                                  TextStyle(fontSize: 12, color: Colors.grey),
+                                  const TextStyle(fontSize: 12, color: Colors.grey),
                               maxLines: 2,
                             ),
                           ],

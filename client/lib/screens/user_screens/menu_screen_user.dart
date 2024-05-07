@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MenuUserScreen extends StatefulWidget {
   final Function(int) menuCallBack;
-  MenuUserScreen({super.key, required this.menuCallBack});
+  const MenuUserScreen({super.key, required this.menuCallBack});
 
   @override
   State<MenuUserScreen> createState() => _MenuUserScreenState();
@@ -17,13 +17,13 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
-    'Buy Pet',
-    'Profile',
-    'Pet Stories',
-    'Favorites',
-    'Order',
+    'Thú cưng',
+    'Cá nhân',
+    'Bài viết',
+    'Yêu thích',
+    'Đơn hàng',
     // 'Manage Adopt',
-    'Notify',
+    'Thông báo',
     // 'Favorite',
     // 'Messages',
 
@@ -32,6 +32,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
 
   List<IconData> icons = [
     FontAwesomeIcons.paw,
+    // ignore: deprecated_member_use
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.newspaper,
     FontAwesomeIcons.heart,
@@ -52,7 +53,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
         });
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(vertical: 24),
         child: Row(
           children: [
             Icon(
@@ -79,20 +80,21 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         // Show a confirmation dialog when the user tries to exit the app
         final shouldExit = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Are you sure you want to exit the application?'),
+            title: const Text('Bạn có chắc muốn thoát khỏi ứng dụng?'),
             actions: [
               TextButton(
-                child: Text('Cancel'),
+                child: const Text('Hủy'),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               TextButton(
-                child: Text('Exit'),
+                child: const Text('Thoát'),
                 onPressed: () => Navigator.of(context).pop(true),
               ),
             ],
@@ -111,7 +113,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
           )),
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -125,7 +127,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
                           if (snapshotAvatar.connectionState ==
                               ConnectionState.waiting) {
                             // Hiển thị một vòng tròn chờ nếu đang tải dữ liệu
-                            return CircleAvatar(
+                            return const CircleAvatar(
                               radius: 24.0,
                               child: CircularProgressIndicator(),
                             );
@@ -161,13 +163,13 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
                               children: [
                                 Text(
                                   snapshotName.data!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 20,
                                   ),
                                 ),
-                                Row(
+                                const Row(
                                   children: [
                                     Icon(
                                       Icons.circle,
@@ -195,6 +197,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
                     children: menuItems
                         .asMap()
                         .entries
+                        // ignore: avoid_types_as_parameter_names
                         .map((MapEntry) => buildMenuRow(MapEntry.key))
                         .toList(),
                   ),

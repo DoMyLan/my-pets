@@ -22,37 +22,37 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
       home: Scaffold(
         backgroundColor: Colors.grey.shade300,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(48, 96, 96, 1.0),
+          backgroundColor: const Color.fromRGBO(48, 96, 96, 1.0),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(
                   context); // Đặt hàm Navigator.pop(context) trong hàm lambda
             },
           ),
-          title: Text("Registration Center's Form"),
+          title: const Text("Đăng ký trung tâm"),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
+          padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
           child: Column(
             children: [
               TextFormField(
                 controller: nameController,
                 keyboardType: TextInputType.name,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
                   filled: true,
                   icon: Icon(
                     Icons.home,
-                    color: const Color.fromRGBO(48, 96, 96, 1.0),
+                    color: Color.fromRGBO(48, 96, 96, 1.0),
                   ),
-                  hintText: "Center's Name",
-                  labelText: 'Name of Center',
+                  hintText: "Tên trung tâm",
+                  labelText: 'Tên trung tâm',
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
 
@@ -60,18 +60,18 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
               TextFormField(
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     filled: true,
                     icon: Icon(
                       Icons.call,
-                      color: const Color.fromRGBO(48, 96, 96, 1.0),
+                      color: Color.fromRGBO(48, 96, 96, 1.0),
                     ),
-                    hintText: 'Where can we reach you',
-                    labelText: 'Phone Number',
+                    hintText: 'Số điện thoại',
+                    labelText: 'Số điện thoại',
                     prefixText: '+84 '),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
 
@@ -80,21 +80,21 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
               //ĐỊA CHỈ
               placesAutoCompleteTextField(addressController),
 
-              SizedBox(
+              const SizedBox(
                 height: 70,
               ),
 
               TextFormField(
                 controller: aboutMeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Tell us about yourself',
-                    helperText: 'Keep it short, this is just demo',
-                    labelText: 'Life Story'),
+                    hintText: 'Nói về trung tâm của bạn',
+                    helperText: 'Nhập thông tin về trung tâm của bạn',
+                    labelText: 'Giới thiệu'),
                 maxLines: 4,
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
 
@@ -117,8 +117,8 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
                         addressController.text.toString(),
                         aboutMeController.text.toString());
                   },
-                  child: Text(
-                    "Continue",
+                  child: const Text(
+                    "Tiếp theo",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,

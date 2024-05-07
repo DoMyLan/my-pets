@@ -140,7 +140,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    child: const Text('Update'),
+                    child: const Text('Cập nhật'),
                   ),
                 ],
               ),
@@ -148,7 +148,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
               TextField(
                 controller: _captionController,
                 decoration: const InputDecoration(
-                  hintText: 'Write a caption...',
+                  hintText: 'Viết nội dung...',
                   border: InputBorder.none,
                   hintStyle: TextStyle(
                     fontSize: 16.0,
@@ -195,7 +195,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: const Text(
-                  "Cancel",
+                  "Hủy",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,

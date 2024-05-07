@@ -53,7 +53,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Change Password',
+                    'Đổi mật khẩu',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Make sure you remember your password',
+                    'Đảm bảo rằng bạn nhớ chính xác mật khẩu của bạn',
                     style: TextStyle(
                       color: Colors.grey,
                     ),
@@ -74,7 +74,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     focusNode: myFocusNode,
                     obscureText: _isObscure,
                     decoration: InputDecoration(
-                      labelText: 'Your current password',
+                      labelText: 'Mật khẩu hiện tại',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
                       ),
@@ -118,7 +118,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     controller: newPassword,
                     obscureText: _isObscure2,
                     decoration: InputDecoration(
-                      labelText: 'New password',
+                      labelText: 'Mật khẩu mới',
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isObscure2 ? Icons.visibility : Icons.visibility_off,
@@ -134,7 +134,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       ),
                       errorText: isValidate
                           ? null
-                          : 'Password must have at least 8 characters, include uppercase, \nlowercase and number', // Show error text when the password is not valid
+                          : 'Mật khẩu phải có ít nhất 8 kí tự, bao gồm chứ in thường, \nchữ in hoa và chữ số', // Show error text when the password is not valid
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -153,7 +153,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     },
                     controller: confirmPassword,
                     decoration: InputDecoration(
-                      labelText: 'Confirm password',
+                      labelText: 'Xác nhận mật khẩu mới',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
                       ),
@@ -169,7 +169,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       ),
                       errorText: isPasswordValid
                           ? null
-                          : 'Passwords do not match', // Show error text when the password is not valid
+                          : 'Mật khẩu không trùng khớp', // Show error text when the password is not valid
                     ),
                     obscureText: _isObscure3,
                   ),
@@ -192,7 +192,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                 newPassword.text == "" ||
                                 confirmPassword.text == "") {
                               notification(
-                                  "Please fill in all the information!", true);
+                                  "Vui lòng điền đầy đủ thông tin!", true);
                             } else {
                               Loading(context);
                               bool success = await changePassword(
@@ -215,7 +215,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                             }
                           }
                         : null,
-                    child: Text('CHANGE PASSWORD'),
+                    child: Text('Đổi mật khẩu'),
                   ),
                   SizedBox(
                     height: 30,
@@ -230,7 +230,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                          'Cancel',
+                          'Hủy',
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 20),

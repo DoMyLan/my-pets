@@ -88,7 +88,7 @@ class _PaidTabState extends State<PaidTab> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => RevenueChartPage())));
+                                  builder: ((context) => const RevenueChartPage())));
                         },
                         child: Text(
                           '(Biểu đồ doanh thu)',
@@ -101,7 +101,7 @@ class _PaidTabState extends State<PaidTab> {
                     ],
                   ),
 
-                  Text('Số tiền thanh toán (4 Th08 2023 - 16 Th08 2023)'),
+                  const Text('Số tiền thanh toán (4 Th08 2023 - 16 Th08 2023)'),
 
                   //BẮT ĐẦU + KẾT THÚC
                   Padding(
@@ -110,7 +110,7 @@ class _PaidTabState extends State<PaidTab> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
+                        SizedBox(
                           width: 120,
                           height: 40,
                           child: InkWell(
@@ -147,7 +147,7 @@ class _PaidTabState extends State<PaidTab> {
                             ),
                           ),
                         ),
-                        Column(
+                        const Column(
                           children: [
                             Icon(
                               Icons.minimize,
@@ -158,7 +158,7 @@ class _PaidTabState extends State<PaidTab> {
                             ),
                           ],
                         ),
-                        Container(
+                        SizedBox(
                           width: 120,
                           height: 40,
                           child: InkWell(

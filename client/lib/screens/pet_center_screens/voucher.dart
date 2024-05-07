@@ -10,7 +10,7 @@ import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:intl/intl.dart';
 
 class VoucherScreen extends StatefulWidget {
-  const VoucherScreen({Key? key}) : super(key: key);
+  const VoucherScreen({super.key});
 
   @override
   State<VoucherScreen> createState() => _VoucherState();
@@ -19,6 +19,7 @@ class VoucherScreen extends StatefulWidget {
 class _VoucherState extends State<VoucherScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController = TabController(length: 4, vsync: this);
+  // ignore: prefer_typing_uninitialized_variables
   var currentClient;
 
   @override
@@ -57,6 +58,7 @@ class _VoucherState extends State<VoucherScreen>
                 if (currentClient.role == 'USER') {
                   // ignore: use_build_context_synchronously
                   Navigator.push(
+                    // ignore: use_build_context_synchronously
                     context,
                     MaterialPageRoute(
                       builder: (context) => MenuFrameUser(
@@ -67,6 +69,7 @@ class _VoucherState extends State<VoucherScreen>
                 } else if (currentClient.role == 'CENTER') {
                   // ignore: use_build_context_synchronously
                   Navigator.push(
+                    // ignore: use_build_context_synchronously
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
@@ -100,6 +103,7 @@ class _VoucherState extends State<VoucherScreen>
           );
 
           if (result != null) {
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => const VoucherScreen()));
           }
@@ -126,6 +130,7 @@ class TabView extends StatelessWidget {
 
   final TabController _tabController;
 
+  // ignore: recursive_getters
   BuildContext get context => context;
 
   @override

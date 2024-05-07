@@ -248,7 +248,6 @@ class _AdoptionScreenState extends State<AdoptionScreen>
       if (selectedPetType != '') {
         if (selectedPetType == 'All') {
           _searchResults = List.from(animals);
-          print('aaaa: $_searchResults');
         } else {
           _searchResults =
               animals.where((pet) => pet.petType == selectedPetType).toList();
@@ -323,7 +322,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                         ),
-                        hintText: 'Search pet to adopt',
+                        hintText: 'Tìm kiếm thú cưng',
                         contentPadding: EdgeInsets.symmetric(
                             vertical:
                                 8), // Giảm khoảng cách giữa các phần tử trong vùng nhập
@@ -357,7 +356,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                 iconSize: 30,
               ),
               Text(
-                'Filter',
+                'Bộ lọc',
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 13,
@@ -484,7 +483,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  fieldInforPet('Name', animal.namePet),
+                                  fieldInforPet('Tên', animal.namePet),
                                   Icon(
                                     animal.gender == "FEMALE"
                                         ? FontAwesomeIcons.venus
@@ -493,13 +492,13 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                 ],
                               ),
                               const SizedBox(height: 2),
-                              fieldInforPet('Breed', animal.breed),
+                              fieldInforPet('Giống', animal.breed),
                               const SizedBox(height: 2),
                               fieldInforPet(
-                                  'Age',
+                                  'Tuổi',
                                   animal.birthday != null
                                       ? AgePet.convertAge(animal.birthday!)
-                                      : "unknown"),
+                                      : "Không xác định"),
                               const SizedBox(height: 2),
                               Row(
                                 children: [
@@ -510,7 +509,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                   ),
                                   const SizedBox(width: 1),
                                   Text(
-                                    '       ${animal.price}.vnd',
+                                    '       ${animal.price} VND',
                                     // '      2350000.vnd',
                                     style: TextStyle(
                                       fontStyle: FontStyle.italic,
@@ -532,7 +531,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                     ),
                                     const SizedBox(width: 1),
                                     Text(
-                                      'Distance: ',
+                                      'Khoảng cách: ',
                                       style: TextStyle(
                                         fontSize: 13,
                                         color: Theme.of(context).primaryColor,
@@ -694,15 +693,15 @@ class AgePet {
     if (months < 1) {
       // If age is less than 1 month, calculate in weeks
       int weeks = (now.difference(birthday).inDays / 7).floor();
-      age = weeks.toString() + ' weeks';
+      age = weeks.toString() + ' tuần';
     } else if (months < 12) {
       // If age is less than 1 year, calculate in months
-      age = months.toString() + ' months';
+      age = months.toString() + ' tháng';
     } else {
       // If age is 1 year or more, calculate in years and months
       int years = months ~/ 12;
       months %= 12;
-      age = years.toString() + ' years ' + months.toString() + ' months';
+      age = years.toString() + ' năm ' + months.toString() + ' tháng';
     }
 
     return age;
@@ -713,13 +712,13 @@ class AgeConverter {
   static String convertAge(double humanAge) {
     if (humanAge * 12 < 1) {
       // Nếu tuổi dưới 1 tháng, tính theo tuần
-      return '${(humanAge * 52).toInt()} weeks';
+      return '${(humanAge * 52).toInt()} tuần';
     } else if (humanAge < 1) {
       // Nếu tuổi dưới 1 năm, tính theo tháng
-      return '${(humanAge * 12).toInt()} months';
+      return '${(humanAge * 12).toInt()} tháng';
     } else {
       // Tuổi 1 năm trở lên, tính theo năm
-      return '${humanAge.toInt()} years';
+      return '${humanAge.toInt()} năm';
     }
   }
 }

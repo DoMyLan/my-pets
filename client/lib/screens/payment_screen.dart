@@ -35,6 +35,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var voucherTotal = 0;
   var totalPayment = 0;
   late int _paymentMethod = 0;
+  late String address = '';
 
   TextEditingController voucherText = TextEditingController();
 
@@ -51,6 +52,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     totalFee = int.parse(widget.pet.price) + transportFee;
     priceProduct = int.parse(widget.pet.price);
     totalPayment = int.parse(widget.pet.price) + transportFee;
+    address = widget.currentClient.address;
+
   }
 
   Future<void> getClient() async {
@@ -62,7 +65,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String? message;
+    String? orderId;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -108,7 +111,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             width: MediaQuery.of(context).size.width *
                                 0.7, // Chiều rộng tối đa
                             child: Text(
-                              currentClient.address,
+                              address,
                               style: const TextStyle(
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w400,
@@ -272,14 +275,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               height: 4,
                             ),
                             Text(
-                              'Breed: ${widget.pet.breed}',
+                              'Giống: ${widget.pet.breed}',
                               style: const TextStyle(fontSize: 14.0),
                             ),
                             const SizedBox(
                               height: 4,
                             ),
                             Text(
-                              'Price: ${widget.pet.price} đ',
+                              'Giá: ${widget.pet.price} đ',
                               style: const TextStyle(fontSize: 14.0),
                             ),
                           ],
@@ -724,7 +727,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           onPressed: () async {
                             Loading(context);
-                            message = await createOrder(
+                            orderId = await createOrder(
                                 currentClient.id,
                                 widget.pet.centerId != null ? true : false,
                                 widget.pet.centerId != null
@@ -734,7 +737,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         ? null
                                         : widget.pet.giver.id,
                                 widget.pet,
-                                currentClient.address,
+                                address,
                                 transportFee,
                                 voucherText.text,
                                 voucherProduct,
@@ -742,11 +745,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 voucherTotal,
                                 totalFee,
                                 totalPayment,
-                                _paymentMethod == 0
-                                    ? "COD"
-                                    : "ONLINE");
+                                _paymentMethod == 0 ? "COD" : "ONLINE");
                             Navigator.of(context).pop();
-                            if (message != "Create order successfully!") {
+                            if (orderId != null) {
                               setState(() {
                                 voucherProduct = 0;
                                 voucherShipping = 0;
@@ -754,23 +755,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 totalPayment = totalFee;
                               });
                             }
-                            if (message == "Create order successfully!" && _paymentMethod == 1) {
+                            if (orderId != null && _paymentMethod == 1) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => VNPAY()));
+                                      builder: (context) => VNPAY(
+                                            orderId: orderId.toString(),
+                                            totalPayment: double.parse(
+                                                totalPayment.toString()),
+                                          )));
                             }
 
-                            if (message != null) {
+                            if (orderId != null) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text('Thông báo'),
-                                    content:
-                                        message == "Create order successfully!"
-                                            ? const Text("Đặt hàng thành công")
-                                            : const Text("Chưa thể đặt hàng"),
+                                    content: orderId != null
+                                        ? const Text("Đặt hàng thành công")
+                                        : const Text("Chưa thể đặt hàng"),
                                     actions: <Widget>[
                                       TextButton(
                                         child: const Text('Đóng'),
