@@ -65,3 +65,17 @@ Future<Voucher?> applyVoucher(code) async {
   }
   return orders;
 }
+
+Future<List<Voucher>> getVoucherCenter(centerId, type) async {
+  var responseData;
+  try {
+    responseData = await api('voucher/center/$centerId?type=$type', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var orderList = responseData['data'] as List<dynamic>;
+  List<Voucher> orders =
+      orderList.map((json) => Voucher.fromJson(json)).toList();
+  return orders;
+}

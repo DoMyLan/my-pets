@@ -1,51 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/voucher_item.dart';
 import 'package:found_adoption_application/main.dart';
+import 'package:found_adoption_application/models/voucher_model.dart';
+import 'package:found_adoption_application/services/order/voucherApi.dart';
 
 // Model cho voucher
-class Voucher {
-  final String id;
-  final String type;
-  final String code;
-  final String description;
+// class Voucher {
+//   final String id;
+//   final String type;
+//   final String code;
+//   final String description;
 
-  Voucher(
-      {required this.id,
-      required this.type,
-      required this.code,
-      required this.description});
-}
+//   Voucher(
+//       {required this.id,
+//       required this.type,
+//       required this.code,
+//       required this.description});
+// }
 
 // Widget hiển thị màn hình voucher
-class VoucherScreen extends StatelessWidget {
-  // Danh sách voucher
-  final List<Voucher> vouchers = [
-    Voucher(
-        id: '1',
-        type: 'Ưu đãi phí vận chuyển',
-        code: 'SHIPFREE',
-        description: 'Miễn phí vận chuyển cho đơn hàng trên 50'),
-    Voucher(
-        id: '2',
-        type: 'Mã giảm giá',
-        code: 'SALE20',
-        description: 'Giảm giá 20% cho đơn hàng đầu tiên'),
-    // Thêm các voucher khác vào đây
-  ];
+// ignore: must_be_immutable
+class VoucherScreen extends StatefulWidget {
+  final String centerId;
+  final String? selectedVoucherCode;
+  const VoucherScreen(
+      {super.key, required this.centerId, this.selectedVoucherCode});
+
+  @override
+  State<VoucherScreen> createState() => _VoucherScreenState();
+}
+
+class _VoucherScreenState extends State<VoucherScreen> {
+  Future<List<Voucher>>? voucherPFuture;
+  Future<List<Voucher>>? voucherSFuture;
+  Future<List<Voucher>>? voucherTFuture;
+
+  String? selectedVoucherCode;
+  bool isSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    voucherPFuture = getVoucherCenter(widget.centerId, "Product");
+    voucherSFuture = getVoucherCenter(widget.centerId, "Shipping");
+    voucherTFuture = getVoucherCenter(widget.centerId, "All");
+    selectedVoucherCode = widget.selectedVoucherCode;
+  }
 
   @override
   Widget build(BuildContext context) {
-     
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
           color: Theme.of(context).primaryColor,
         ),
-        title: Text('Danh sách voucher'),
+        title: const Text('Danh sách voucher'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -56,11 +69,10 @@ class VoucherScreen extends StatelessWidget {
               //Nhập mã voucher
               Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 50, 
+                  const Expanded(
+                    child: SizedBox(
+                      height: 50,
                       child: TextField(
-                     
                         decoration: InputDecoration(
                           hintText: 'Nhập mã voucher',
                           border: OutlineInputBorder(),
@@ -68,71 +80,201 @@ class VoucherScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10), 
-                  Container(
-                    height: 50, 
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        
+                        Navigator.of(context).pop(selectedVoucherCode);
                       },
-                      child: Text(
-                        'Áp dụng',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero,
                         ),
+                      ),
+                      child: const Text(
+                        'Áp dụng',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20,),
-        
-              Container(
-                // height: 40,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Ưu đãi phí vận chuyển',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                    const Text(
-                      'Có thể chọn 1 voucher',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    VoucherItemSelected(type: 'Shipping',),
-                    VoucherItemSelected(type: 'Shipping',),
-                  ],
-                ),
+              const Text(
+                'Chỉ có thể chọn 1 voucher trong tất cả các loại voucher',
+                style: TextStyle(fontSize: 14),
               ),
-              SizedBox(height: 10),
+              const SizedBox(
+                height: 20,
+              ),
+
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  'Ưu đãi phí vận chuyển',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                FutureBuilder(
+                  future: voucherSFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text('Error'),
+                      );
+                    } else {
+                      List<Voucher> voucherS = snapshot.data as List<Voucher>;
+                      if (voucherS.isEmpty) {
+                        return const Center(
+                            child: Text('Không có voucher nào'));
+                      } else {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: voucherS.length,
+                          itemBuilder: (context, index) {
+                            if (voucherS[index].code == selectedVoucherCode) {
+                              isSelected = true;
+                            }
+
+                            return VoucherItemSelected(
+                              voucher: voucherS[index],
+                              onChanged: (isSelected) {
+                                setState(() {
+                                  if (isSelected) {
+                                    selectedVoucherCode = voucherS[index].code;
+                                  } else {
+                                    selectedVoucherCode = null;
+                                  }
+                                });
+                              },
+                            );
+                          },
+                        );
+                      }
+                    }
+                  },
+                )
+              ]),
+              const SizedBox(height: 10),
               Divider(
                 color: Colors.grey.shade300,
                 thickness: 1,
                 height: 4,
               ),
-              SizedBox(height: 16),
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Mã giảm giá',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                    const Text(
-                      'Có thể chọn 1 voucher',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    VoucherItemSelected(type: 'Coupon',),
-                    VoucherItemSelected(type: 'Coupon',),
-                    VoucherItemSelected(type: 'Coupon',),
-                  ],
-                ),
+              const SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Mã giảm giá',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  FutureBuilder(
+                    future: voucherPFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      } else {
+                        List<Voucher> voucherS = snapshot.data as List<Voucher>;
+                        if (voucherS.isEmpty) {
+                          return const Center(
+                              child: Text('Không có voucher nào'));
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: voucherS.length,
+                            itemBuilder: (context, index) {
+                              if (voucherS[index].code == selectedVoucherCode) {
+                                isSelected = true;
+                              }
+                              return VoucherItemSelected(
+                                voucher: voucherS[index],
+                                onChanged: (isSelected) {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedVoucherCode =
+                                          voucherS[index].code;
+                                    } else {
+                                      selectedVoucherCode = null;
+                                    }
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        }
+                      }
+                    },
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              Divider(
+                color: Colors.grey.shade300,
+                thickness: 1,
+                height: 4,
+              ),
+              const SizedBox(height: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Giảm giá tổng đơn hàng',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  FutureBuilder(
+                    future: voucherTFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      } else {
+                        List<Voucher> voucherS = snapshot.data as List<Voucher>;
+                        if (voucherS.isEmpty) {
+                          return const Center(
+                              child: Text('Không có voucher nào'));
+                        } else {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: voucherS.length,
+                            itemBuilder: (context, index) {
+                              if (voucherS[index].code == selectedVoucherCode) {
+                                isSelected = true;
+                              }
+                              return VoucherItemSelected(
+                                voucher: voucherS[index],
+                                onChanged: (isSelected) {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedVoucherCode =
+                                          voucherS[index].code;
+                                    } else {
+                                      selectedVoucherCode = null;
+                                    }
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        }
+                      }
+                    },
+                  )
+                ],
               ),
             ],
           ),
@@ -142,8 +284,8 @@ class VoucherScreen extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: VoucherScreen(),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     home: VoucherScreen(),
+//   ));
+// }

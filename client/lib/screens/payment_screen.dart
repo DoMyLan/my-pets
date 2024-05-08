@@ -1,11 +1,13 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/user_screens/show_all_voucher.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/services/order/voucherApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -38,6 +40,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   late String address = '';
 
   var newAddress = '';
+
+  late String? voucherCode = "";
 
   TextEditingController voucherText = TextEditingController();
 
@@ -155,8 +159,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             0), // Điều chỉnh lề bên trái và bên phải của Divider
                     child: Divider(
                       color: Theme.of(context).primaryColor,
-                      thickness: 5,
-                      height: 30,
+                      thickness: 1,
+                      height: 1,
                     ),
                   ),
                 ),
@@ -322,22 +326,119 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 15.0),
-                const Row(
+                Divider(
+                  color: Colors.grey.shade300,
+                  thickness: 1,
+                  height: 1,
+                ),
+                const SizedBox(height: 5.0),
+                Row(
                   children: [
-                    Icon(Icons.wallet_giftcard,
-                        color: Color.fromARGB(255, 209, 191, 28)),
-                    SizedBox(
-                      width: 4,
+                    const Icon(
+                      Icons.card_giftcard_outlined,
+                      color: Colors.amberAccent,
                     ),
-                    Text(
-                      'Voucher của Center',
+                    const Text(
+                      'Voucher',
                       style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          voucherProduct = 0;
+                          voucherShipping = 0;
+                          voucherTotal = 0;
+                          totalPayment = totalFee;
+                        });
+                        voucherCode = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => VoucherScreen(
+                                    centerId: widget.pet.centerId.id,
+                                    selectedVoucherCode: voucherCode))));
+                        if (voucherProduct == 0 &&
+                            voucherShipping == 0 &&
+                            voucherTotal == 0) {
+                          Loading(context);
+                          var voucher = await applyVoucher(voucherCode);
+                          Navigator.of(context).pop();
+                          setState(() {
+                            voucherCode = voucherCode;
+                            if (voucher != null) {
+                              if (voucher.type == "Product") {
+                                voucherProduct = min(
+                                    voucher.discount * priceProduct,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - voucherProduct;
+                              } else if (voucher.type == "Shipping") {
+                                voucherShipping = min(
+                                    voucher.discount * transportFee,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - transportFee;
+                              } else {
+                                voucherTotal = min(voucher.discount * totalFee,
+                                    voucher.maxDiscount);
+                                totalPayment = totalFee - voucherTotal;
+                              }
+                            }
+                          });
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Thông báo'),
+                                content:
+                                    const Text('Chỉ được áp dụng 1 voucher'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Đóng'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          voucherProduct != 0 ||
+                                  voucherShipping != 0 ||
+                                  voucherTotal != 0
+                              ? Text(
+                                  'Giảm giá: ${voucherProduct != 0 ? voucherProduct : voucherShipping != 0 ? voucherShipping : voucherTotal} đ (Đã áp dụng)',
+                                  style: const TextStyle(
+                                      fontSize: 14.0, color: Colors.redAccent),
+                                )
+                              : const Text(
+                                  'Chưa áp dụng voucher',
+                                  style: TextStyle(
+                                      fontSize: 14.0, color: Colors.redAccent),
+                                ),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                          )
+                        ],
                       ),
                     ),
-                  ],
+                  ], //VoucherItemSelected(type: 'Product',)],
                 ),
+                const SizedBox(height: 5.0),
+
+                Divider(
+                  color: Colors.grey.shade300,
+                  thickness: 1,
+                  height: 1,
+                ),
+
                 Row(
                   children: [
                     Expanded(
@@ -436,7 +537,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 const SizedBox(height: 20.0),
                 Divider(
                   color: Colors.grey.shade300,
-                  thickness: 10,
+                  thickness: 1,
                   height: 1,
                 ),
                 const SizedBox(height: 20.0),
