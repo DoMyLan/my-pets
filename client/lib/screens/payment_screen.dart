@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/user_screens/show_all_voucher.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/services/order/voucherApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -54,8 +56,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     totalFee = int.parse(widget.pet.price) + transportFee;
     priceProduct = int.parse(widget.pet.price);
     totalPayment = int.parse(widget.pet.price) + transportFee;
-    address =
-        "${widget.currentClient.firstName} ${widget.currentClient.lastName}, ${widget.currentClient.phoneNumber}, ${widget.currentClient.address}";
+    address = widget.currentClient.address;
+
   }
 
   Future<void> getClient() async {
@@ -322,18 +324,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   height: 1,
                 ),
                 const SizedBox(height: 15.0),
-                const Row(
+                Row(
                   children: [
                     Icon(Icons.wallet_giftcard,
                         color: Color.fromARGB(255, 209, 191, 28)),
                     SizedBox(
                       width: 4,
                     ),
-                    Text(
-                      'Voucher của Center',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
+                    TextButton(
+                      onPressed: (){
+                         Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                       VoucherScreen())));
+                      },
+                    
+                      style: ButtonStyle(
+                          // Cài đặt các thuộc tính của nút ở đây
+                          ),
+                      child: Text(
+                        'Voucher của Center (Nhấn để chọn)',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          color: mainColor
+                        ),
                       ),
                     ),
                   ],

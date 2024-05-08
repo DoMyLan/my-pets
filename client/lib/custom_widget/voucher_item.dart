@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/main.dart';
 
-
 // // Model cho voucher
 // class Voucher {
 //   final String id;
@@ -19,7 +18,8 @@ import 'package:found_adoption_application/main.dart';
 
 class VoucherItemSelected extends StatefulWidget {
   final String type;
-  const VoucherItemSelected({super.key, required this.type});
+  final String descriptionVoucher;
+  const VoucherItemSelected({super.key, required this.type, required this.descriptionVoucher});
 
   @override
   State<VoucherItemSelected> createState() => _VoucherItemSelectedState();
@@ -27,12 +27,13 @@ class VoucherItemSelected extends StatefulWidget {
 
 class _VoucherItemSelectedState extends State<VoucherItemSelected> {
   bool isSelected = false;
- 
+  
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: MediaQuery.of(context).size.width ,
+        width: MediaQuery.of(context).size.width,
         height: 120,
         padding: EdgeInsets.all(4),
         decoration: BoxDecoration(
@@ -71,7 +72,9 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                         height: 6,
                       ),
                       Text(
-                        widget.type.toString() == 'Shipping' ? 'Shipping' : 'Coupon',
+                        widget.type.toString() == 'Shipping'
+                            ? 'Shipping'
+                            : 'Coupon',
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       )
                     ],
@@ -83,13 +86,12 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Giảm tối đa 50k',
+                    widget.descriptionVoucher,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
                   ),
-                 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -160,34 +162,6 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                 ],
               ),
             ),
-            // Column(
-            //   children: [
-            //     SizedBox(
-            //       height: 20,
-            //     ),
-            //     ElevatedButton(
-            //       onPressed: () {
-            //         setState(() {
-            //           isSelected = !isSelected;
-            //         });
-            //       },
-            //       child: isSelected
-            //           ? Icon(
-            //               Icons.check,
-            //               color: Colors.white,
-            //               size: 20,
-            //             )
-            //           : null, // Icon hoặc child widget để hiển thị khi được chọn
-            //       style: ElevatedButton.styleFrom(
-            //         shape: CircleBorder(), // Tạo hình tròn cho nút
-
-            //         primary: isSelected
-            //             ? mainColor
-            //             : Colors.white, // Màu nền của nút
-            //       ),
-            //     ),
-            //   ],
-            // )
           ],
         ),
       ),
