@@ -559,8 +559,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            pet.centerId!.avatar
-                                          ),
+                                              pet.centerId!.avatar),
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -897,7 +896,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         ),
 
                   Spacer(),
-                  if (currentClient.role == "USER" && pet.statusPaid == 'NOTHING')
+                  if (currentClient.role == "USER" &&
+                      pet.statusPaid == 'NOTHING')
                     Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Container(
@@ -991,7 +991,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                         ),
                       ),
                     ),
-                    if (currentClient.role == "USER" && pet.statusPaid != 'NOTHING')
+                  if (currentClient.role == "USER" &&
+                      pet.statusPaid != 'NOTHING')
                     Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: Container(
@@ -1038,8 +1039,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                               ),
                               Expanded(
                                 child: GestureDetector(
-                                  onTap: () {
-                                  },
+                                  onTap: () {},
                                   child: Material(
                                     borderRadius: BorderRadius.circular(20),
                                     elevation: 4,
@@ -1066,11 +1066,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   //HIỂN THỊ 2 BUTTON CỦA USER
 
                   if (currentClient.role == 'CENTER' &&
-                      pet.statusPaid != 'NOTHING')
+                      pet.statusPaid == 'NOTHING')
                     MaterialButton(
                       color: Theme.of(context).primaryColor,
                       minWidth: double.infinity,
-                      height: 60,
+                      height: 40,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -1119,7 +1119,28 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                             fontSize: 18,
                             color: Colors.green),
                       ),
-                    ),
+                    )
+                  else if (currentClient.role == 'CENTER' &&
+                      pet.statusPaid == 'PENDING')
+                    MaterialButton(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(10),
+
+                      onPressed: () {
+                        
+                      },
+                      // defining the shape
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.green),
+                          borderRadius: BorderRadius.circular(0)),
+                      child: const Text(
+                        "Đang có người mua",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.green),
+                      ),
+                    )
                 ],
               ),
 
