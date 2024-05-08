@@ -176,34 +176,6 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                 ],
               ),
             ),
-            // Column(
-            //   children: [
-            //     SizedBox(
-            //       height: 20,
-            //     ),
-            //     ElevatedButton(
-            //       onPressed: () {
-            //         setState(() {
-            //           isSelected = !isSelected;
-            //         });
-            //       },
-            //       child: isSelected
-            //           ? Icon(
-            //               Icons.check,
-            //               color: Colors.white,
-            //               size: 20,
-            //             )
-            //           : null, // Icon hoặc child widget để hiển thị khi được chọn
-            //       style: ElevatedButton.styleFrom(
-            //         shape: CircleBorder(), // Tạo hình tròn cho nút
-
-            //         primary: isSelected
-            //             ? mainColor
-            //             : Colors.white, // Màu nền của nút
-            //       ),
-            //     ),
-            //   ],
-            // )
           ],
         ),
       ),
