@@ -64,11 +64,12 @@ class _ExampleState extends State<VNPAY> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: responseCode == ""
               ? <Widget>[
-                  Text('Thanh toán đơn hàng $responseCode'),
+                  const Text('Thanh toán đơn hàng'),
                   TextButton(
                     onPressed: onPayment,
                     child: const Text('Thanh toán'),
                   ),
+                  const Text('Lưu ý: Bạn không thể hủy đơn hàng sau khi thanh toán bằng VNPAY'),
                 ]
               : responseCode == "00"
                   ? <Widget>[
