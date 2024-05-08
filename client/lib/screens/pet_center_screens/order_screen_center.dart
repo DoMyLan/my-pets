@@ -378,9 +378,23 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         const Spacer(),
-                                        widget.tabIndex == 0
+                                        widget.tabIndex == 0 &&
+                                                orders[index].statusPayment ==
+                                                    "PENDING" &&
+                                                orders[index].paymentMethods ==
+                                                    "ONLINE"
                                             ? GestureDetector(
-                                                onTap: () {},
+                                                onTap: () async {
+                                                  Loading(context);
+                                                  //Hủy đơn hàng
+                                                  await changeStatusOrder(
+                                                      orders[index].id,
+                                                      "CANCEL");
+                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    orders.removeAt(index);
+                                                  });
+                                                },
                                                 child: Container(
                                                   width: 60,
                                                   height: 40,

@@ -501,7 +501,9 @@ class _TrackingOrderState extends State<TrackingOrder> {
                             )
                           : const SizedBox(),
                       const Spacer(),
-                      order.statusOrder == "PENDING"
+                      order.statusOrder == "PENDING" &&
+                              order.statusPayment == "PENDING" &&
+                              order.paymentMethods == "ONLINE"
                           ? Positioned(
                               left: 105,
                               bottom: 30,
