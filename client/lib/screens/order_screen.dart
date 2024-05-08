@@ -70,7 +70,7 @@ class _TheOrdersState extends State<TheOrders>
             },
           ),
           title: const Text(
-            'Orders',
+            'Đơn hàng',
             style: TextStyle(
                 color: Color.fromRGBO(48, 96, 96, 1.0),
                 fontSize: 24,
@@ -355,7 +355,8 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         const Spacer(),
-                                        orders[index].statusOrder == "PENDING"
+                                        orders[index].statusOrder == "PENDING" && orders[index].statusPayment == "PENDING" &&
+                              orders[index].paymentMethods == "ONLINE"
                                             ? GestureDetector(
                                                 onTap: () async {
                                                   Loading(context);

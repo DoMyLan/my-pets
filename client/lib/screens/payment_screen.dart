@@ -39,6 +39,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   late int _paymentMethod = 0;
   late String address = '';
 
+  var newAddress = '';
+
   TextEditingController voucherText = TextEditingController();
 
   @override
@@ -55,6 +57,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     priceProduct = int.parse(widget.pet.price);
     totalPayment = int.parse(widget.pet.price) + transportFee;
     address = widget.currentClient.address;
+
   }
 
   Future<void> getClient() async {
@@ -85,46 +88,66 @@ class _PaymentScreenState extends State<PaymentScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: Colors.red,
+                    const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      'Địa chỉ nhận hàng',
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () async {
+                        String newAddress = await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Nhập địa chỉ mới'),
+                            content: TextField(
+                              controller: TextEditingController(text: address),
+                              onChanged: (value) {
+                                address = value;
+                              },
                             ),
-                            SizedBox(width: 5),
-                            Text(
-                              'Địa chỉ nhận hàng',
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.bold,
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(address);
+                                },
                               ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 28.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width *
-                                0.7, // Chiều rộng tối đa
-                            child: Text(
-                              address,
-                              style: const TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              softWrap: true,
-                              maxLines: null,
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
+                        );
+                        if (newAddress != null) {
+                          setState(() {
+                            address = newAddress;
+                          });
+                        }
+                      },
                     ),
                   ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 28.0),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.7, // Chiều rộng tối đa
+                    child: Text(
+                      address,
+                      style: const TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      softWrap: true,
+                      maxLines: null,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   width: double.infinity,
