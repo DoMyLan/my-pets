@@ -4,13 +4,17 @@ import 'package:found_adoption_application/screens/revenue/unpaid_tab.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
 class RevenueReportScreen extends StatefulWidget {
+  const RevenueReportScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RevenueReportScreenState createState() => _RevenueReportScreenState();
 }
 
 class _RevenueReportScreenState extends State<RevenueReportScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  // ignore: prefer_typing_uninitialized_variables
   var currentClient;
 
   @override
@@ -32,16 +36,16 @@ class _RevenueReportScreenState extends State<RevenueReportScreen>
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
           color: Theme.of(context).primaryColor,
         ),
-        title: Text('Revenue Report'),
+        title: const Text('Revenue Report'),
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: 'Chưa thanh toán'),
             Tab(text: 'Đã thanh toán'),
           ],

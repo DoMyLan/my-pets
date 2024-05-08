@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MenuCenterScreen extends StatefulWidget {
   final Function(int) menuCallBack;
-  MenuCenterScreen({super.key, required this.menuCallBack});
+  const MenuCenterScreen({super.key, required this.menuCallBack});
 
   @override
   State<MenuCenterScreen> createState() => _MenuCenterScreenState();
@@ -19,13 +19,14 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
-    'Buy Pet',
-    'Pet Story',
-    'Profile',
-    'Add pet',
-    'Order',
+    'Thú cưng',
+    'Bài viết',
+    'Cá nhân',
+    'Thêm thú cưng',
+    'Đơn hàng',
     // 'Manage Adopt',
-    ' Add Voucher',
+    'Voucher',
+    'Thông báo',
     
     // 'Messages',
 
@@ -35,11 +36,13 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
   List<IconData> icons = [
     FontAwesomeIcons.paw,
     FontAwesomeIcons.newspaper,
+    // ignore: deprecated_member_use
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.plus,
     FontAwesomeIcons.firstOrder,
     // FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.moneyBill,
+    FontAwesomeIcons.bell,
  
     // FontAwesomeIcons.envelope,
 
@@ -55,7 +58,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
         });
       },
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 24),
+        padding: const EdgeInsets.symmetric(vertical: 24),
         child: Row(
           children: [
             Icon(
@@ -82,20 +85,21 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         // Show a confirmation dialog when the user tries to exit the app
         final shouldExit = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Are you sure you want to exit the application?'),
+            title: const Text('Bạn có chắc muốn thoát khỏi ứng dụng?'),
             actions: [
               TextButton(
-                child: Text('Cancel'),
+                child: const Text('Hủy'),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               TextButton(
-                child: Text('Exit'),
+                child: const Text('Thoát'),
                 onPressed: () => Navigator.of(context).pop(true),
               ),
             ],
@@ -114,7 +118,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
           )),
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -165,13 +169,13 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                               children: [
                                 Text(
                                   snapshotName.data!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 20,
                                   ),
                                 ),
-                                Row(
+                                const Row(
                                   children: [
                                     Icon(
                                       Icons.circle,

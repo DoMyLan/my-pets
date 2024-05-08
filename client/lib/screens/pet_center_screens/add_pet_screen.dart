@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 class AddPetScreen extends StatefulWidget {
   const AddPetScreen({super.key});
   @override
+  // ignore: library_private_types_in_public_api
   _AddPetScreenState createState() => _AddPetScreenState();
 }
 
@@ -43,18 +44,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
+  // ignore: prefer_typing_uninitialized_variables
   var currentClient;
 
   bool isFreeOptionSelected = true;
   String price = '0';
 
-  List<dynamic> _selectedColors = ['Yellow'];
+  final List<dynamic> _selectedColors = ['Yellow'];
 
-  List<String> _colors = [
+  final List<String> _colors = [
     'Red',
     'Green',
     'Blue',
@@ -88,8 +90,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
+    // ignore: use_build_context_synchronously
     Loading(context);
     var result = await uploadMultiImage(imageFileList);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
     finalResult2 = result.map((url) => url).toList();
     if (mounted) {
@@ -161,7 +165,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
     });
     // Kéo giao diện lên trên cùng
     _scrollController.animateTo(0,
-        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
 
     await notificationHandler.showNotification();
   }
@@ -174,7 +178,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Add a New Pet',
+        title: const Text('Thêm thú cưng',
             style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0))),
         centerTitle: true,
         elevation: 0,
@@ -182,6 +186,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
           onPressed: () async {
             var currentClient = await getCurrentClient();
             Navigator.push(
+                // ignore: use_build_context_synchronously
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
@@ -229,11 +234,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     )),
 
               //THÔNG TIN GIÁ
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
-              Text(
-                'Choose an option:',
+              const Text(
+                'Chọn loại:',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -254,11 +259,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
                             });
                           },
                         ),
-                        Text('Free'),
+                        const Text('Miễn phí'),
                       ],
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -276,7 +281,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                             });
                           },
                         ),
-                        Text('Set Price'),
+                        const Text('Đặt giá'),
                       ],
                     ),
                   ),
@@ -303,14 +308,14 @@ class _AddPetScreenState extends State<AddPetScreen> {
                         ),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                           onChanged: (value) {
                             setState(() {
                               price = value.toString();
                             });
                           },
-                          decoration: InputDecoration(
-                            hintText: 'Enter price ...',
+                          decoration: const InputDecoration(
+                            hintText: 'Nhập giá ...',
                             hintStyle: TextStyle(fontSize: 14),
                             border: InputBorder.none,
                             suffixText: 'vnd',
@@ -323,8 +328,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ),
                 ),
 
-              Text(
-                'Fill in the table with the needed information:',
+              const Text(
+                'Thông tin cơ bản:',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -332,7 +337,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
               ),
 
               Table(
-                columnWidths: {
+                columnWidths: const {
                   0: FractionColumnWidth(0.5),
                   1: FractionColumnWidth(0.5),
                 },
@@ -344,8 +349,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _namePetController,
-                            decoration: InputDecoration(
-                              labelText: 'Pet Name',
+                            decoration: const InputDecoration(
+                              labelText: 'Tên thú cưng',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -356,8 +361,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _breedController,
-                            decoration: InputDecoration(
-                              labelText: 'Breed',
+                            decoration: const InputDecoration(
+                              labelText: 'Giống loài',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -372,8 +377,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _weightController,
-                            decoration: InputDecoration(
-                              labelText: 'Weight',
+                            decoration: const InputDecoration(
+                              labelText: 'Cân nặng (kg)',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -384,8 +389,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _originalController,
-                            decoration: InputDecoration(
-                              labelText: 'Original',
+                            decoration: const InputDecoration(
+                              labelText: 'Nguồn gốc',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -398,7 +403,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
               Row(
                 children: [
-                  const Text('Type:'),
+                  const Text('Loại:'),
                   Radio(
                     value: 'Cat',
                     groupValue: _selectedPetType,
@@ -408,7 +413,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Cat'),
+                  const Text('Mèo'),
                   Radio(
                     value: 'Dog',
                     groupValue: _selectedPetType,
@@ -418,7 +423,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  Text('Dog'),
+                  const Text('Chó'),
                 ],
               ),
               // TextField(
@@ -430,12 +435,12 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Text("Birthday (*): ",
+                  const Text("Ngày sinh (*): ",
                       style: TextStyle(fontSize: 14, color: Colors.black)),
                   Text(
                       birthday != null
                           ? DateFormat('dd-MM-yyyy').format(birthday!.toLocal())
-                          : 'Date has not been selected',
+                          : 'Ngày sinh chưa được chọn',
                       style:
                           const TextStyle(fontSize: 15, color: Colors.black)),
                   IconButton(
@@ -460,11 +465,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ListTile(
-                    title: Text(
-                      'Select color:',
+                    title: const Text(
+                      'Màu sắc:',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 201, 121, 2)),
+                          color: Color.fromARGB(255, 201, 121, 2)),
                     ),
                     trailing: DropdownButton<String>(
                       value: _selectedColors.last,
@@ -481,12 +486,12 @@ class _AddPetScreenState extends State<AddPetScreen> {
                                 height: 10,
                                 color: _getColorFromString(color),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text(color),
                               if (_selectedColors.contains(color))
-                                Icon(
+                                const Icon(
                                   Icons.check,
                                   color: Colors.green,
                                 ),
@@ -496,17 +501,15 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       }).toList(),
                     ),
                   ),
-                  Container(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Selected colors',
-                        border: OutlineInputBorder(),
-                      ),
-                      controller: TextEditingController(
-                        text: _selectedColors.join(', '),
-                      ),
-                      readOnly: true,
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Selected colors',
+                      border: OutlineInputBorder(),
                     ),
+                    controller: TextEditingController(
+                      text: _selectedColors.join(', '),
+                    ),
+                    readOnly: true,
                   ),
                 ],
               ),
@@ -517,7 +520,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
               Row(
                 children: [
                   const Text(
-                    'Gender:',
+                    'Giới tính:',
                     style: TextStyle(fontSize: 12),
                   ),
                   Radio(
@@ -530,7 +533,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                   ),
                   const Text(
-                    'Male',
+                    'Bé trai',
                     style: TextStyle(fontSize: 12),
                   ),
                   Radio(
@@ -543,7 +546,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                   ),
                   const Text(
-                    'Female',
+                    'Bé gái',
                     style: TextStyle(fontSize: 12),
                   ),
                   Radio(
@@ -555,7 +558,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       });
                     },
                   ),
-                  const Text('Unknown'),
+                  const Text('Không xác định'),
                 ],
               ),
               const SizedBox(
@@ -573,8 +576,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
               // ),
 
               //ABOUT PET
-              Text(
-                'About Pet:',
+              const Text(
+                'Thông tin thêm',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -587,7 +590,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   Card(
                     color: const Color.fromARGB(255, 250, 250, 250),
                     elevation: 4, // Add elevation for shadow effect
-                    margin: EdgeInsets.all(0), // No margin
+                    margin: const EdgeInsets.all(0), // No margin
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -633,16 +636,17 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       var currentClient = await getCurrentClient();
                       // Handle cancel button press
                       Navigator.push(
+                          // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   MenuFrameCenter(centerId: currentClient.id)));
                     },
-                    child: const Text('Cancel'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 241, 189,
                           186), // Specify background color for the cancel button
                     ),
+                    child: const Text('Hủy'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -653,15 +657,16 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           _selectedPetType == '' ||
                           _selectedGender == '') {
                         notification(
-                            'Please fill in all the information', true);
+                            'Vui lòng điền đầy đủ thông tin', true);
                         return;
                       }
                       // Create a new Pet object with the entered information
                       Loading(context);
                       await postPet();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Add Pet'),
+                    child: const Text('Tạo thú cưng'),
                   ),
                 ],
               ),
@@ -685,7 +690,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
       case 'Orange':
         return Colors.orange;
       case 'White':
-        return Color.fromARGB(255, 245, 242, 242);
+        return const Color.fromARGB(255, 245, 242, 242);
       case 'Black':
         return Colors.black;
       case 'Brown':
@@ -709,10 +714,10 @@ class _AddPetScreenState extends State<AddPetScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(icon, color: _getColorIcon(title)),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

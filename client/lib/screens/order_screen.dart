@@ -223,7 +223,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             ),
                                             child: const Center(
                                               child: Text(
-                                                "Following",
+                                                "Theo dõi",
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500,
@@ -237,7 +237,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                           width: 10,
                                         ),
                                         SizedBox(
-                                          width: 170,
+                                          width: 160,
                                           child: Text(
                                             orders[index].seller.centerId !=
                                                     null
@@ -255,6 +255,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
+                                        const Spacer(),
                                         Text(
                                           orders[index].statusPayment ==
                                                   'PENDING'
@@ -391,6 +392,39 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : SizedBox(),
+                                        (orders[index].statusOrder ==
+                                                        "CONFIRMED" ||
+                                                    orders[index].statusOrder ==
+                                                        "COMPLETED") &&
+                                                orders[index].statusPayment ==
+                                                    "PENDING" &&
+                                                orders[index].paymentMethods ==
+                                                    "ONLINE"
+                                            ? GestureDetector(
+                                                onTap: () async {},
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.blue,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      'Thanh toán VNPAY',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
                                         orders[index].statusOrder == "DELIVERED"
                                             ? GestureDetector(
                                                 onTap: () async {

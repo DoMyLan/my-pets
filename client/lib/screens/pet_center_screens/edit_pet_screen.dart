@@ -52,7 +52,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
   //thông báo
   final NotificationHandler notificationHandler = NotificationHandler();
-  List<String> _colors = [
+  final List<String> _colors = [
     'Red',
     'Green',
     'Blue',
@@ -149,6 +149,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
             var currentClient = await getCurrentClient();
             // ignore: use_build_context_synchronously
             Navigator.push(
+                // ignore: use_build_context_synchronously
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
@@ -191,11 +192,11 @@ class _EditPetScreenState extends State<EditPetScreen> {
                     )),
 
               //THÔNG TIN GIÁ
-              SizedBox(
+              const SizedBox(
                 height: 12,
               ),
-              Text(
-                'Choose an option:',
+              const Text(
+                'Chọn loại:',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -216,11 +217,11 @@ class _EditPetScreenState extends State<EditPetScreen> {
                             });
                           },
                         ),
-                        Text('Free'),
+                        const Text('Miễn phí'),
                       ],
                     ),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -238,7 +239,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                             });
                           },
                         ),
-                        Text('Set Price'),
+                        const Text('Đặt giá'),
                       ],
                     ),
                   ),
@@ -264,15 +265,15 @@ class _EditPetScreenState extends State<EditPetScreen> {
                         ),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                           onChanged: (value) {
                             setState(() {
                               price = value.toString();
                             });
                           },
                           controller: _priceController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter price ...',
+                          decoration: const InputDecoration(
+                            hintText: 'Nhập giá ...',
                             hintStyle: TextStyle(fontSize: 14),
                             border: InputBorder.none,
                             suffixText: 'vnd',
@@ -287,8 +288,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
                   ),
                 ),
 
-              Text(
-                'Fill in the table with the needed information:',
+              const Text(
+                'Thông tin cơ bản',
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -296,7 +297,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
               ),
 
               Table(
-                columnWidths: {
+                columnWidths: const {
                   0: FractionColumnWidth(0.5),
                   1: FractionColumnWidth(0.5),
                 },
@@ -308,8 +309,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _namePetController,
-                            decoration: InputDecoration(
-                              labelText: 'Pet Name',
+                            decoration: const InputDecoration(
+                              labelText: 'Tên thú cưng',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -320,8 +321,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _breedController,
-                            decoration: InputDecoration(
-                              labelText: 'Breed',
+                            decoration: const InputDecoration(
+                              labelText: 'Giống loài',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -336,8 +337,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _weightController,
-                            decoration: InputDecoration(
-                              labelText: 'Weight',
+                            decoration: const InputDecoration(
+                              labelText: 'Cân nặng',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -348,8 +349,8 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: _originalController,
-                            decoration: InputDecoration(
-                              labelText: 'Original',
+                            decoration: const InputDecoration(
+                              labelText: 'Nguồn gốc',
                               border: OutlineInputBorder(),
                             ),
                           ),
@@ -370,7 +371,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
               // ),
               Row(
                 children: [
-                  const Text('Type:'),
+                  const Text('Loại:'),
                   Radio(
                     value: 'Cat',
                     groupValue: _selectedPetType,
@@ -380,7 +381,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Cat'),
+                  const Text('Mèo'),
                   Radio(
                     value: 'Dog',
                     groupValue: _selectedPetType,
@@ -390,7 +391,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Dog'),
+                  const Text('Chó'),
                 ],
               ),
 
@@ -398,12 +399,12 @@ class _EditPetScreenState extends State<EditPetScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Text("Birthday (*): ",
+                  const Text("Ngày sinh (*): ",
                       style: TextStyle(fontSize: 14, color: Colors.black)),
                   Text(
                       birthday != null
                           ? DateFormat('dd-MM-yyyy').format(birthday!.toLocal())
-                          : 'Date has not been selected',
+                          : 'Chọn ngày sinh',
                       style:
                           const TextStyle(fontSize: 15, color: Colors.black)),
                   IconButton(
@@ -449,11 +450,11 @@ class _EditPetScreenState extends State<EditPetScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ListTile(
-                    title: Text(
-                      'Select color:',
+                    title: const Text(
+                      'Màu sắc:',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: const Color.fromARGB(255, 201, 121, 2)),
+                          color:Color.fromARGB(255, 201, 121, 2)),
                     ),
                     trailing: DropdownButton<String>(
                       value: _selectedColors.last,
@@ -470,12 +471,12 @@ class _EditPetScreenState extends State<EditPetScreen> {
                                 height: 10,
                                 color: _getColorFromString(color),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20,
                               ),
                               Text(color),
                               if (_selectedColors.contains(color))
-                                Icon(
+                                const Icon(
                                   Icons.check,
                                   color: Colors.green,
                                 ),
@@ -485,17 +486,15 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       }).toList(),
                     ),
                   ),
-                  Container(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Selected colors',
-                        border: OutlineInputBorder(),
-                      ),
-                      controller: TextEditingController(
-                        text: _selectedColors.join(', '),
-                      ),
-                      readOnly: true,
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Chọn màu',
+                      border: OutlineInputBorder(),
                     ),
+                    controller: TextEditingController(
+                      text: _selectedColors.join(', '),
+                    ),
+                    readOnly: true,
                   ),
                 ],
               ),
@@ -504,7 +503,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
 
               Row(
                 children: [
-                  const Text('Gender:'),
+                  const Text('Giới tính:'),
                   Radio(
                     value: 'MALE',
                     groupValue: _selectedGender,
@@ -514,7 +513,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Male'),
+                  const Text('Bé trai'),
                   Radio(
                     value: 'FEMALE',
                     groupValue: _selectedGender,
@@ -524,7 +523,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Female'),
+                  const Text('Bé gái'),
                   Radio(
                     value: 'ORTHER',
                     groupValue: _selectedGender,
@@ -534,7 +533,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       });
                     },
                   ),
-                  const Text('Orther'),
+                  const Text('Không xác định'),
                 ],
               ),
               const SizedBox(
@@ -600,13 +599,14 @@ class _EditPetScreenState extends State<EditPetScreen> {
                       // Handle cancel button press
                       // ignore: use_build_context_synchronously
                       Navigator.push(
+                          // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   MenuFrameCenter(centerId: currentClient.id)));
                     },
                     // ignore: sort_child_properties_last
-                    child: const Text('Cancel'),
+                    child: const Text('Hủy'),
                     style: ElevatedButton.styleFrom(
                       // ignore: deprecated_member_use
                       backgroundColor: const Color.fromARGB(255, 241, 189,
@@ -623,16 +623,18 @@ class _EditPetScreenState extends State<EditPetScreen> {
                           _selectedPetType == '' ||
                           _selectedGender == '') {
                         notification(
-                            'Please fill in all the information', true);
+                            'Vui lòng điền đầy đủ thông tin', true);
                         return;
                       }
                       // Create a new Pet object with the entered information
                       Loading(context);
                       await handlerUpdatePet();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Edit Pet'),
+                    child: const Text('Lưu'),
                   ),
                 ],
               ),
@@ -656,7 +658,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
       case 'Orange':
         return Colors.orange;
       case 'White':
-        return Color.fromARGB(255, 245, 242, 242);
+        return const Color.fromARGB(255, 245, 242, 242);
       case 'Black':
         return Colors.black;
       case 'Brown':
@@ -695,10 +697,10 @@ class _EditPetScreenState extends State<EditPetScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(icon, color: _getColorIcon(title)),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -710,7 +712,7 @@ class _EditPetScreenState extends State<EditPetScreen> {
             controller: aboutPetInfor
             ,
             maxLines: null, 
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
             ),
           ),

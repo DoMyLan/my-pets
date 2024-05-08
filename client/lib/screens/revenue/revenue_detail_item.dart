@@ -220,7 +220,7 @@ class _RevenueDetailScreenState extends State<RevenueDetailScreen> {
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
-                      child: Column(
+                      child: const Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -260,20 +260,20 @@ class _RevenueDetailScreenState extends State<RevenueDetailScreen> {
                       ),
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     //DOANH THU
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       width: widthDevice,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Doanh thu',
+                          const Text('Doanh thu',
                               style: TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.bold)),
                           Text('đ ${order.totalPayment}')

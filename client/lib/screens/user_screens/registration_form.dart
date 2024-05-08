@@ -32,19 +32,19 @@ class _RegistrationFormState extends State<RegistrationForm> {
       home: Scaffold(
         backgroundColor: Colors.grey.shade300,
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(48, 96, 96, 1.0),
+          backgroundColor: const Color.fromRGBO(48, 96, 96, 1.0),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(
                   context); // Đặt hàm Navigator.pop(context) trong hàm lambda
             },
           ),
-          title: Text("Registration User's Form"),
+          title: const Text("Đăng kí người dùng"),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+          padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
           child: Column(
             children: [
               Row(
@@ -54,36 +54,36 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: TextFormField(
                       controller: firstNameController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
                         filled: true,
                         icon: Icon(
                           Icons.person,
-                          color: const Color.fromRGBO(48, 96, 96, 1.0),
+                          color: Color.fromRGBO(48, 96, 96, 1.0),
                         ),
-                        hintText: 'First Name',
-                        labelText: 'First Name',
+                        hintText: 'Họ',
+                        labelText: 'Họ',
                       ),
                     ),
                   ),
-                  SizedBox(width: 10), // Khoảng cách giữa hai trường
+                  const SizedBox(width: 10), // Khoảng cách giữa hai trường
 
                   //LAST NAME
                   Expanded(
                     child: TextFormField(
                       controller: lastNameController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: UnderlineInputBorder(),
                         filled: true,
-                        hintText: 'Last Name',
-                        labelText: 'Last Name',
+                        hintText: 'Tên',
+                        labelText: 'Tên',
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
 
@@ -91,18 +91,18 @@ class _RegistrationFormState extends State<RegistrationForm> {
               TextFormField(
                 controller: phoneNumberController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     filled: true,
                     icon: Icon(
                       Icons.call,
-                      color: const Color.fromRGBO(48, 96, 96, 1.0),
+                      color:  Color.fromRGBO(48, 96, 96, 1.0),
                     ),
-                    hintText: 'Where can we reach you',
-                    labelText: 'Phone Number',
+                    hintText: 'Số điện thoại',
+                    labelText: 'Số điện thoại',
                     prefixText: '+84 '),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
 
@@ -124,14 +124,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
               //ĐỊA CHỈ
               placesAutoCompleteTextField(addressController),
 
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
 
               Container(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  'Experiences: ',
+                child: const Text(
+                  'Kinh nghiệm: ',
                   style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -149,8 +149,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       onChanged: (val) {
                         setSelectedRadio(val!);
                       }),
-                  Text('Yes'),
-                  SizedBox(
+                  const Text('Có'),
+                  const SizedBox(
                     width: 50,
                   ),
                   Radio(
@@ -159,21 +159,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       onChanged: (val) {
                         setSelectedRadio(val!);
                       }),
-                  Text('No'),
+                  const Text('Không'),
                 ],
               ),
 
               TextFormField(
                 controller: auboutMeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Tell us about yourself',
-                    helperText: 'Keep it short, this is just demo',
-                    labelText: 'Life Story'),
+                    hintText: 'Nói về bản thân bạn',
+                    helperText: 'Nói về bản thân bạn',
+                    labelText: 'Giới thiệu'),
                 maxLines: 4,
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
 
@@ -184,8 +184,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 onPressed: () async {
                   LatLng location =await convertAddressToLatLng(addressController.text.toString());
 
-                      print('Tọa độ Address mới nhập: $location');
+                      // print('Tọa độ Address mới nhập: $location');
                   await userform(
+                      // ignore: use_build_context_synchronously
                       context,
                       widget.accountId,
                       firstNameController.text.toString(),
@@ -205,8 +206,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: GestureDetector(
-                  child: Text(
-                    "Continue",
+                  child: const Text(
+                    "Tiếp theo",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,

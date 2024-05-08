@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:found_adoption_application/screens/chart_folder/chart_revenue_screen.dart';
 import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/add_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/order_screen_center.dart';
@@ -151,7 +150,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
+    // final deviceWidth = MediaQuery.of(context).size.width;
     return Stack(children: finalStack());
   }
 }

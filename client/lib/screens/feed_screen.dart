@@ -148,13 +148,13 @@ class _FeedScreenState extends State<FeedScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Stories'),
-            Tab(text: 'Short videos'),
+            Tab(text: 'Bài viết'),
+            Tab(text: 'Video ngắn'),
           ],
         ),
         backgroundColor: Colors.white,
         title: const Text(
-          'Pet stories',
+          'Bài viết về thú cưng',
           style: TextStyle(
               color: Color.fromRGBO(48, 96, 96, 1.0),
               fontWeight: FontWeight.bold,

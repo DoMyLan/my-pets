@@ -55,7 +55,7 @@ class NotificationPage extends StatelessWidget {
          
             SizedBox(width: 8.0),
             Text(
-              'Notification',
+              'Thông báo',
               style: TextStyle(color: Color.fromRGBO(48, 96, 96, 1.0)),
             ),
           ],

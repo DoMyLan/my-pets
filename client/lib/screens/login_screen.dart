@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(
-          'Login',
+          'Đăng nhập',
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0,
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Column(
                   children: <Widget>[
                     Text(
-                      "Login",
+                      "Đăng nhập",
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 10,
                     ),
                     Text(
-                      "Login to your account",
+                      "Đăng nhập bằng tài khoản của bạn",
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     )
                   ],
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           isPassword: false,
                           isLogin: true),
                       inputField(
-                          label: "Password",
+                          label: "Mật khẩu",
                           obscureText: true,
                           controller: passwordController,
                           isPassword: true,
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Kiểm tra giá trị của signUpType và thực hiện các hành động tương ứng
                         if (emailController.text.toString() == '') {
                           Fluttertoast.showToast(
-                            msg: "Email not empty!",
+                            msg: "Email không được để trống!",
                             toastLength:
                                 Toast.LENGTH_SHORT, // Thời gian hiển thị
                             gravity: ToastGravity.BOTTOM, // Vị trí hiển thị
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         } else if (passwordController.text.toString() == '') {
                           Fluttertoast.showToast(
-                            msg: "Password not empty!",
+                            msg: "Password không được để trống!",
                             toastLength:
                                 Toast.LENGTH_SHORT, // Thời gian hiển thị
                             gravity: ToastGravity.BOTTOM, // Vị trí hiển thị
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Text(
-                        "Login",
+                        "Đăng nhập",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
@@ -164,22 +164,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextEditingController _controller =
                                   TextEditingController();
                               return AlertDialog(
-                                title: const Text('Forgot Password'),
+                                title: const Text('Quên mật khẩu'),
                                 content: TextField(
                                   controller: _controller,
                                   decoration: const InputDecoration(
-                                    labelText: 'Enter your email',
+                                    labelText: 'Nhập email',
                                   ),
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: const Text('Cancel'),
+                                    child: const Text('Hủy'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
                                   TextButton(
-                                    child: const Text('Forgot Password'),
+                                    child: const Text('Quên mật khẩu'),
                                     onPressed: () async {
                                       String email = _controller
                                           .text; // Get value from text field
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: const Text(
-                          "Forgot password?",
+                          "Quên mật khẩu?",
                           style: TextStyle(
                               fontSize: 17,
                               color: Color.fromARGB(255, 1, 64, 93),
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Don't have an account?",
+                      "Chưa có tài khoản?",
                       style: TextStyle(fontSize: 17, color: Colors.black),
                     ),
                     SizedBox(
@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 builder: (context) => SignUpScreen()));
                       },
                       child: Text(
-                        " Sign up",
+                        " Đăng ký ngay!",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,

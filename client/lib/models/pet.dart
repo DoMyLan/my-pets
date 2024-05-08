@@ -30,6 +30,7 @@ class Pet {
   final User? foundOwner;
   final String? foundOwner_id;
   final String statusAdopt;
+  final String? statusPaid;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -60,6 +61,7 @@ class Pet {
     this.foundOwner,
     this.foundOwner_id,
     required this.statusAdopt,
+    this.statusPaid,
     this.createdAt,
     this.updatedAt,
   });
@@ -198,6 +200,7 @@ class Pet {
             )
           : null,
       statusAdopt: json['statusAdopt'],
+      statusPaid: json['statusPaid'],
       // centerId_id: json['centerId']['_id'],
       // foundOwner_id: json['statusAdopt'] == 'HAS_ONE_OWNER'
       //     ? json['foundOwner']['_id']
