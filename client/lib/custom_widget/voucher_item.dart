@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/main.dart';
+import 'package:found_adoption_application/models/voucher_model.dart';
 
 // // Model cho voucher
 // class Voucher {
@@ -17,9 +18,10 @@ import 'package:found_adoption_application/main.dart';
 // }
 
 class VoucherItemSelected extends StatefulWidget {
-  final String type;
-  final String descriptionVoucher;
-  const VoucherItemSelected({super.key, required this.type, required this.descriptionVoucher});
+  final Voucher voucher;
+  final ValueChanged<bool>? onChanged;
+  const VoucherItemSelected(
+      {super.key, required this.voucher, this.onChanged});
 
   @override
   State<VoucherItemSelected> createState() => _VoucherItemSelectedState();
@@ -27,7 +29,13 @@ class VoucherItemSelected extends StatefulWidget {
 
 class _VoucherItemSelectedState extends State<VoucherItemSelected> {
   bool isSelected = false;
-  
+  Voucher? voucher;
+
+  @override
+  void initState() {
+    super.initState();
+    voucher = widget.voucher;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +43,7 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: 120,
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.0),
           color: Colors.white,
@@ -62,20 +70,25 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        widget.type.toString() == 'Shipping'
+                        voucher!.type == 'Shipping'
                             ? FontAwesomeIcons.truck
-                            : FontAwesomeIcons.cat,
+                            : voucher!.type == 'Product'
+                                ? FontAwesomeIcons.cat
+                                : FontAwesomeIcons.cartArrowDown,
                         size: 30,
                         color: Colors.white,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 6,
                       ),
                       Text(
-                        widget.type.toString() == 'Shipping'
-                            ? 'Shipping'
-                            : 'Coupon',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        voucher!.type == 'Shipping'
+                            ? 'Vận chuyển'
+                            : voucher!.type == 'Product'
+                                ? 'Thú cưng'
+                                : 'Tổng đơn hàng',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                       )
                     ],
                   ))
@@ -86,8 +99,8 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.descriptionVoucher,
-                    style: TextStyle(
+                    'Giảm ${voucher!.discount}% tối đa ${voucher!.maxDiscount}',
+                    style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold),
@@ -95,45 +108,46 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Đơn tối thiếu 300k',
+                      const Text(
+                        'Mua thú cưng tại trung tâm',
                         style: TextStyle(color: Colors.black, fontSize: 12),
                       ),
-                      Container(
+                      SizedBox(
                         height: 25,
                         width: 90,
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
                               isSelected = !isSelected;
+                              widget.onChanged?.call(isSelected);
                             });
                           },
-                          child: isSelected
-                              ? Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 20,
-                                )
-                              : null,
                           style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                             backgroundColor: isSelected
                                 ? mainColor
                                 : Colors
                                     .white, // Use backgroundColor instead of primary
                           ),
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : null,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 6,
                   ),
                   Text(
-                    'Sắp hết hạn: Còn 2 ngày',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
+                    'Sắp hết hạn: Còn ${voucher!.endDate.difference(DateTime.now()).inDays} ngày',
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 14,
                   ),
                   Row(
@@ -145,7 +159,7 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                         size: 12,
                         color: mainColor,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 6,
                       ),
                       Flexible(

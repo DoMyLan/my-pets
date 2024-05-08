@@ -474,9 +474,11 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      order.statusOrder == "PENDING" &&
-                              order.statusPayment == "PENDING" &&
-                              order.paymentMethods == "ONLINE"
+                      (order.statusOrder == "PENDING" &&
+                                  order.statusPayment == "PENDING" &&
+                                  order.paymentMethods == "ONLINE") ||
+                              (order.statusOrder == "PENDING" &&
+                                  order.paymentMethods == "COD")
                           ? Positioned(
                               left: 105,
                               bottom: 30,
