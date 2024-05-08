@@ -42,6 +42,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var newAddress = '';
 
   late String? voucherCode = "";
+  var orderSuccess = false;
 
   TextEditingController voucherText = TextEditingController();
 
@@ -438,77 +439,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   thickness: 1,
                   height: 1,
                 ),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: voucherText,
-                        decoration: InputDecoration(
-                          hintText: 'Nhập mã voucher',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Theme.of(context).primaryColor),
-                      ),
-                      onPressed: () async {
-                        if (voucherProduct == 0 &&
-                            voucherShipping == 0 &&
-                            voucherTotal == 0) {
-                          Loading(context);
-                          var voucher = await applyVoucher(voucherText.text);
-                          Navigator.of(context).pop();
-                          setState(() {
-                            if (voucher != null) {
-                              if (voucher.type == "Product") {
-                                voucherProduct = min(
-                                    voucher.discount * priceProduct,
-                                    voucher.maxDiscount);
-                                totalPayment = totalFee - voucherProduct;
-                              } else if (voucher.type == "Shipping") {
-                                voucherShipping = min(
-                                    voucher.discount * transportFee,
-                                    voucher.maxDiscount);
-                                totalPayment = totalFee - transportFee;
-                              } else {
-                                voucherTotal = min(voucher.discount * totalFee,
-                                    voucher.maxDiscount);
-                                totalPayment = totalFee - voucherTotal;
-                              }
-                            }
-                          });
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Thông báo'),
-                                content:
-                                    const Text('Chỉ được áp dụng 1 voucher'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('Đóng'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Áp dụng',
-                        style: TextStyle(fontSize: 13, color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -826,107 +756,134 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     ],
                   ),
                   const SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: () {
-                      // Xử lý sự kiện khi nhấn vào nút Đặt hàng
-                      // Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: ((context) =>
-                      //                  PaymentMethod())));
-                    },
-                    child: Container(
-                      color: Colors.red,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Center(
-                        child: TextButton(
-                          child: const Text(
-                            'Đặt hàng',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: () async {
-                            Loading(context);
-                            orderId = await createOrder(
-                                currentClient.id,
-                                widget.pet.centerId != null ? true : false,
-                                widget.pet.centerId != null
-                                    ? widget.pet.centerId.id
-                                    // ignore: prefer_null_aware_operators
-                                    : widget.pet.giver == null
-                                        ? null
-                                        : widget.pet.giver.id,
-                                widget.pet,
-                                address,
-                                transportFee,
-                                voucherText.text,
-                                voucherProduct,
-                                voucherShipping,
-                                voucherTotal,
-                                totalFee,
-                                totalPayment,
-                                _paymentMethod == 0 ? "COD" : "ONLINE");
-                            Navigator.of(context).pop();
-                            if (orderId != null) {
-                              setState(() {
-                                voucherProduct = 0;
-                                voucherShipping = 0;
-                                voucherTotal = 0;
-                                totalPayment = totalFee;
-                              });
-                            }
-                            if (orderId != null && _paymentMethod == 1) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => VNPAY(
-                                            orderId: orderId.toString(),
-                                            totalPayment: double.parse(
-                                                totalPayment.toString()),
-                                          )));
-                            }
-
-                            if (orderId != null) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Thông báo'),
-                                    content: orderId != null
-                                        ? const Text("Đặt hàng thành công")
-                                        : const Text("Chưa thể đặt hàng"),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Đóng'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-
-                            //KHÔNG XÓA CODE Ở ĐÂY NHA
+                  !orderSuccess
+                      ? GestureDetector(
+                          onTap: () {
+                            // Xử lý sự kiện khi nhấn vào nút Đặt hàng
                             // Navigator.push(
-                            // context,
-                            // MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         PaymentMethod(success: success!,)));
-
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const Orders()));
+                            //         context,
+                            //         MaterialPageRoute(
+                            //             builder: ((context) =>
+                            //                  PaymentMethod())));
                           },
+                          child: Container(
+                            color: Colors.red,
+                            height: 50,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Center(
+                              child: TextButton(
+                                child: const Text(
+                                  'Đặt hàng',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  Loading(context);
+                                  orderId = await createOrder(
+                                      currentClient.id,
+                                      widget.pet.centerId != null
+                                          ? true
+                                          : false,
+                                      widget.pet.centerId != null
+                                          ? widget.pet.centerId.id
+                                          // ignore: prefer_null_aware_operators
+                                          : widget.pet.giver == null
+                                              ? null
+                                              : widget.pet.giver.id,
+                                      widget.pet,
+                                      address,
+                                      transportFee,
+                                      voucherText.text,
+                                      voucherProduct,
+                                      voucherShipping,
+                                      voucherTotal,
+                                      totalFee,
+                                      totalPayment,
+                                      _paymentMethod == 0 ? "COD" : "ONLINE");
+                                  Navigator.of(context).pop();
+                                  if (orderId != null) {
+                                    setState(() {
+                                      voucherProduct = 0;
+                                      voucherShipping = 0;
+                                      voucherTotal = 0;
+                                      totalPayment = totalFee;
+                                    });
+                                  }
+                                  if (orderId != null && _paymentMethod == 1) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => VNPAY(
+                                                  orderId: orderId.toString(),
+                                                  totalPayment: double.parse(
+                                                      totalPayment.toString()),
+                                                )));
+                                  }
+
+                                  if (orderId != null) {
+                                    setState(() {
+                                      orderSuccess = true;
+                                    });
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Thông báo'),
+                                          content: orderId != null
+                                              ? const Text(
+                                                  "Đặt hàng thành công")
+                                              : const Text("Chưa thể đặt hàng"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Đóng'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  //KHÔNG XÓA CODE Ở ĐÂY NHA
+                                  // Navigator.push(
+                                  // context,
+                                  // MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         PaymentMethod(success: success!,)));
+
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => const Orders()));
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            color: Colors.grey,
+                            height: 50,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Center(
+                              child: TextButton(
+                                  child: const Text(
+                                    'Bạn đã đặt hàng thành công',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: () {}),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

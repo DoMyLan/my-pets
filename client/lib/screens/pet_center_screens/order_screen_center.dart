@@ -378,11 +378,17 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                               fontSize: 14, color: Colors.grey),
                                         ),
                                         const Spacer(),
-                                        widget.tabIndex == 0 &&
-                                                orders[index].statusPayment ==
-                                                    "PENDING" &&
-                                                orders[index].paymentMethods ==
-                                                    "ONLINE"
+                                        (widget.tabIndex == 0 &&
+                                                    orders[index]
+                                                            .statusPayment ==
+                                                        "PENDING" &&
+                                                    orders[index]
+                                                            .paymentMethods ==
+                                                        "ONLINE") ||
+                                                (widget.tabIndex == 0 &&
+                                                    orders[index]
+                                                            .paymentMethods ==
+                                                        "COD")
                                             ? GestureDetector(
                                                 onTap: () async {
                                                   Loading(context);
