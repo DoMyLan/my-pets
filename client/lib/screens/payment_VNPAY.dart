@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/order_screen.dart';
+import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:vnpay_flutter/vnpay_flutter.dart';
 
 class VNPAY extends StatefulWidget {
@@ -27,7 +29,7 @@ class _ExampleState extends State<VNPAY> {
           'Pay ${widget.totalPayment} VND', //order info, default is Pay Order
       amount: widget.totalPayment,
       returnUrl:
-          'https://sandbox.vnpayment.vn/merchantv2/', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
+          'https://abc.com/return', //https://sandbox.vnpayment.vn/apis/docs/huong-dan-tich-hop/#code-returnurl
       ipAdress: '59.153.254.38',
       vnpayHashKey:
           'UNWJIMZPXWPGBPYFGXJKADCYSIQPDBVX', //vnpay hash key, get from vnpay
@@ -37,35 +39,18 @@ class _ExampleState extends State<VNPAY> {
 
     VNPAYFlutter.instance.show(
       paymentUrl: paymentUrl,
-      onPaymentSuccess: (params) {
-        closeInAppWebView();
-        setState(() async {
+      onPaymentSuccess: (params) async {
+        Loading(context);
+        await confirmPayment(widget.orderId);
+        Navigator.pop(context);
+        setState(() {
           responseCode = params['vnp_ResponseCode'];
-          if (responseCode.toString() == '00') {
-            await confirmPayment(widget.orderId);
-          }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TheOrders(),
-            ),
-          );
         });
       },
       onPaymentError: (params) {
-        closeInAppWebView();
         setState(() {
           responseCode = 'Error';
         });
-      },
-      onWebPaymentComplete: () {
-        closeInAppWebView();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TheOrders(),
-            ),
-          );
       },
     );
     // closeInAppWebView();R
@@ -77,13 +62,76 @@ class _ExampleState extends State<VNPAY> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Thanh toán đơn hàng'),
-            TextButton(
-              onPressed: onPayment,
-              child: const Text('Thanh toán'),
-            ),
-          ],
+          children: responseCode == ""
+              ? <Widget>[
+                  Text('Thanh toán đơn hàng $responseCode'),
+                  TextButton(
+                    onPressed: onPayment,
+                    child: const Text('Thanh toán'),
+                  ),
+                ]
+              : responseCode == "00"
+                  ? <Widget>[
+                      const Text('Thanh toán đơn hàng thành công'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              var currentClient = await getCurrentClient();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuFrameUser(
+                                    userId: currentClient.id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text('Trở về trang chủ'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TheOrders(),
+                                ),
+                              );
+                            },
+                            child: const Text('Xem đơn hàng'),
+                          ),
+                        ],
+                      ),
+                    ]
+                  : <Widget>[
+                      const Text('Thanh toán đơn hàng thất bại'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () async {
+                              var currentClient = await getCurrentClient();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuFrameUser(
+                                    userId: currentClient.id,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const Text('Trở về trang chủ'),
+                          ),
+                          TextButton(
+                            onPressed: onPayment,
+                            child: const Text('Thanh toán lại'),
+                          ),
+                        ],
+                      ),
+                    ],
         ),
       ),
     );

@@ -70,7 +70,7 @@ class _TheOrdersState extends State<TheOrders>
             },
           ),
           title: const Text(
-            'Orders',
+            'Đơn hàng',
             style: TextStyle(
                 color: Color.fromRGBO(48, 96, 96, 1.0),
                 fontSize: 24,
