@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
@@ -72,19 +73,93 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   Stack(
                     alignment: Alignment.topLeft,
                     children: [
-                      Container(
-                        child: pet.images.length == 1
-                            ? Hero(
-                                tag: pet.namePet,
-                                child: Image(
-                                  height: screenHeight * 0.45,
-                                  width: double.infinity,
-                                  image: NetworkImage(pet.images.first),
-                                  fit: BoxFit.cover, //vấn đề ở đây nè nha
+                      Stack(children: [
+                        Container(
+                          child: pet.images.length == 1
+                              ? Hero(
+                                  tag: pet.namePet,
+                                  child: Image(
+                                    height: screenHeight * 0.4,
+                                    width: double.infinity,
+                                    image: NetworkImage(pet.images.first),
+                                    fit: BoxFit.cover, //vấn đề ở đây nè nha
+                                  ),
+                                )
+                              : _slider(pet.images),
+                        ),
+                        Container(
+                          height: screenHeight * 0.4,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.1),
+                                Colors.black.withOpacity(0.6)
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: SizedBox(
+                            height: screenHeight * 0.38,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      pet.namePet,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(" - ${pet.breed}",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ))
+                                  ],
                                 ),
-                              )
-                            : _slider(pet.images),
-                      ),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      pet.reducePrice != 0
+                                          ? (int.parse(pet.price) -
+                                                      pet.reducePrice) >
+                                                  0
+                                              ? "${int.parse(pet.price) - pet.reducePrice}đ   "
+                                              : 'Miễn phí   '
+                                          : pet.price,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    pet.reducePrice > 0
+                                        ? Text("${pet.reducePrice}đ",
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                decorationThickness: 2.0,
+                                                decorationColor: Colors.white))
+                                        : const SizedBox()
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ]),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 20),
@@ -162,7 +237,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                             height: MediaQuery.sizeOf(context).height * 0.45,
                             color: Colors.white,
                             child: SingleChildScrollView(
-                              physics: AlwaysScrollableScrollPhysics(),
+                              physics: const AlwaysScrollableScrollPhysics(),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 5, vertical: 4),
@@ -178,10 +253,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         CircleAvatar(
                                           radius: 30.0,
                                           backgroundImage: NetworkImage(
-                                            pet.statusAdopt == 'HAS_ONE_OWNER'
-                                                ? pet.foundOwner!.avatar
-                                                : pet.centerId!.avatar,
-                                          ),
+                                              pet.centerId!.avatar),
                                         ),
                                         const SizedBox(width: 8),
                                         Expanded(
@@ -207,10 +279,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                     );
                                                   },
                                                   child: Text(
-                                                    pet.statusAdopt ==
-                                                            'HAS_ONE_OWNER'
-                                                        ? '${pet.foundOwner!.firstName} ${pet.foundOwner!.lastName}'
-                                                        : pet.centerId!.name,
+                                                    pet.centerId!.name,
                                                     style: TextStyle(
                                                       color: Theme.of(context)
                                                           .primaryColor,
@@ -241,35 +310,35 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         ),
 
                                         //Btn View ProfileUser đối với các Pet đã bán
-                                        if (pet.statusAdopt == 'HAS_ONE_OWNER')
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              // Xử lý sự kiện khi nút được nhấn
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 2,
-                                                      horizontal: 5),
-                                              backgroundColor: Colors.white,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(0),
-                                              ), // Màu nền
+                                        // if (pet.statusAdopt == 'HAS_ONE_OWNER')
+                                        //   ElevatedButton(
+                                        //     onPressed: () {
+                                        //       // Xử lý sự kiện khi nút được nhấn
+                                        //     },
+                                        //     style: ElevatedButton.styleFrom(
+                                        //       padding:
+                                        //           const EdgeInsets.symmetric(
+                                        //               vertical: 2,
+                                        //               horizontal: 5),
+                                        //       backgroundColor: Colors.white,
+                                        //       shape: RoundedRectangleBorder(
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(0),
+                                        //       ), // Màu nền
 
-                                              side: BorderSide(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  width: 1),
-                                            ),
-                                            child: Text(
-                                              'Xem người dùng',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  fontSize: 13),
-                                            ),
-                                          ),
+                                        //       side: BorderSide(
+                                        //           color: Theme.of(context)
+                                        //               .primaryColor,
+                                        //           width: 1),
+                                        //     ),
+                                        //     child: Text(
+                                        //       'Xem người dùng',
+                                        //       style: TextStyle(
+                                        //           color: Theme.of(context)
+                                        //               .primaryColor,
+                                        //           fontSize: 13),
+                                        //     ),
+                                        //   ),
                                       ],
                                     ),
 
@@ -281,18 +350,18 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         //Số lượng thú cưng đang đăng bán
-                                        Row(
+                                        const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.done,
                                               color: Colors.green,
                                               weight: 20,
                                               fill: 0.8,
                                             ),
-                                            const Text(
+                                            Text(
                                               ' Đã mua',
                                               style: TextStyle(
                                                 fontSize: 13,
@@ -1126,9 +1195,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                       color: Colors.white,
                       padding: const EdgeInsets.all(10),
 
-                      onPressed: () {
-                        
-                      },
+                      onPressed: () {},
                       // defining the shape
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.green),
@@ -1304,11 +1371,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   notification('Mô tả không được để trống!', true);
                   return;
                 }
-                Loading(context);
-                await createAdopt(
-                    widget.currentId.id, infoController.text.toString());
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop();
+                // Loading(context);
+                // await createAdopt(
+                //     widget.currentId.id, infoController.text.toString());
+                // // ignore: use_build_context_synchronously
+                // Navigator.of(context).pop();
               },
               child: const Text('Adopt'),
             ),

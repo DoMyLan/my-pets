@@ -29,7 +29,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     getClient();
   }
 
-    Future<void> getClient() async {
+  Future<void> getClient() async {
     var temp = await getCurrentClient();
     setState(() {
       currentClient = temp;
@@ -149,9 +149,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 2),
-                                  child: Text(listPet[index].centerId != null
-                                      ? listPet[index].centerId!.name
-                                      : '${listPet[index].giver!.firstName} ${listPet[index].giver!.lastName}'),
+                                  child: Text(listPet[index].centerId!.name),
                                 ),
                                 Padding(
                                     padding: const EdgeInsets.symmetric(
