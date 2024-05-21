@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/screens/order_state.dart';
+import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/feedback.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -413,7 +414,19 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 orders[index].paymentMethods ==
                                                     "ONLINE"
                                             ? GestureDetector(
-                                                onTap: () async {},
+                                                onTap: () async {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          VNPAY(
+                                                        orderId: orders[index].id,
+                                                        totalPayment:
+                                                            double.parse(orders[index].totalPayment.toString()),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                                 child: Container(
                                                   width: 120,
                                                   height: 30,
