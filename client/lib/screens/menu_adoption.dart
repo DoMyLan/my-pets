@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               centerId: null,
             ),
           ),
-          AddPetScreenPersonal(),
+          // AddPetScreenPersonal(),
           ChangeNotifierProvider(
             create: (_) => Tab2Data(),
             child: AdoptionScreenGiver(),

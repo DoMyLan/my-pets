@@ -427,9 +427,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
 
         calculateDistance(
                 currentClient.location,
-                animal.centerId != null
-                    ? animal.centerId!.location
-                    : animal.giver!.location)
+                animal.centerId!.location)
             .then((value) {
           value.toStringAsFixed(2);
         });
@@ -530,10 +528,7 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
                                   ),
                                   FutureBuilder<double>(
                                     future: calculateDistance(
-                                        currentClient.location,
-                                        animal.centerId != null
-                                            ? animal.centerId!.location
-                                            : animal.giver!.location),
+                                        currentClient.location, animal.centerId!.location),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {

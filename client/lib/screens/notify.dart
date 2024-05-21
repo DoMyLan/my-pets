@@ -117,10 +117,10 @@ class _NotificationCardState extends State<NotificationCard> {
           if (currentClient.role == 'USER') {
             if (widget.notifies.title == 'Adoption') {
               // ignore: use_build_context_synchronously
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StatusAdoptUser()));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => const StatusAdoptUser()));
             } else if (widget.notifies.title == 'Post') {
               // ignore: use_build_context_synchronously
               Navigator.push(
@@ -141,8 +141,8 @@ class _NotificationCardState extends State<NotificationCard> {
           } else {
             if (widget.notifies.title == 'Adoption') {
               // ignore: use_build_context_synchronously
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => StatusAdopt()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => StatusAdopt()));
             } else if (widget.notifies.title == 'Post') {
               // ignore: use_build_context_synchronously
               Navigator.push(

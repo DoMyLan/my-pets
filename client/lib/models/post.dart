@@ -93,7 +93,7 @@ class Post {
               free: json['petId']['free'] as bool,
               images: json['petId']['images'] as List<dynamic>,
               weight: json['petId']['weight'] as String,
-              statusAdopt: json['petId']['statusAdopt'] as String,
+              reducePrice: json['petId']['reducePrice'] as int,
             )
           : null,
       createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['createdAt']))

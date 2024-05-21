@@ -4,7 +4,7 @@ class PetSale {
   final String breed;
   final String image;
   final double price;
-  final double reducedPrice;
+  final int reducePrice;
 
   PetSale({
     required this.id,
@@ -12,17 +12,17 @@ class PetSale {
     required this.breed,
     required this.image,
     required this.price,
-    required this.reducedPrice,
+    required this.reducePrice,
   });
 
   factory PetSale.fromJson(Map<String, dynamic> json) {
     return PetSale(
-      id: json['id'] as String,
-      name: json['name'] as String,
+      id: json['_id'] as String,
+      name: json['namePet'] as String,
       breed: json['breed'] as String,
-      image: (json['image'] as List<String>)[0],
+      image: (json['images'] as List<dynamic>)[0],
       price: double.parse(json['price']),
-      reducedPrice: json['reducedPrice'] as double,
+      reducePrice: json['reducePrice'] as int,
     );
   }
 }

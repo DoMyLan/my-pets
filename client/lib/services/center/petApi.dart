@@ -3,6 +3,7 @@ import 'package:found_adoption_application/models/breed_model.dart';
 import 'package:found_adoption_application/models/centerLoad.dart';
 import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/models/pet_sale_model.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -12,9 +13,6 @@ import 'package:intl/intl.dart';
 
 Future<void> addPet(
   String? centerId,
-  String? giver,
-  String? rescue,
-  String? linkCenter,
   String namePet,
   String petType,
   String breed,
@@ -34,9 +32,6 @@ Future<void> addPet(
   var responseData = {};
   var body = jsonEncode({
     "centerId": centerId,
-    "giver": giver,
-    "rescue": rescue,
-    "linkCenter": linkCenter,
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
@@ -86,6 +81,7 @@ Future<List<Pet>> getAllPet() async {
   }
   var petList = responseData['data'] as List<dynamic>;
   List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  print(pets);
   return pets;
 }
 
@@ -337,3 +333,21 @@ Future<List<CenterHot>> getCenterHot() async {
       centerList.map((json) => CenterHot.fromJson(json)).toList();
   return centers;
 }
+
+
+Future<List<PetSale>> getPetSale() async {
+  // ignore: prefer_typing_uninitialized_variables
+  var responseData;
+  try {
+    const apiUrl = "pet/sale/list";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var centerList = responseData['data'] as List<dynamic>;
+  List<PetSale> centers =
+      centerList.map((json) => PetSale.fromJson(json)).toList();
+  return centers;
+}
+
