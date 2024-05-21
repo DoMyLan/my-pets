@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/order.dart';
+import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/user_screens/feedback.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
@@ -479,7 +480,17 @@ class _TrackingOrderState extends State<TrackingOrder> {
                               order.paymentMethods == "ONLINE" &&
                               order.statusOrder != "CANCEL"
                           ? GestureDetector(
-                              onTap: () async {},
+                              onTap: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VNPAY(
+                                              orderId: order.id,
+                                              totalPayment: double.parse(order
+                                                  .totalPayment
+                                                  .toString()),
+                                            )));
+                              },
                               child: Container(
                                 width: 130,
                                 height: 40,

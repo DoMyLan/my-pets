@@ -4,6 +4,7 @@ import 'package:found_adoption_application/models/review.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
+import 'package:video_player/video_player.dart';
 
 class UserReviewCard extends StatefulWidget {
   final Review review;
@@ -16,6 +17,39 @@ class UserReviewCard extends StatefulWidget {
 class _UserReviewCardState extends State<UserReviewCard> {
   bool isExpanded = false;
   Review get review => widget.review;
+
+  //video
+  late VideoPlayerController? _controller;
+  bool _isVideoLoaded = false;
+  bool _isPlaying = false;
+  List<Widget?> urls = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.review.video != null && widget.review.video!.isNotEmpty) {
+      _controller =
+          VideoPlayerController.networkUrl(Uri.parse(widget.review.video!))
+            ..initialize().then((_) {
+              setState(() {
+                _isVideoLoaded = true;
+              });
+            });
+    }
+    // else if (widget.review.images != null &&
+    //     widget.review.images!.isNotEmpty) {
+    //   urls = widget.review.images!.map((url) => Image.network(url)).toList();
+    // }
+
+    print('testurl: $urls');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+    urls = [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +134,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
               ),
             ),
             Text(
-              '${review.petId.namePet} - ${review.petId.breed}, ${AgePet.convertAge(review.petId.birthday!)} tuổi - ${review.petId.weight} kg',
+              '${review.petId.namePet} - ${review.petId.breed}, ${AgePet.convertAge(review.petId.birthday!)} tuổi - ${review.petId.weight}',
               style: const TextStyle(
                 fontSize: 14.0,
               ),
@@ -131,7 +165,7 @@ class _UserReviewCardState extends State<UserReviewCard> {
 
         //list image
 
-        _buildImages(review.images as List<dynamic>),
+        _buildImages(review.images as List<dynamic>, review.video ?? ''),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,65 +239,101 @@ class _UserReviewCardState extends State<UserReviewCard> {
     );
   }
 
-  Widget _buildImages(List<dynamic> urls) {
-    List<Widget> imageWidgets = [];
+  void _togglePlayPause() {
+    if (_controller != null && _controller!.value.isPlaying) {
+      _controller!.pause();
+      setState(() {
+        _isPlaying = false;
+      });
+    } else if (_controller != null) {
+      _controller!.play();
+      setState(() {
+        _isPlaying = true;
+      });
+    }
+  }
+
+  Widget _buildImages(List<dynamic> urls, String video) {
+    List<Widget?> imageWidgets = [];
     int maxTotalImages = 4; // Số ảnh tối đa cần hiển thị
     int displayedImages = 0; // Số ảnh đã hiển thị
+    bool isVideoDisplayed = false;
 
-    for (int i = 0; i < urls.length && displayedImages < maxTotalImages; i++) {
-      imageWidgets.add(
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return FullScreenDialogImage(urls: urls, initialIndex: i, review: review,);
-              },
-            );
-          },
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Stack(
-              children: [
-                Image.network(
-                  urls[i],
-                  width: 170, // Đặt chiều rộng cố định cho ảnh
-                  height: 170, // Đặt chiều cao cố định cho ảnh
-                  fit: BoxFit.cover,
+   
+
+    if (!isVideoDisplayed && video.isNotEmpty) {
+      // Nếu có video, thêm video vào danh sách ảnh đầu tiên
+      imageWidgets.add(SizedBox(
+        width: 140,
+        height: 140,
+        child: AspectRatio(
+          aspectRatio: 16 / 9, // Aspect ratio của video
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              VideoPlayer(_controller!),
+              IconButton(
+                onPressed: _togglePlayPause,
+                icon: Icon(
+                  _isPlaying ? Icons.pause : Icons.play_arrow,
                 ),
-                if (i == maxTotalImages - 1)
-                  // Hiển thị Text '+1' trên ảnh thứ 4 nếu đã hiển thị đủ 5 ảnh
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withOpacity(0.5),
-                      child: const Center(
-                        child: Text(
-                          '+1',
-                          style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+                color: Colors.white,
+                iconSize: 50,
+              ),
+            ],
           ),
         ),
-      );
+      ));
       displayedImages++;
-    }
+      isVideoDisplayed = true;
+    } 
+      for (int i = 0;
+          i < urls.length && displayedImages < maxTotalImages;
+          i++) {
+        // Thêm ảnh vào danh sách
+        imageWidgets.add(
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return FullScreenDialogImage(
+                    urls: urls,
+                    initialIndex: i,
+                    review: review,
+                  );
+                },
+              );
+              print('Get videoPath from review: $video');
+            },
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.network(
+                urls[i],
+                width: 170, // Đặt chiều rộng cố định cho ảnh
+                height: 170, // Đặt chiều cao cố định cho ảnh
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+        displayedImages++;
+      }
+    
 
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2, // Chia mỗi hàng thành 2 cột
       mainAxisSpacing: 4.0, // Khoảng cách giữa các hàng
       crossAxisSpacing: 4.0, // Khoảng cách giữa các cột
-      children: imageWidgets,
+      children: imageWidgets
+          .where((element) => element != null)
+          .whereType<Widget>()
+          .toList(), // Lọc bỏ các phần tử null
     );
   }
 }
+
 class AgePet {
   static String convertAge(DateTime birthday) {
     String age = '';
