@@ -119,6 +119,34 @@ flutter:
     - assets/images/success.mp3
     - assets/images/logo.jpg
 
+    - assets/dogs/alaska.jpg
+    - assets/dogs/backinh.jpg
+    - assets/dogs/beagle.jpg
+    - assets/dogs/chihuahua.jpg
+    - assets/dogs/becgie.jpg
+    - assets/dogs/corgi.jpg
+    - assets/dogs/choco.jpg
+    - assets/dogs/dachshund.jpg
+    - assets/dogs/golden.jpg
+    - assets/dogs/husky.jpg
+    - assets/dogs/phocsoc.jpg
+    - assets/dogs/poodle.jpg
+    - assets/dogs/pug.jpg
+    - assets/dogs/shiba.jpg
+    - assets/dogs/samoyed.jpg
+    - assets/dogs/khac.jpg
+    - assets/cats/aicap.jpg
+    - assets/cats/anhlongdai.jpg
+    - assets/cats/batu.jpg
+    - assets/cats/mun.jpg
+    - assets/cats/munchkin.jpg
+    - assets/cats/ragdoll.jpg
+    - assets/cats/vang.png
+    - assets/cats/xiem.jpg
+    - assets/cats/muop.jpg
+    - assets/cats/khac.jpg
+    - assets/images/background_top.png
+
   #   - images/a_dot_ham.jpeg
 flutter_launcher_icons:
   android: 'launcher_icon'

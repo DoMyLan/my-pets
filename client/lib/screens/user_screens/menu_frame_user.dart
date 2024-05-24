@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
+import 'package:found_adoption_application/screens/guest/home_guest.dart';
 import 'package:found_adoption_application/screens/menu_adoption.dart';
 import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/order_screen.dart';
@@ -30,6 +31,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     _animationController = AnimationController(vsync: this, duration: duration);
 
     scaleAnimations = [
+      // Tween<double>(begin: 1.0, end: 0.7).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.7).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.6).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.5).animate(_animationController),
@@ -44,21 +46,22 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
     //sao chép danh sách screens vào screensnapshot
     screenSnapshot = screens.values.toList();
-    screens[2] = const FeedScreen();
+    screens[3] = const FeedScreen();
   }
 
   //Map chứa cặp key-value (int - widget)
   Map<int, Widget> screens = {
-    0: const HomeScreen(),
+    // 0: const Home_Guest(),
+    1: const HomeScreen(),
 
-    1: ProfilePage(userId: null),
-    2: const FeedScreen(),
-    3: const FavoriteScreen(),
-    4: const TheOrders(),
+    2: ProfilePage(userId: null),
+    3: const FeedScreen(),
+    4: const FavoriteScreen(),
+    5: const TheOrders(),
     // 5: StatusAdoptUser(),
   
 
-    5: const NotificationPage()
+    6: const NotificationPage()
   
 
     // 6: NotificationPage()

@@ -459,54 +459,53 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : SizedBox(),
-                                        // (orders[index].statusOrder ==
-                                        //                 "CONFIRMED" ||
-                                        //             orders[index].statusOrder ==
-                                        //                 "COMPLETED") &&
-                                        //         orders[index].statusPayment ==
-                                        //             "PENDING" &&
-                                        //         orders[index].paymentMethods ==
-                                        //             "ONLINE"
-                                        //     ? GestureDetector(
-                                        //         onTap: () async {
-                                        //           Navigator.push(
-                                        //               context,
-                                        //               MaterialPageRoute(
-                                        //                   builder:
-                                        //                       (context) =>
-                                        //                           VNPAY(
-                                        //                             orderId:
-                                        //                                 orders[index]
-                                        //                                     .id,
-                                        //                             totalPayment: double.parse(orders[
-                                        //                                     index]
-                                        //                                 .totalPayment
-                                        //                                 .toString()),
-                                        //                           )));
-                                        //         },
-                                        //         // child: Container(
-                                        //         //   width: 120,
-                                        //         //   height: 30,
-                                        //         //   decoration: BoxDecoration(
-                                        //         //     borderRadius:
-                                        //         //         BorderRadius.circular(
-                                        //         //             5),
-                                        //         //     color: Colors.blue,
-                                        //         //   ),
-                                        //         //   child: const Center(
-                                        //         //     child: Text(
-                                        //         //       'Thanh toán VNPAY11',
-                                        //         //       style: TextStyle(
-                                        //         //         fontSize: 14,
-                                        //         //         fontWeight:
-                                        //         //             FontWeight.w500,
-                                        //         //         color: Colors.white,
-                                        //         //       ),
-                                        //         //     ),
-                                        //         //   ),
-                                        //         // ),
-                                        //       )
-                                        //     : const SizedBox(),
+
+                                        (orders[index].statusOrder ==
+                                                        "CONFIRMED" ||
+                                                    orders[index].statusOrder ==
+                                                        "COMPLETED") &&
+                                                orders[index].statusPayment ==
+                                                    "PENDING" &&
+                                                orders[index].paymentMethods ==
+                                                    "ONLINE"
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          VNPAY(
+                                                        orderId: orders[index].id,
+                                                        totalPayment:
+                                                            double.parse(orders[index].totalPayment.toString()),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 120,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.blue,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      'Thanh toán VNPAY',
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(),
+
                                         orders[index].statusOrder == "DELIVERED"
                                             ? GestureDetector(
                                                 onTap: () async {

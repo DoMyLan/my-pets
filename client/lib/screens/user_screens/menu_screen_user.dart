@@ -17,6 +17,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
+    // 'Trang chủ',
     'Thú cưng',
     'Cá nhân',
     'Bài viết',
@@ -31,6 +32,8 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
   ];
 
   List<IconData> icons = [
+    // ignore: deprecated_member_use
+    // FontAwesomeIcons.home,
     FontAwesomeIcons.paw,
     // ignore: deprecated_member_use
     FontAwesomeIcons.userAlt,

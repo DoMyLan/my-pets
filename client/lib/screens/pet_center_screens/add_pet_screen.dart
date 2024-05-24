@@ -136,9 +136,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
 
       await addPet(
           currentClient.id,
-          null,
-          null,
-          null,
           _namePetController.text.toString(),
           _selectedPetType,
           _breedController.text.toString(),
