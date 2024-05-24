@@ -210,7 +210,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         GestureDetector(
                                           onTap: () {},
@@ -234,9 +234,6 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
                                         SizedBox(
                                           width: 160,
                                           child: Text(
@@ -256,18 +253,24 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const Spacer(),
-                                        Text(
-                                          orders[index].statusPayment ==
-                                                  'PENDING'
-                                              ? 'Chờ thanh toán'
-                                              : 'Đã thanh toán ${orders[index].paymentMethods}',
-                                          style: TextStyle(
+                                        SizedBox(
+                                          width:
+                                              100, // Đảm bảo Container chiếm toàn bộ chiều rộng
+                                          child: Text(
+                                            orders[index].statusPayment ==
+                                                    'PENDING'
+                                                ? 'Chờ thanh toán'
+                                                : 'Đã thanh toán ${orders[index].paymentMethods}',
+                                            style: TextStyle(
                                               color:
                                                   orders[index].statusPayment ==
                                                           'PENDING'
                                                       ? Colors.orange
-                                                      : Colors.green),
+                                                      : Colors.green,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -275,24 +278,24 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                       height: 10,
                                     ),
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         SizedBox(
-                                          height: 70,
+                                          height: 80,
                                           width: 70,
                                           child: Image.network(
                                             orders[index].petId.images[0]!,
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
+                                        
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(
-                                              width: 250,
+                                              width: 100,
                                               child: Text(
                                                 orders[index].petId.namePet,
                                                 style: const TextStyle(
@@ -328,6 +331,57 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             ),
                                           ],
                                         ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        (orders[index].statusOrder ==
+                                                        "CONFIRMED" ||
+                                                    orders[index].statusOrder ==
+                                                        "COMPLETED") &&
+                                                orders[index].statusPayment ==
+                                                    "PENDING" &&
+                                                orders[index].paymentMethods ==
+                                                    "ONLINE"
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                                  VNPAY(
+                                                                    orderId:
+                                                                        orders[index]
+                                                                            .id,
+                                                                    totalPayment: double.parse(orders[
+                                                                            index]
+                                                                        .totalPayment
+                                                                        .toString()),
+                                                                  )));
+                                                },
+                                                child: Container(
+                                                  width: 130,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Colors.blue,
+                                                  ),
+                                                  child: const Center(
+                                                    child: Text(
+                                                      'Thanh toán VNPAY',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox(width: 140,),
                                       ],
                                     ),
                                     const SizedBox(
@@ -405,6 +459,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : SizedBox(),
+
                                         (orders[index].statusOrder ==
                                                         "CONFIRMED" ||
                                                     orders[index].statusOrder ==
@@ -450,6 +505,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                 ),
                                               )
                                             : const SizedBox(),
+
                                         orders[index].statusOrder == "DELIVERED"
                                             ? GestureDetector(
                                                 onTap: () async {
@@ -503,30 +559,23 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                         ),
                                                       );
                                                     },
-                                                    child: GestureDetector(
-                                                      onTap: () {},
-                                                      child: Container(
-                                                        width: 90,
-                                                        height: 30,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          color:
-                                                              Colors.blueGrey,
-                                                        ),
-                                                        child: const Center(
-                                                          child: Text(
-                                                            "Đánh giá",
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
+                                                    child: Container(
+                                                      width: 90,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Đánh giá",
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: Colors.white,
                                                           ),
                                                         ),
                                                       ),
