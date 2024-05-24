@@ -3,19 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/models/voucher_model.dart';
 
-// // Model cho voucher
-// class Voucher {
-//   final String id;
-//   final String type;
-//   final String code;
-//   final String description;
-
-//   Voucher(
-//       {required this.id,
-//       required this.type,
-//       required this.code,
-//       required this.description});
-// }
 
 class VoucherItemSelected extends StatefulWidget {
   final Voucher voucher;
