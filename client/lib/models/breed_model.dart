@@ -21,9 +21,9 @@ class Breed {
         "Mèo Xiêm",
         "Mèo Munchkin",
         "Mèo Ragdoll",
-        "Mèo mướp",
-        "Mèo vàng",
-        "Mèo mun",
+        "Mèo Mướp",
+        "Mèo Vàng",
+        "Mèo Mun",
         "Mèo khác"
       ];
 

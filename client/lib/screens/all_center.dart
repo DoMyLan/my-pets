@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/center_item.dart';
 import 'package:found_adoption_application/main.dart';
+import 'package:found_adoption_application/models/center_hot_model.dart';
+import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
 class AllCenterScreen extends StatefulWidget {
   @override
@@ -9,9 +12,22 @@ class AllCenterScreen extends StatefulWidget {
 }
 
 class _AllCenterScreenState extends State<AllCenterScreen> {
+  Future<List<CenterHot>>? centerHotFuture;
+  List<CenterHot> centerHots = [];
+  dynamic currentClient;
+
   @override
   void initState() {
     super.initState();
+    centerHotFuture = getCenterHot();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   @override
@@ -49,22 +65,48 @@ class _AllCenterScreenState extends State<AllCenterScreen> {
                 height: 4,
               ),
 
-              CenterItem(),
-              SizedBox(
-                height: 10,
-              ),
+              FutureBuilder(
+                  future: centerHotFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
+                      centerHots = snapshot.data as List<CenterHot>;
 
-              CenterItem(),
-              SizedBox(
-                height: 10,
-              ),
+                      if (currentClient.role == "USER") {
+                        for (var centerHot in centerHots) {
+                          centerHot.follow =
+                              centerHot.followerUser.contains(currentClient.id);
+                          centerHot.follower = centerHot.followerUser.length +
+                              centerHot.followerCenter.length;
+                        }
+                      } else {
+                        for (var centerHot in centerHots) {
+                          centerHot.follow = centerHot.followerCenter
+                              .contains(currentClient.id);
+                          centerHot.follower = centerHot.followerUser.length +
+                              centerHot.followerCenter.length;
+                        }
+                      }
 
-              CenterItem(),
-              SizedBox(
-                height: 10,
-              ),
-
-              CenterItem(),
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: ListView.builder(
+                            itemCount: centerHots.length,
+                            itemBuilder: (context, index) {
+                              return CenterItem(
+                                centerHot: centerHots[index],
+                              );
+                            }),
+                      );
+                    }
+                  }),
             ],
           ),
         ),

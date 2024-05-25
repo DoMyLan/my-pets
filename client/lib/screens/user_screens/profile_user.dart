@@ -191,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                       ),
                                       const SizedBox(width: 8.0),
-                                      currentClient.id == widget.userId
+                                      currentClient.id == widget.userId.id
                                           ? PopupMenuButton<int>(
                                               itemBuilder: (context) => [
                                                 PopupMenuItem(
