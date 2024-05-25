@@ -5,10 +5,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/breed_model.dart';
 import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/models/pet_sale_model.dart';
+import 'package:found_adoption_application/screens/all_center.dart';
+import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/services/followApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
 class Home_Guest extends StatefulWidget {
@@ -150,11 +154,20 @@ class PetSaleWidget extends StatefulWidget {
 
 class _PetSaleWidgetState extends State<PetSaleWidget> {
   Future<List<PetSale>>? petFuture;
+  dynamic currentClient;
 
   @override
   void initState() {
     super.initState();
     petFuture = getPetSale();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   @override
@@ -210,7 +223,13 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              //chuyển sang trang chi tiết
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return AnimalDetailScreen(
+                                  petId: listPetSale[index].id,
+                                  currentId: currentClient,
+                                );
+                              }));
                             },
                             child: Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -288,7 +307,7 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                                                           decorationColor:
                                                               Colors.white)),
                                                   Text(
-                                                      "${listPetSale[index].price - listPetSale[index].reducePrice}đ",
+                                                      "${listPetSale[index].price - listPetSale[index].reducePrice > 0 ? listPetSale[index].price - listPetSale[index].reducePrice : "Miễn phí"}đ",
                                                       style: const TextStyle(
                                                           color: Colors.white,
                                                           fontSize: 14,
@@ -345,12 +364,37 @@ class CenterFavorite extends StatefulWidget {
 
 class _CenterFavoriteState extends State<CenterFavorite> {
   Future<List<CenterHot>>? centerHotFuture;
+  // ignore: prefer_typing_uninitialized_variables
+  var currentClient;
+  List<CenterHot>? listCenterHot;
 
   @override
   void initState() {
     super.initState();
     centerHotFuture = getCenterHot();
+    getClient();
   }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
+
+  // void updateFollower(bool follow, int index) {
+  //   setState(() {
+  //     if (follow) {
+  //       setState(() {
+  //         listCenterHot![index].follower -= 1;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         listCenterHot![index].follower += 1;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -372,6 +416,9 @@ class _CenterFavoriteState extends State<CenterFavorite> {
               TextButton(
                 onPressed: () {
                   //xem tất cả
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return AllCenterScreen();
+                  }));
                 },
                 child: const Text(
                   "Xem tất cả",
@@ -396,16 +443,38 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
-                    List<CenterHot> listCenterHot =
-                        snapshot.data as List<CenterHot>;
+                    listCenterHot = snapshot.data as List<CenterHot>;
+                    if (currentClient.role == "USER") {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerUser.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
+                    } else {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerCenter.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
+                    }
 
                     return ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 4,
+                        itemCount: listCenterHot!.length < 5
+                            ? listCenterHot!.length
+                            : 5,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              //chuyển sang trang chi tiết
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ProfileCenterPage(
+                                  centerId: listCenterHot![index].id,
+                                  petId: null,
+                                );
+                              }));
                             },
                             child: Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -438,7 +507,8 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                                             15),
                                                     image: DecorationImage(
                                                         image: NetworkImage(
-                                                            listCenterHot[index]
+                                                            listCenterHot![
+                                                                    index]
                                                                 .avatar),
                                                         fit: BoxFit.cover)),
                                               ),
@@ -449,15 +519,20 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      listCenterHot[index].name,
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                    SizedBox(
+                                                      height: 40,
+                                                      child: Text(
+                                                        listCenterHot![index]
+                                                            .name,
+                                                        style: const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
                                                     ),
                                                     Row(
                                                       children: [
@@ -469,7 +544,7 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                                         const SizedBox(
                                                             width: 5),
                                                         Text(
-                                                          listCenterHot[index]
+                                                          listCenterHot![index]
                                                               .rating
                                                               .toString(),
                                                           style:
@@ -486,7 +561,7 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                                         const SizedBox(
                                                             width: 5),
                                                         Text(
-                                                          listCenterHot[index]
+                                                          listCenterHot![index]
                                                               .sold
                                                               .toString(),
                                                           style:
@@ -496,7 +571,7 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                                       ],
                                                     ),
                                                     Text(
-                                                      "${listCenterHot[index].sold} người theo dõi",
+                                                      "${listCenterHot![index].follower} người theo dõi",
                                                       style: const TextStyle(
                                                           fontSize: 14),
                                                     ),
@@ -507,7 +582,9 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                                           ),
                                           const SizedBox(height: 10),
                                           onPressFollow(
-                                            follow: listCenterHot[index].follow,
+                                            follow:
+                                                listCenterHot![index].follow,
+                                            id: listCenterHot![index].id,
                                           )
                                         ],
                                       ),
@@ -528,9 +605,11 @@ class _CenterFavoriteState extends State<CenterFavorite> {
 // ignore: must_be_immutable
 class onPressFollow extends StatefulWidget {
   late bool follow;
+  final String id;
   onPressFollow({
     super.key,
     required this.follow,
+    required this.id,
   });
 
   @override
@@ -543,22 +622,24 @@ class _onPressFollowState extends State<onPressFollow> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         setState(() {
           isLoading = true;
+        });
+        await follow_unfollow("", widget.id);
+        setState(() {
           widget.follow = !widget.follow;
         });
-        Future.delayed(const Duration(seconds: 1), () {
-          setState(() {
-            isLoading = false;
-          });
+        setState(() {
+          isLoading = false;
         });
       },
       child: Container(
         width: 220,
         height: 30,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5), color: Colors.teal),
+            borderRadius: BorderRadius.circular(5),
+            color: widget.follow ? Colors.grey : Colors.teal),
         child: !isLoading
             ? Center(
                 child: Text(

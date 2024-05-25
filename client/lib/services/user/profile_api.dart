@@ -53,7 +53,7 @@ Future<InfoCenter> getProfileCenter(BuildContext context, var centerId) async {
   var center;
   try {
     var responseData;
-    responseData = await api('/center/${id}', 'GET', '');
+    responseData = await api('center/${id}', 'GET', '');
     var centerData = responseData['data'] as dynamic;
     center = InfoCenter.fromJson(centerData);
   } catch (e) {
