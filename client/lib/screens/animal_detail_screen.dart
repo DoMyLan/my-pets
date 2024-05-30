@@ -228,710 +228,293 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
 
                   //Nửa giao diện ở dưới(bắt đầu chứa content của user)
                   //Role truy cập hiện tại là trung tâm
-                  currentClient.role == 'CENTER'
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Container(
-                            height: MediaQuery.sizeOf(context).height * 0.45,
-                            color: Colors.white,
-                            child: SingleChildScrollView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Container(
+                      height: MediaQuery.sizeOf(context).height * 0.45,
+                      color: Colors.white,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30.0,
+                                    backgroundImage:
+                                        NetworkImage(pet.centerId!.avatar),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
-                                          radius: 30.0,
-                                          backgroundImage: NetworkImage(
-                                              pet.centerId!.avatar),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProfileCenterPage(
-                                                          centerId:
-                                                              pet.centerId!.id,
-                                                          petId: pet.id,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    pet.centerId!.name,
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    softWrap: true,
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileCenterPage(
+                                                    centerId: pet.centerId!.id,
+                                                    petId: pet.id,
                                                   ),
                                                 ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  DateFormat.yMMMMd()
-                                                      .add_Hms()
-                                                      .format(pet.createdAt!),
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.grey,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle: FontStyle.italic,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                      
-                                      ],
-                                    ),
-
-                                    const SizedBox(height: 8),
-
-                                    //Đã mua + đánh giá ở screen Review
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        //Số lượng thú cưng đang đăng bán
-                                        const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Icons.done,
-                                              color: Colors.green,
-                                              weight: 20,
-                                              fill: 0.8,
-                                            ),
-                                            Text(
-                                              ' Đã mua',
+                                              );
+                                            },
+                                            child: Text(
+                                              pet.centerId!.name,
                                               style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-
-                                        //đánh giá sao
-                                        RichText(
-                                          text: const TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.black,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: '4.9',
-                                                style: TextStyle(
-                                                    color: Colors.orange),
-                                              ),
-                                              TextSpan(text: ' Đánh giá'),
-                                            ],
-                                          ),
-                                        ),
-
-                                        GestureDetector(
-                                          onTap: () {
-                                            // Chuyển đến Trang ReviewProfileScreen
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ReviewProfileScreen(
-                                                            centerId: pet
-                                                                .centerId!
-                                                                .id)));
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                FontAwesomeIcons
-                                                    .solidHandPointRight,
-                                                size: 16,
                                                 color: Theme.of(context)
                                                     .primaryColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              const SizedBox(
-                                                width: 6,
-                                              ),
-                                              // Khoảng cách giữa icon và text
-                                              Text(
-                                                'Xem đánh giá',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-
-                                    Divider(
-                                      color: Colors.grey.shade200,
-                                      thickness: 10,
-                                      height: 13,
-                                    ),
-
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          'Chi tiết thú cưng',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const Spacer(),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            padding: MaterialStateProperty.all<
-                                                EdgeInsets>(
-                                              const EdgeInsets.all(
-                                                  0), // Đây là giá trị padding bạn muốn thiết lập
+                                              softWrap: true,
                                             ),
                                           ),
-                                          onPressed: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                //widget modelbottomsheet
-                                                return CustomModalBottomSheet(
-                                                    context, pet);
-                                              },
-                                            );
-                                          },
-                                          child: const Row(
-                                            children: [
-                                              Text(
-                                                'Tên, Giống, Tuổi,...',
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Color.fromARGB(
-                                                        255, 90, 90, 90)),
-                                              ),
-                                              Icon(
-                                                Icons.navigate_next,
-                                                size: 20,
-                                                color: Color.fromARGB(
-                                                    255, 90, 90, 90),
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-
-                                    Divider(
-                                      color: Colors.grey.shade200,
-                                      height:
-                                          10, // Chiều cao của đường gạch ngang
-                                      thickness: 1,
-                                    ),
-
-                                    const Text(
-                                      'Mô tả thú cưng',
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // Text(
-                                    //   pet.description,
-                                    //   maxLines: _isExpanded == true ? 100 : maxlines,
-                                    //   overflow: TextOverflow.ellipsis,
-                                    // ),
-
-                                    // if (!_isExpanded &&
-                                    //     pet.description.split('\n').length >=
-                                    //         maxlines)
-                                    //   TextButton(
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         _isExpanded = true;
-                                    //       });
-                                    //     },
-                                    //     child: Row(
-                                    //       mainAxisAlignment: MainAxisAlignment.center,
-                                    //       children: [
-                                    //         Text('Xem thêm'),
-                                    //         Icon(
-                                    //           Icons.keyboard_arrow_down,
-                                    //           size: 20,
-                                    //           color: Color.fromARGB(255, 90, 90, 90),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // if (_isExpanded == true)
-                                    //   TextButton(
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         _isExpanded = false;
-                                    //       });
-                                    //     },
-                                    //     child: Row(
-                                    //       mainAxisAlignment: MainAxisAlignment.center,
-                                    //       children: [
-                                    //         Text('Thu gọn'),
-                                    //         Icon(
-                                    //           Icons.expand_less,
-                                    //           size: 20,
-                                    //           color: Color.fromARGB(255, 90, 90, 90),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-
-                                    //Pet information Detail
-
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            _buildInfoRow(
-                                              Icons.assignment,
-                                              'Hướng dẫn nuôi:',
-                                              'Nhập hướng dẫn nuôi',
-                                              pet.instruction,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.info,
-                                              'Lưu ý:',
-                                              'Nhập lưu ý',
-                                              pet.attention,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.favorite,
-                                              'Sở thích:',
-                                              'Nhập sở thích',
-                                              pet.hobbies,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.local_hospital,
-                                              'Tiêm chủng:',
-                                              'Nhập tiêm chủng',
-                                              pet.inoculation,
-                                            ),
-                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-
-                      //Role truy cập hiện là user đang seeking pet
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 0),
-                          child: Container(
-                            height: MediaQuery.sizeOf(context).height * 0.45,
-                            color: Colors.white,
-                            child: SingleChildScrollView(
-                              physics: AlwaysScrollableScrollPhysics(),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 5, vertical: 4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      // mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 30.0,
-                                          backgroundImage: NetworkImage(
-                                              pet.centerId!.avatar),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10.0),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProfileCenterPage(
-                                                          centerId:
-                                                              pet.centerId!.id,
-                                                          petId: pet.id,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    pet.centerId!.name,
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    softWrap: true,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  DateFormat.yMMMMd()
-                                                      .add_Hms()
-                                                      .format(pet.createdAt!),
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.grey,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontStyle: FontStyle.italic,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Xử lý sự kiện khi nút được nhấn
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 5),
-                                            backgroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(0),
-                                            ), // Màu nền
-
-                                            side: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                width: 1),
-                                          ),
+                                        Align(
+                                          alignment: Alignment.topLeft,
                                           child: Text(
-                                            'Xem trung tâm',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontSize: 13),
+                                            DateFormat.yMMMMd()
+                                                .add_Hms()
+                                                .format(pet.createdAt!),
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle: FontStyle.italic,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
+                                  ),
+                                ],
+                              ),
 
-                                    const SizedBox(height: 8),
+                              const SizedBox(height: 8),
 
-                                    //Thống kê số lượng thú cưng đăng bán + đánh giá ở screen Review
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                              //Đã mua + đánh giá ở screen Review
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  //Số lượng thú cưng đang đăng bán
+                                  const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.done,
+                                        color: Colors.green,
+                                        weight: 20,
+                                        fill: 0.8,
+                                      ),
+                                      Text(
+                                        ' Đã mua',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+
+                                  //đánh giá sao
+                                  RichText(
+                                    text: const TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                      ),
                                       children: [
-                                        //Số lượng thú cưng đang đăng bán
-                                        RichText(
-                                          text: const TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.black,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: '48',
-                                                style: TextStyle(
-                                                    color: Colors.orange),
-                                              ),
-                                              TextSpan(text: ' Thú cưng'),
-                                            ],
-                                          ),
+                                        TextSpan(
+                                          text: '4.9',
+                                          style:
+                                              TextStyle(color: Colors.orange),
                                         ),
+                                        TextSpan(text: ' Đánh giá'),
+                                      ],
+                                    ),
+                                  ),
 
-                                        //đánh giá sao
-                                        RichText(
-                                          text: const TextSpan(
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.black,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: '4.9',
-                                                style: TextStyle(
-                                                    color: Colors.orange),
-                                              ),
-                                              TextSpan(text: ' Đánh giá'),
-                                            ],
-                                          ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Chuyển đến Trang ReviewProfileScreen
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReviewProfileScreen(
+                                                      centerId:
+                                                          pet.centerId!.id)));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          FontAwesomeIcons.solidHandPointRight,
+                                          size: 16,
+                                          color: Theme.of(context).primaryColor,
                                         ),
-
-                                        //Tạo ở đây
-                                        GestureDetector(
-                                          onTap: () {
-                                            // Chuyển đến Trang ReviewProfileScreen
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ReviewProfileScreen(
-                                                          centerId:
-                                                              pet.centerId!.id,
-                                                        )));
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                FontAwesomeIcons
-                                                    .solidHandPointRight,
-                                                size: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              ),
-                                              const SizedBox(
-                                                width: 6,
-                                              ),
-                                              // Khoảng cách giữa icon và text
-                                              Text(
-                                                'Xem đánh giá',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ],
+                                        const SizedBox(
+                                          width: 6,
+                                        ),
+                                        // Khoảng cách giữa icon và text
+                                        Text(
+                                          'Xem đánh giá',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                       ],
                                     ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 2,
+                              ),
 
-                                    Divider(
-                                      color: Colors.grey.shade200,
-                                      thickness: 10,
-                                      height: 13,
+                              Divider(
+                                color: Colors.grey.shade200,
+                                thickness: 10,
+                                height: 13,
+                              ),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Chi tiết thú cưng',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Spacer(),
+                                  TextButton(
+                                    style: ButtonStyle(
+                                      padding:
+                                          MaterialStateProperty.all<EdgeInsets>(
+                                        const EdgeInsets.all(
+                                            0), // Đây là giá trị padding bạn muốn thiết lập
+                                      ),
                                     ),
-
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          //widget modelbottomsheet
+                                          return CustomModalBottomSheet(
+                                              context, pet);
+                                        },
+                                      );
+                                    },
+                                    child: const Row(
                                       children: [
-                                        const Text(
-                                          'Chi tiết thú cưng',
+                                        Text(
+                                          'Tên, Giống, Tuổi,...',
                                           style: TextStyle(
                                               fontSize: 13,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                              color: Color.fromARGB(
+                                                  255, 90, 90, 90)),
                                         ),
-                                        Spacer(),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            padding: MaterialStateProperty.all<
-                                                EdgeInsets>(
-                                              EdgeInsets.all(
-                                                  0), // Đây là giá trị padding bạn muốn thiết lập
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                //widget modelbottomsheet
-                                                return CustomModalBottomSheet(
-                                                    context, pet);
-                                              },
-                                            );
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                'Tên, Giống, Tuổi,...',
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Color.fromARGB(
-                                                        255, 90, 90, 90)),
-                                              ),
-                                              Icon(
-                                                Icons.navigate_next,
-                                                size: 20,
-                                                color: Color.fromARGB(
-                                                    255, 90, 90, 90),
-                                              )
-                                            ],
-                                          ),
+                                        Icon(
+                                          Icons.navigate_next,
+                                          size: 20,
+                                          color:
+                                              Color.fromARGB(255, 90, 90, 90),
                                         )
                                       ],
                                     ),
-
-                                    Divider(
-                                      color: Colors.grey.shade200,
-                                      height:
-                                          10, // Chiều cao của đường gạch ngang
-                                      thickness: 1,
-                                    ),
-
-                                    const Text(
-                                      'Mô tả thú cưng',
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // Text(
-                                    //   pet.description,
-                                    //   maxLines: _isExpanded == true ? 100 : maxlines,
-                                    //   overflow: TextOverflow.ellipsis,
-                                    // ),
-
-                                    // if (!_isExpanded &&
-                                    //     pet.description.split('\n').length >=
-                                    //         maxlines)
-                                    //   TextButton(
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         _isExpanded = true;
-                                    //       });
-                                    //     },
-                                    //     child: Row(
-                                    //       mainAxisAlignment: MainAxisAlignment.center,
-                                    //       children: [
-                                    //         Text('Xem thêm'),
-                                    //         Icon(
-                                    //           Icons.keyboard_arrow_down,
-                                    //           size: 20,
-                                    //           color: Color.fromARGB(255, 90, 90, 90),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // if (_isExpanded == true)
-                                    //   TextButton(
-                                    //     onPressed: () {
-                                    //       setState(() {
-                                    //         _isExpanded = false;
-                                    //       });
-                                    //     },
-                                    //     child: Row(
-                                    //       mainAxisAlignment: MainAxisAlignment.center,
-                                    //       children: [
-                                    //         Text('Thu gọn'),
-                                    //         Icon(
-                                    //           Icons.expand_less,
-                                    //           size: 20,
-                                    //           color: Color.fromARGB(255, 90, 90, 90),
-                                    //         )
-                                    //       ],
-                                    //     ),
-                                    //   ),
-
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-
-                                    //Pet information Detail
-
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            _buildInfoRow(
-                                              Icons.assignment,
-                                              'Hướng dẫn nuôi:',
-                                              'Nhập hướng dẫn nuôi',
-                                              pet.instruction,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.info,
-                                              'Lưu ý:',
-                                              'Nhập lưu ý',
-                                              pet.attention,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.favorite,
-                                              'Sở thích:',
-                                              'Nhập sở thích',
-                                              pet.hobbies,
-                                            ),
-                                            _buildInfoRow(
-                                              Icons.local_hospital,
-                                              'Tiêm chủng:',
-                                              'Nhập tiêm chủng',
-                                              pet.inoculation,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
-                            ),
+
+                              Divider(
+                                color: Colors.grey.shade200,
+                                height: 10, // Chiều cao của đường gạch ngang
+                                thickness: 1,
+                              ),
+
+                              const Text(
+                                'Mô tả thú cưng',
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+
+                              const SizedBox(
+                                height: 10,
+                              ),
+
+                              //Pet information Detail
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInfoRow(
+                                        Icons.assignment,
+                                        'Hướng dẫn nuôi:',
+                                        'Nhập hướng dẫn nuôi',
+                                        pet.instruction,
+                                      ),
+                                      _buildInfoRow(
+                                        Icons.info,
+                                        'Lưu ý:',
+                                        'Nhập lưu ý',
+                                        pet.attention,
+                                      ),
+                                      _buildInfoRow(
+                                        Icons.favorite,
+                                        'Sở thích:',
+                                        'Nhập sở thích',
+                                        pet.hobbies,
+                                      ),
+                                      _buildInfoRow(
+                                        Icons.local_hospital,
+                                        'Tiêm chủng:',
+                                        'Nhập tiêm chủng',
+                                        pet.inoculation,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+
 
                   Spacer(),
                   if (currentClient.role == "USER" &&
@@ -983,15 +566,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    // showInfoInputDialog(
-                                    //     context, pet.id);
-
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) =>
-                                    //           const FormAdopt()),
-                                    // );
+                                 
 
                                     Navigator.push(
                                       context,
@@ -1001,10 +576,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               currentClient: currentClient)),
                                     );
 
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (context) => const Orders()));
+                                   
                                   },
                                   child: Material(
                                     borderRadius: BorderRadius.circular(20),
