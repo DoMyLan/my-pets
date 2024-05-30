@@ -127,7 +127,7 @@ Future<List<Pet>> filterPet(breed, color, age) async {
   var responseData;
   var colorSearch = '';
   var ageSearch = '';
-  var breedSearch = breed != null ? breed : '';
+  var breedSearch = breed;
 
   if (color.isNotEmpty) {
     for (var i = 0; i < color.length; i++) {
