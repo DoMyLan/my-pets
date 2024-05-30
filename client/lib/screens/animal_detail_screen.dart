@@ -5,6 +5,7 @@ import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
@@ -268,10 +269,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ProfileCenterPage(
+                                                            ProfileCenter(
                                                           centerId:
                                                               pet.centerId!.id,
-                                                          petId: pet.id,
                                                         ),
                                                       ),
                                                     );
@@ -614,10 +614,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ProfileCenterPage(
+                                                            ProfileCenter(
                                                           centerId:
-                                                              pet.centerId!.id,
-                                                          petId: pet.id,
+                                                              pet.centerId!.id
                                                         ),
                                                       ),
                                                     );

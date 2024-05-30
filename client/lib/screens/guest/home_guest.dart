@@ -9,7 +9,7 @@ import 'package:found_adoption_application/screens/all_center.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/followApi.dart';
@@ -309,7 +309,7 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                                                   Text(
                                                       "${listPetSale[index].price - listPetSale[index].reducePrice > 0 ? listPetSale[index].price - listPetSale[index].reducePrice : "Miễn phí"}đ",
                                                       style: const TextStyle(
-                                                          color: Colors.white,
+                                                          color: Colors.black,
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.bold)),
@@ -470,9 +470,8 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                             onTap: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return ProfileCenterPage(
+                                return ProfileCenter(
                                   centerId: listCenterHot![index].id,
-                                  petId: null,
                                 );
                               }));
                             },

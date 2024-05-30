@@ -7,6 +7,7 @@ import 'package:found_adoption_application/screens/adoption_screen.dart';
 
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/voucher.dart';
 
 class MenuFrameCenter extends StatefulWidget {
@@ -53,7 +54,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
     //sao chép danh sách screens vào screensnapshot
     screenSnapshot = screens.values.toList();
     // print(widget.centerId);
-    screens[2] = ProfileCenterPage(centerId: widget.centerId, petId: null);
+    screens[2] = ProfileCenter(centerId: widget.centerId);
     screens[0] = AdoptionScreen(centerId: widget.centerId);
   }
 
@@ -63,7 +64,7 @@ class _MenuFrameCenterState extends State<MenuFrameCenter>
       centerId: null,
     ),
     1: FeedScreen(),
-    2: ProfileCenterPage(centerId: null, petId: null),
+    2: ProfileCenter(centerId: ""),
     3: AddPetScreen(),
     4: TheOrdersCenter(),
     // 5: StatusAdopt(),

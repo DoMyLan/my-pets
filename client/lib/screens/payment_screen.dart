@@ -2,8 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_VNPAY.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
-import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/user_screens/show_all_voucher.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
 import 'package:found_adoption_application/services/order/voucherApi.dart';
@@ -49,10 +48,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     getClient();
     currentClient = widget.currentClient;
     transportFee = calculateShippingCost(calculateDistance(
-        widget.currentClient.location,
-        widget.pet.centerId != null
-            ? widget.pet.centerId!.location
-            : widget.pet.giver!.location));
+        widget.currentClient.location, widget.pet.centerId!.location));
     totalFee = int.parse(widget.pet.price) + transportFee;
     priceProduct = int.parse(widget.pet.price);
     totalPayment = int.parse(widget.pet.price) + transportFee;
@@ -164,23 +160,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.pet.centerId != null
-                        ? Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileCenterPage(
-                                centerId: widget.pet.centerId!.id,
-                                petId: widget.pet.id,
-                              ),
-                            ),
-                          )
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfilePage(userId: widget.pet.giver!.id),
-                            ),
-                          );
+                    ;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ProfileCenter(centerId: widget.pet.centerId!.id),
+                      ),
+                    );
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -188,23 +175,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       Flexible(
                         child: GestureDetector(
                           onTap: () {
-                            widget.pet.centerId != null
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ProfileCenterPage(
-                                        centerId: widget.pet.centerId!.id,
-                                        petId: null,
-                                      ),
-                                    ),
-                                  )
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ProfilePage(
-                                          userId: widget.pet.giver!.id),
-                                    ),
-                                  );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileCenter(
+                                    centerId: widget.pet.centerId!.id),
+                              ),
+                            );
                           },
                           child: Text(
                             widget.pet.centerId != null
@@ -225,23 +202,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       GestureDetector(
                           onTap: () {
-                            widget.pet.centerId != null
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ProfileCenterPage(
-                                        centerId: widget.pet.centerId!.id,
-                                        petId: widget.pet.id,
-                                      ),
-                                    ),
-                                  )
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ProfilePage(
-                                          userId: widget.pet.giver!.id),
-                                    ),
-                                  );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProfileCenter(
+                                    centerId: widget.pet.centerId!.id),
+                              ),
+                            );
                           },
                           child: const Text('Xem bài viết')),
                       const SizedBox(
