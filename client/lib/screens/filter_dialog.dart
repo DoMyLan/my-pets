@@ -16,13 +16,18 @@ class _FilterDialogState extends State<FilterDialog> {
         backgroundColor: Colors.grey.shade100,
         title: const Text(
           'Chọn bộ lọc',
-          style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
         actions: [
-          // const Spacer(), 
+          // const Spacer(),
           IconButton(
-            icon: const Icon(Icons.clear_outlined, color: Colors.black, size: 20,),
+            icon: const Icon(
+              Icons.clear_outlined,
+              color: Colors.black,
+              size: 20,
+            ),
             onPressed: () {
               // Xử lý khi bấm nút clear
               Navigator.pop(context);
@@ -41,7 +46,7 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  String? selectedBreed ='Chó cỏ';
+  String? selectedBreed = 'Chó Husky';
   RangeValues selectedAgeRange = RangeValues(1, 10);
   List<String> selectedColors = [];
   List<String> allColors = [
@@ -70,11 +75,13 @@ class _FilterScreenState extends State<FilterScreen> {
                 if (newValue != null) {
                   setState(() {
                     selectedBreed = newValue;
+                    print('new: $selectedBreed');
                   });
                 }
               },
               items: <String>[
-                'Husky',
+                'Mèo Xiêm',
+                'Chó Husky',
                 'Poodle',
                 'Pitpull',
                 'Chó cỏ',
@@ -129,14 +136,17 @@ class _FilterScreenState extends State<FilterScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
               ),
-              onPressed: () {
+              onPressed: () async {
                 try {
                   List<int> listAge =
                       convertRangeValuesToListInt(selectedAgeRange);
 
                   Future<List<Pet>> dataPet =
                       filterPet(selectedBreed, selectedColors, listAge);
-                  Navigator.pop<Future<List<Pet>>>(context, dataPet);
+                  List<Pet> pets =
+                      await dataPet; // Wait for the future to complete
+                  //đóng hộp thoại và trả về dataPet
+                  Navigator.pop<List<Pet>>(context, pets);
                 } catch (e) {
                   print('errorr12: ${e.toString()}');
                 }
