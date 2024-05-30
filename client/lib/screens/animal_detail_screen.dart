@@ -5,6 +5,7 @@ import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
@@ -265,12 +266,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileCenterPage(
-                                                    centerId: pet.centerId!.id,
-                                                    petId: pet.id,
-                                                  ),
-                                                ),
+                                                    builder: (context) =>
+                                                        ProfileCenter(
+                                                            centerId: pet
+                                                                .centerId!.id)),
                                               );
                                             },
                                             child: Text(
@@ -515,7 +514,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                     ),
                   ),
 
-
                   Spacer(),
                   if (currentClient.role == "USER" &&
                       pet.statusPaid == 'NOTHING')
@@ -566,8 +564,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                 
-
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -575,8 +571,6 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                               pet: pet,
                                               currentClient: currentClient)),
                                     );
-
-                                   
                                   },
                                   child: Material(
                                     borderRadius: BorderRadius.circular(20),

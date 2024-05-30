@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/like_model.dart';
 import 'package:found_adoption_application/models/post.dart';
+import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/comment_screen.dart';
 import 'package:found_adoption_application/screens/edit_post_screen.dart';
 import 'package:found_adoption_application/screens/like_screen.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
-import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
+import 'package:found_adoption_application/screens/user_screens/profile_user_new.dart';
 import 'package:found_adoption_application/services/post/like_post_api.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -107,7 +108,7 @@ class _PostCardState extends State<PostCard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage(
+                              builder: (context) => ProfileUser(
                                   userId: clientPost.userId!
                                       .id) // Thay thế bằng tên lớp tương ứng
                               ));
@@ -116,9 +117,8 @@ class _PostCardState extends State<PostCard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProfileCenterPage(
-                              centerId: clientPost.petCenterId!.id,
-                              petId: null),
+                          builder: (context) => ProfileCenter(
+                              centerId: clientPost.petCenterId!.id),
                         ),
                       );
                     }
@@ -127,7 +127,7 @@ class _PostCardState extends State<PostCard> {
                     children: <Widget>[
                       CircleAvatar(
                         radius: 24,
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: Colors.white,
                         backgroundImage: NetworkImage(
                           clientPost.userId != null
                               ? clientPost.userId!.avatar
@@ -162,14 +162,13 @@ class _PostCardState extends State<PostCard> {
                           ? Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProfilePage(
+                                  builder: (context) => ProfileUser(
                                       userId: clientPost.userId!.id)))
                           : Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ProfileCenterPage(
-                                    centerId: clientPost.petCenterId!.id,
-                                    petId: null),
+                                builder: (context) => ProfileCenter(
+                                    centerId: clientPost.petCenterId!.id),
                               ),
                             );
                     },
@@ -460,7 +459,7 @@ class _PostCardState extends State<PostCard> {
           clientPost.petId != null
               ? Container(
                   color: Colors.grey.shade100,
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width - 20,
                   height: 70,
                   child: Column(
                     children: [
@@ -469,21 +468,119 @@ class _PostCardState extends State<PostCard> {
                         children: [
                           const SizedBox(width: 10),
                           Container(
-                            width: MediaQuery.of(context).size.width - 20,
+                            width: MediaQuery.of(context).size.width - 40,
                             color: Colors.white,
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Image(
-                                    image: NetworkImage(
-                                        clientPost.petId!.images[0]),
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover),
-                                const SizedBox(width: 10),
-                                Text(clientPost.petId!.namePet,
-                                    style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold)),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image(
+                                        image: NetworkImage(
+                                            clientPost.petId!.images[0]),
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                                "${clientPost.petId!.namePet} - ",
+                                                style: const TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                            Text(clientPost.petId!.breed,
+                                                style: const TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                        Text(
+                                            "${int.parse(clientPost.petId!.price) - clientPost.petId!.reducePrice > 0 ? int.parse(clientPost.petId!.price) - clientPost.petId!.reducePrice : "Miễn phí"}đ",
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        dynamic currentClient =
+                                            await getCurrentClient();
+                                        Navigator.push(
+                                            // ignore: use_build_context_synchronously
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AnimalDetailScreen(
+                                                      petId:
+                                                          clientPost.petId!.id,
+                                                      currentId: currentClient,
+                                                    )));
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        child: const Text(
+                                          'Xem chi tiết',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    // const SizedBox(width: 10),
+                                    // GestureDetector(
+                                    //   onTap: () async {
+                                    //     dynamic currentClient =
+                                    //         await getCurrentClient();
+                                            
+                                    //     Navigator.push(
+                                    //         // ignore: use_build_context_synchronously
+                                    //         context,
+                                    //         MaterialPageRoute(
+                                    //             builder: (context) =>
+                                    //                 PaymentScreen(
+                                    //                   pet: clientPost.petId,
+                                    //                   currentClient:
+                                    //                       currentClient,
+                                    //                 )));
+                                    //   },
+                                    //   child: Container(
+                                    //     padding: const EdgeInsets.symmetric(
+                                    //         horizontal: 10, vertical: 5),
+                                    //     decoration: BoxDecoration(
+                                    //       color: Colors.red[400],
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(20.0),
+                                    //     ),
+                                    //     child: const Text(
+                                    //       'Mua ngay',
+                                    //       style: TextStyle(
+                                    //           color: Colors.white,
+                                    //           fontSize: 12),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    const SizedBox(width: 10),
+                                  ],
+                                )
                               ],
                             ),
                           ),

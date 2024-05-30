@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/like_model.dart';
 import 'package:found_adoption_application/screens/feed_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/user_screens/profile_user_new.dart';
 import 'package:found_adoption_application/services/post/like_post_api.dart';
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 
@@ -78,18 +80,17 @@ class _LikeScreenState extends State<LikeScreen> {
                                       ? Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ProfilePage(
+                                              builder: (context) => ProfileUser(
                                                   userId:
                                                       likes[index].userId!.id)))
                                       : Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                ProfileCenterPage(
+                                                ProfileCenter(
                                                     centerId: likes[index]
                                                         .centerId!
-                                                        .id,
-                                                    petId: null),
+                                                        .id),
                                           ),
                                         );
                                 },
@@ -153,7 +154,7 @@ class _LikeScreenState extends State<LikeScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ProfilePage(
+                                                            ProfileUser(
                                                                 userId:
                                                                     likes[index]
                                                                         .userId!
@@ -162,12 +163,11 @@ class _LikeScreenState extends State<LikeScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ProfileCenterPage(
+                                                          ProfileCenter(
                                                               centerId:
                                                                   likes[index]
                                                                       .centerId!
-                                                                      .id,
-                                                              petId: null),
+                                                                      .id),
                                                     ),
                                                   );
                                           },

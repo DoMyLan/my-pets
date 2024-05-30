@@ -7,6 +7,7 @@ import 'package:found_adoption_application/screens/order_screen.dart';
 import 'package:found_adoption_application/screens/pet_favorites.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_screen_user.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/user_screens/profile_user_new.dart';
 
 class MenuFrameUser extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -54,7 +55,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     0: const Home_Guest(),
     1: const HomeScreen(),
 
-    2: ProfilePage(userId: null),
+    2: ProfileUser(userId: "",),
     3: const FeedScreen(),
     4: const FavoriteScreen(),
     5: const TheOrders(),

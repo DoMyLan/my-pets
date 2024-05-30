@@ -8,7 +8,8 @@ import 'package:found_adoption_application/models/pet_center.dart';
 import 'package:found_adoption_application/models/user.dart' as user_comment;
 import 'package:found_adoption_application/models/user.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
-import 'package:found_adoption_application/screens/user_screens/profile_user.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
+import 'package:found_adoption_application/screens/user_screens/profile_user_new.dart';
 import 'package:found_adoption_application/services/post/comment.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
@@ -159,15 +160,15 @@ class _CommentScreenState extends State<CommentScreen> {
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ProfilePage(
+                                          builder: (context) => ProfileUser(
                                               userId:
                                                   comments[index].userId!.id)))
                                   : Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ProfileCenterPage(
+                                        builder: (context) => ProfileCenter(
                                             centerId:
-                                                comments[index].centerId!.id, petId: null),
+                                                comments[index].centerId!.id),
                                       ),
                                     );
                             },
@@ -206,7 +207,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ProfilePage(
+                                                      ProfileUser(
                                                           userId:
                                                               comments[index]
                                                                   .userId!
@@ -215,11 +216,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    ProfileCenterPage(
+                                                    ProfileCenter(
                                                         centerId:
                                                             comments[index]
                                                                 .centerId!
-                                                                .id, petId: null),
+                                                                .id),
                                               ),
                                             );
                                     },

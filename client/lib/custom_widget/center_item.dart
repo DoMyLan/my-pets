@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/screens/guest/home_guest.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 
 // void main() {
 //   runApp(MaterialApp(
@@ -37,9 +37,8 @@ class _CenterItemState extends State<CenterItem> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfileCenterPage(
+                builder: (context) => ProfileCenter(
                   centerId: centerHot.id,
-                  petId: null,
                 ),
               ),
             );

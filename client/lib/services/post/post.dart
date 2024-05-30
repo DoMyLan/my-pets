@@ -86,7 +86,7 @@ Future<List<Post>> getAllPostPersonal(var id) async {
   }
   List<dynamic> postList = List.empty();
 
-  postList = responseData['data'] != null ? responseData['data'] : List.empty();
+  postList = responseData['data'] ?? List.empty();
   List<Post> posts = postList.map((json) => Post.fromJson(json)).toList();
   return posts;
 }
