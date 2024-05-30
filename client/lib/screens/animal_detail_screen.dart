@@ -1,13 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
-import 'package:found_adoption_application/services/adopt/adopt.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/loading.dart';
@@ -144,7 +142,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                       ),
                                     ),
                                     pet.reducePrice > 0
-                                        ? Text("${pet.reducePrice}đ",
+                                        ? Text("${pet.price}đ",
                                             style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,

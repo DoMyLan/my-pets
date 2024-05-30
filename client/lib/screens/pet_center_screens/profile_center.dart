@@ -13,11 +13,11 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
+import 'package:found_adoption_application/services/followApi.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
@@ -44,6 +44,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
   // ignore: prefer_typing_uninitialized_variables
   var currentClient;
   late bool isLoading = true;
+  late InfoCenter center;
 
   List<String> animalTypes = [
     'Cats',
@@ -139,10 +140,21 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
               );
             } else if (snapshot.hasError) {
               // If there is an error fetching data, show an error message
-              return const Center(child: Text('User not found.'));
+              return const Center(child: Text('Error'));
             } else {
               // If data is successfully fetched, display the form
-              InfoCenter center = snapshot.data!;
+              center = snapshot.data as InfoCenter;
+
+              center.follower =
+                  center.followerUser.length + center.followerCenter.length;
+
+              if (currentClient.role == "USER") {
+                center.follow = center.followerUser.contains(currentClient.id);
+              } else {
+                center.follow =
+                    center.followerCenter.contains(currentClient.id);
+              }
+
               if (center.status == 'HIDDEN') {
                 if (currentClient.id != widget.centerId) {
                   return const Center(
@@ -190,12 +202,17 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                         Row(
                           children: [
                             ElevatedButton.icon(
-                              onPressed: () {
-                                notification(
-                                    "Feature under development", false);
+                              onPressed: () async {
+                                await follow_unfollow("", center.id);
+                                setState(() {
+                                  center.follow = !center.follow;
+                                });
                               },
-                              icon: const Icon(Icons.person_add, color: Colors.white),
-                              label: const Text('Theo dõi'),
+                              icon: const Icon(Icons.person_add,
+                                  color: Colors.white),
+                              label: Text(
+                                center.follow ? 'Đang theo dõi' : 'Theo dõi',
+                              ),
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.white,
                                 backgroundColor: Theme.of(context)
@@ -222,7 +239,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                 color: Colors.white),
                                             label: const Text('Sửa thông tin'),
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
                                             ),
                                           ),
@@ -246,7 +264,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                                 color: Colors.white),
                                             label: const Text('Đổi mật khẩu'),
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
                                             ),
                                           ),
@@ -261,11 +280,14 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                                               _showBottomSheet(
                                                   center.id, center.status);
                                             },
-                                            icon: const Icon(Icons.change_circle,
+                                            icon: const Icon(
+                                                Icons.change_circle,
                                                 color: Colors.white),
-                                            label: const Text('Thay đổi trạng thái'),
+                                            label: const Text(
+                                                'Thay đổi trạng thái'),
                                             style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white, backgroundColor: Theme.of(context)
+                                              foregroundColor: Colors.white,
+                                              backgroundColor: Theme.of(context)
                                                   .primaryColor,
                                             ),
                                           ),
@@ -666,7 +688,8 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
             Flexible(
               child: Text(
                 info,
-                style: const TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
+                style: const TextStyle(
+                    fontSize: 16.0, fontStyle: FontStyle.italic),
                 softWrap: true,
               ),
             ),

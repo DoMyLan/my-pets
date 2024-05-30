@@ -31,7 +31,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
     _animationController = AnimationController(vsync: this, duration: duration);
 
     scaleAnimations = [
-      // Tween<double>(begin: 1.0, end: 0.7).animate(_animationController),
+      Tween<double>(begin: 1.0, end: 0.7).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.7).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.6).animate(_animationController),
       Tween<double>(begin: 1.0, end: 0.5).animate(_animationController),
@@ -51,7 +51,7 @@ class _MenuFrameUserState extends State<MenuFrameUser>
 
   //Map chứa cặp key-value (int - widget)
   Map<int, Widget> screens = {
-    // 0: const Home_Guest(),
+    0: const Home_Guest(),
     1: const HomeScreen(),
 
     2: ProfilePage(userId: null),
