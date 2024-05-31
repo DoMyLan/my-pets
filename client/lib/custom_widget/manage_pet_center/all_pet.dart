@@ -14,11 +14,13 @@ class AllPetCenter extends StatefulWidget {
   final String searchKeyword;
   final List<Pet>? filterResult;
   final ValueChanged<String> onSearchKeywordChanged;
+  final String? centerId;
   AllPetCenter(
       {required this.listType,
       required this.searchKeyword,
       required this.onSearchKeywordChanged,
-      required this.filterResult});
+      required this.filterResult,
+      required this.centerId});
   @override
   _AllPetCenterState createState() => _AllPetCenterState();
 }
@@ -50,8 +52,12 @@ class _AllPetCenterState extends State<AllPetCenter>
 
         isLoading = false;
       });
-
-      var pets = await getAllPet();
+      var pets;
+      if (temp.role == 'USER') {
+        pets = await getAllPet(widget.centerId);
+      } else {
+        pets = await getAllPet(temp.id);
+      }
       if (!listEquals(pets, previousPets)) {
         // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
         setState(() {

@@ -260,6 +260,7 @@ class _FeedScreenState extends State<FeedScreen>
                   if (!isLoadingVideo) {
                     return VideoApp(
                       videoPost: visibleVideos[index],
+                      back: false,
                     );
                   } else if (isLoadingVideo) {
                     return const Center(

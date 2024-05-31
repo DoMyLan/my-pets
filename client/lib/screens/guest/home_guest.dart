@@ -7,7 +7,10 @@ import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/models/pet_sale_model.dart';
 import 'package:found_adoption_application/screens/all_center.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
+import 'package:found_adoption_application/screens/guest/pets_breed.dart';
+import 'package:found_adoption_application/screens/guest/pets_sale.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
+import 'package:found_adoption_application/screens/pet_breed.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -155,6 +158,7 @@ class PetSaleWidget extends StatefulWidget {
 class _PetSaleWidgetState extends State<PetSaleWidget> {
   Future<List<PetSale>>? petFuture;
   dynamic currentClient;
+  List<PetSale> listPetSale = [];
 
   @override
   void initState() {
@@ -189,7 +193,11 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
               const Spacer(),
               TextButton(
                 onPressed: () {
-                  //xem tất cả
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return PetsSale(
+                      listPetSale: listPetSale,
+                    );
+                  }));
                 },
                 child: const Text(
                   "Xem tất cả",
@@ -214,7 +222,7 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else {
-                    List<PetSale> listPetSale = snapshot.data as List<PetSale>;
+                    listPetSale = snapshot.data as List<PetSale>;
 
                     return ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -309,32 +317,16 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                                                   Text(
                                                       "${listPetSale[index].price - listPetSale[index].reducePrice > 0 ? listPetSale[index].price - listPetSale[index].reducePrice : "Miễn phí"}đ",
                                                       style: const TextStyle(
-                                                          color: Colors.black,
+                                                          color: Colors.white,
                                                           fontSize: 14,
                                                           fontWeight:
                                                               FontWeight.bold)),
                                                 ],
                                               ),
                                               const Spacer(),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  //
-                                                },
-                                                child: Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      color: Colors.teal[300]),
-                                                  child: const Icon(
-                                                    Icons.shopping_cart,
-                                                    color: Colors.white,
-                                                    size: 25,
-                                                  ),
-                                                ),
-                                              ),
+                                              OnPressBuyWidget(
+                                                  petSale: listPetSale[index],
+                                                  currentClient: currentClient),
                                             ],
                                           ),
                                         ],
@@ -674,31 +666,20 @@ class BreedFavotite extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Thú cưng được yêu thích",
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  //xem tất cả
-                },
-                child: const Text(
-                  "Xem tất cả",
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              )
             ],
           ),
           SizedBox(
-            height: 220.0,
+            height: 259.0,
             child: Column(
               children: [
                 TabBar(
@@ -791,87 +772,118 @@ class _BreedWidgetState extends State<BreedWidget> {
               return b.sold.compareTo(a.sold);
             });
 
-            return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      //chuyển sang trang chi tiết
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(15)),
-                        child: Stack(children: [
-                          Image(
-                            image: AssetImage(breeds[index].asset),
-                            height: 180.0,
-                            width: 130.0,
-                            fit: BoxFit.cover,
+            return Column(
+              children: [
+                SizedBox(
+                  height: 180.0,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return PetBreed(
+                                breed: breeds[index].name,
+                              );
+                            }));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              child: Stack(children: [
+                                Image(
+                                  image: AssetImage(breeds[index].asset),
+                                  height: 180.0,
+                                  width: 130.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                Container(
+                                  height: 180.0,
+                                  width: 130.0,
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.center,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                        Colors.black.withOpacity(0.1),
+                                        Colors.black.withOpacity(0.8)
+                                      ])),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5, right: 5, bottom: 5),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          breeds[index].name,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.remove_red_eye,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              breeds[index].view.toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            const Icon(
+                                              Icons.shopping_cart,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(width: 5),
+                                            Text(
+                                              breeds[index].sold.toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        )
+                                      ]),
+                                )
+                              ]),
+                            ),
                           ),
-                          Container(
-                            height: 180.0,
-                            width: 130.0,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.center,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                  Colors.black.withOpacity(0.1),
-                                  Colors.black.withOpacity(0.8)
-                                ])),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 5, right: 5, bottom: 5),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    breeds[index].name,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.remove_red_eye,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        breeds[index].view.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      const Icon(
-                                        Icons.shopping_cart,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        breeds[index].sold.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14),
-                                      ),
-                                    ],
-                                  )
-                                ]),
-                          )
-                        ]),
-                      ),
+                        );
+                      }),
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
+                    return PetsBreed(
+                      breeds: breeds,
+                      type: widget.breedName == "Dog" ? "Chó" : "Mèo",
+                    );
+                  })),
+                  child: const Text(
+                    "Xem tất cả",
+                    style: TextStyle(
+                      color: Colors.grey,
                     ),
-                  );
-                });
+                  ),
+                )
+              ],
+            );
           }
         });
   }

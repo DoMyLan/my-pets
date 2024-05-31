@@ -30,7 +30,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
   String _searchKeyword = '';
   List<Pet> _searchResults = [];
   List<Pet>? _filterResults;
-  
+
   int _currentTabIndex = 0;
 
   Map<String, List<Pet>?> _filterResultsByTab = {
@@ -54,19 +54,20 @@ class _AdoptionScreenState extends State<AdoptionScreen>
         currentClient = temp;
         isLoading = false;
       });
+      // var pets = await getAllPet(centerId);
 
-      var pets = await getAllPet();
-      if (!listEquals(pets, previousPets)) {
-        // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
-        setState(() {
-          previousPets = List.from(pets);
-          animals = List.from(pets);
-          dataFetched =
-              true; // Đặt biến trạng thái thành true sau khi dữ liệu đã được fetch
-        });
-      }
+      // if (!listEquals(pets, previousPets)) {
+      //   // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
+      //   setState(() {
+      //     previousPets = List.from(pets);
+      //     animals = List.from(pets);
+      //     dataFetched =
+      //         true; // Đặt biến trạng thái thành true sau khi dữ liệu đã được fetch
+      //   });
+      // }
     } catch (error) {}
   }
+
   void _updateCurrentTabIndex(int index) {
     setState(() {
       _currentTabIndex = index;
@@ -97,26 +98,30 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                         delegate: SliverChildListDelegate([
                           Column(
                             children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 22),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TBackHomePage(),
-                                    TuserQuickInfor(
-                                        currentClient: currentClient),
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage:
-                                          NetworkImage(currentClient.avatar),
-                                    ),
-                                  ],
+                              if (centerId == null)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 22),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TBackHomePage(),
+                                      TuserQuickInfor(
+                                          currentClient: currentClient),
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage:
+                                            NetworkImage(currentClient.avatar),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              if (currentClient.role == 'USER') buildSearch(),
+                              if (currentClient.role == 'USER' &&
+                                  centerId == null)
+                                buildSearch(),
                             ],
                           ),
                         ]),
@@ -126,7 +131,8 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                 },
                 body:
                     //Truy cập là CENTER
-                    currentClient.role == 'CENTER'
+                    (currentClient.role == 'CENTER' ||
+                            (currentClient.role == 'USER' && centerId != null))
                         ? DefaultTabController(
                             length: 4,
                             child: Stack(children: [
@@ -175,6 +181,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                               _updateSearchKeyword,
                                           filterResult:
                                               _filterResultsByTab['all'],
+                                          centerId: centerId,
                                         ),
                                         AllPetCenter(
                                           listType: 'forSale',
@@ -183,6 +190,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                               _updateSearchKeyword,
                                           filterResult:
                                               _filterResultsByTab['forSale'],
+                                          centerId: centerId,
                                         ),
                                         AllPetCenter(
                                           listType: 'pending',
@@ -191,6 +199,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                               _updateSearchKeyword,
                                           filterResult:
                                               _filterResultsByTab['pending'],
+                                          centerId: centerId,
                                         ),
                                         AllPetCenter(
                                           listType: 'sold',
@@ -199,42 +208,45 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                               _updateSearchKeyword,
                                           filterResult:
                                               _filterResultsByTab['sold'],
+                                          centerId: centerId,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                              Positioned(
-                                top: 48,
-                                right: 10,
-                                child: Container(
-                                  width: 70,
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(FontAwesomeIcons.sliders),
-                                        color: mainColor,
-                                        onPressed: () {
-                                          showFilterDialog();
-                                        },
-                                        iconSize: 20,
-                                      ),
-                                      Text(
-                                        'Lọc',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12,
+                              if (centerId == null)
+                                Positioned(
+                                  top: 48,
+                                  right: 10,
+                                  child: Container(
+                                    width: 70,
+                                    height: 50,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(FontAwesomeIcons.sliders),
+                                          color: mainColor,
+                                          onPressed: () {
+                                            showFilterDialog();
+                                          },
+                                          iconSize: 20,
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          'Lọc',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
                             ]),
                           )
 
@@ -245,6 +257,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                             searchKeyword: _searchKeyword,
                             onSearchKeywordChanged: _updateSearchKeyword,
                             filterResult: _filterResults,
+                            centerId: centerId,
                           ),
               );
             }),
@@ -269,27 +282,25 @@ class _AdoptionScreenState extends State<AdoptionScreen>
 
     if (result != null) {
       setState(() {
-        if(currentClient.role=='CENTER')
-        {
+        if (currentClient.role == 'CENTER') {
           switch (_currentTabIndex) {
-          case 0:
-            _filterResultsByTab['all'] = result;
-            break;
-          case 1:
-            _filterResultsByTab['forSale'] = result;
-            break;
-          case 2:
-            _filterResultsByTab['pending'] = result;
-            break;
-          case 3:
-            _filterResultsByTab['sold'] = result;
-            break;
-          default:
-            break;
-        }
-        }
-        else{
-          _filterResults =result;
+            case 0:
+              _filterResultsByTab['all'] = result;
+              break;
+            case 1:
+              _filterResultsByTab['forSale'] = result;
+              break;
+            case 2:
+              _filterResultsByTab['pending'] = result;
+              break;
+            case 3:
+              _filterResultsByTab['sold'] = result;
+              break;
+            default:
+              break;
+          }
+        } else {
+          _filterResults = result;
         }
       });
     }

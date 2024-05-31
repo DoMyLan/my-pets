@@ -63,16 +63,15 @@ Future<void> addPet(
   }
 }
 
-Future<List<Pet>> getAllPet() async {
-  var currentClient = await getCurrentClient();
+Future<List<Pet>> getAllPet(String? centerId) async {
   var responseData;
   final apiUrl;
 
   try {
-    if (currentClient.role == 'USER') {
+    if (centerId == null) {
       apiUrl = "pet/all/pets/center";
     } else {
-      apiUrl = "pet/${currentClient.id}";
+      apiUrl = "pet/${centerId}";
     }
     responseData = await api(apiUrl, "GET", '');
   } catch (e) {
@@ -313,8 +312,7 @@ Future<List<Breed>> getBreed(typePet) async {
     //  notification(e.toString(), true);
   }
   var breedList = responseData['data'] as List<dynamic>;
-  List<Breed> breeds =
-      breedList.map((json) => Breed.fromJson(json)).toList();
+  List<Breed> breeds = breedList.map((json) => Breed.fromJson(json)).toList();
   return breeds;
 }
 
@@ -334,7 +332,6 @@ Future<List<CenterHot>> getCenterHot() async {
   return centers;
 }
 
-
 Future<List<PetSale>> getPetSale() async {
   // ignore: prefer_typing_uninitialized_variables
   var responseData;
@@ -351,3 +348,18 @@ Future<List<PetSale>> getPetSale() async {
   return centers;
 }
 
+Future<List<Pet>> getPetBreed(String breed) async {
+  dynamic responseData;
+
+  try {
+    final apiUrl = "pet/breed/list/pet?breed=$breed";
+    responseData = await api(apiUrl, "GET", '');
+    var petList = responseData['data'] as List<dynamic>;
+    List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+    return pets;
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+    return [];
+  }
+}

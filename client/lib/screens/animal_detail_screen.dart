@@ -86,76 +86,78 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                 )
                               : _slider(pet.images),
                         ),
-                        Container(
+                        SizedBox(
                           height: screenHeight * 0.4,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.1),
-                                Colors.black.withOpacity(0.6)
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SizedBox(
-                            height: screenHeight * 0.38,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      pet.namePet,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(" - ${pet.breed}",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        ))
-                                  ],
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                height: screenHeight * 0.1,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.black.withOpacity(0),
+                                      Colors.black.withOpacity(0.7)
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                Row(
+                                child: Column(
                                   children: [
-                                    Text(
-                                      pet.reducePrice != 0
-                                          ? (int.parse(pet.price) -
-                                                      pet.reducePrice) >
-                                                  0
-                                              ? "${int.parse(pet.price) - pet.reducePrice}đ   "
-                                              : 'Miễn phí   '
-                                          : pet.price,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    pet.reducePrice > 0
-                                        ? Text("${pet.price}đ",
+                                    Row(
+                                      children: [
+                                        Text(
+                                          pet.namePet,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(" - ${pet.breed}",
                                             style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                decoration:
-                                                    TextDecoration.lineThrough,
-                                                decorationThickness: 2.0,
-                                                decorationColor: Colors.white))
-                                        : const SizedBox()
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ))
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          pet.reducePrice != 0
+                                              ? (int.parse(pet.price) -
+                                                          pet.reducePrice) >
+                                                      0
+                                                  ? "${int.parse(pet.price) - pet.reducePrice}đ   "
+                                                  : 'Miễn phí   '
+                                              : pet.price,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        pet.reducePrice > 0
+                                            ? Text("${pet.price}đ",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    decorationThickness: 2.0,
+                                                    decorationColor:
+                                                        Colors.white))
+                                            : const SizedBox()
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
                         )
                       ]),
@@ -233,7 +235,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Container(
-                      height: MediaQuery.sizeOf(context).height * 0.45,
+                      height: MediaQuery.sizeOf(context).height * 0.52,
                       color: Colors.white,
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -519,79 +521,70 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                       pet.statusPaid == 'NOTHING')
                     Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: Container(
-                        height: 50,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(30),
-                              topLeft: Radius.circular(30),
-                            )),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 22),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  setState(() {
-                                    isFavorite = !isFavorite;
-                                  });
-                                  Loading(context);
-                                  await favoritePet(pet.id);
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.of(context).pop();
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                setState(() {
+                                  isFavorite = !isFavorite;
+                                });
+                                Loading(context);
+                                await favoritePet(pet.id);
+                                // ignore: use_build_context_synchronously
+                                Navigator.of(context).pop();
+                              },
+                              child: Material(
+                                borderRadius: BorderRadius.circular(20),
+                                elevation: 4,
+                                color: Theme.of(context).primaryColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Icon(
+                                    isFavorite
+                                        ? FontAwesomeIcons.solidHeart
+                                        : FontAwesomeIcons.heart,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PaymentScreen(
+                                            pet: pet,
+                                            currentClient: currentClient)),
+                                  );
                                 },
                                 child: Material(
                                   borderRadius: BorderRadius.circular(20),
                                   elevation: 4,
                                   color: Theme.of(context).primaryColor,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Icon(
-                                      isFavorite
-                                          ? FontAwesomeIcons.solidHeart
-                                          : FontAwesomeIcons.heart,
-                                      color: Colors.red,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: Text(
+                                      'Mua ngay',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PaymentScreen(
-                                              pet: pet,
-                                              currentClient: currentClient)),
-                                    );
-                                  },
-                                  child: Material(
-                                    borderRadius: BorderRadius.circular(20),
-                                    elevation: 4,
-                                    color: Theme.of(context).primaryColor,
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(15.0),
-                                      child: Text(
-                                        'Mua ngay',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -979,7 +972,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                 (item) => Image.network(
                   item,
                   fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height * 0.45,
+                  height: MediaQuery.of(context).size.height * 0.4,
                   width: double.infinity,
                 ),
               )
@@ -989,9 +982,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
             scrollPhysics: const BouncingScrollPhysics(),
             autoPlay: true,
             //điều chỉnh tỉ lệ ảnh hiển thị
-            aspectRatio: MediaQuery.of(context).size.height *
-                0.56 /
-                MediaQuery.of(context).size.width,
+            aspectRatio: MediaQuery.of(context).size.height * 0.534 / MediaQuery.of(context).size.width,
             viewportFraction: 1,
 
             onPageChanged: (index, reason) {

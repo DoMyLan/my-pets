@@ -21,6 +21,7 @@ class _VoucherState extends State<VoucherScreen>
   late TabController _tabController = TabController(length: 4, vsync: this);
   // ignore: prefer_typing_uninitialized_variables
   var currentClient;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _VoucherState extends State<VoucherScreen>
     var temp = await getCurrentClient();
     setState(() {
       currentClient = temp;
+      isLoading = false;
     });
   }
 
@@ -44,78 +46,84 @@ class _VoucherState extends State<VoucherScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text('Voucher',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () async {
-              var currentClient = await getCurrentClient();
-
-              if (currentClient != null) {
-                if (currentClient.role == 'USER') {
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    // ignore: use_build_context_synchronously
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MenuFrameUser(
-                        userId: currentClient.id,
-                      ),
-                    ),
-                  );
-                } else if (currentClient.role == 'CENTER') {
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                    // ignore: use_build_context_synchronously
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MenuFrameCenter(centerId: currentClient.id),
-                    ),
-                  );
-                }
-              }
-            },
-            icon: const Icon(FontAwesomeIcons.bars),
-          )),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: TabView(
-              tabController: _tabController,
-              centerId: currentClient!.id,
-            ),
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
           )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await showModalBottomSheet(
-            isScrollControlled: false,
-            context: context,
-            builder: (BuildContext context) {
-              //widget modelbottomsheet
-              return const CustomModalBottomSheet();
-            },
-          );
+        : Scaffold(
+            appBar: AppBar(
+                title: const Text('Voucher',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                centerTitle: true,
+                leading: IconButton(
+                  onPressed: () async {
+                    var currentClient = await getCurrentClient();
 
-          if (result != null) {
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const VoucherScreen()));
-          }
-        },
-        backgroundColor: mainColor,
-        child: const Icon(
-          Icons.add,
-          size: 30,
-          color: Colors.white,
-        ),
-      ),
-    );
+                    if (currentClient != null) {
+                      if (currentClient.role == 'USER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuFrameUser(
+                              userId: currentClient.id,
+                            ),
+                          ),
+                        );
+                      } else if (currentClient.role == 'CENTER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MenuFrameCenter(centerId: currentClient.id),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(FontAwesomeIcons.bars),
+                )),
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: TabView(
+                    tabController: _tabController,
+                    centerId: currentClient!.id,
+                  ),
+                )
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                final result = await showModalBottomSheet(
+                  isScrollControlled: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    //widget modelbottomsheet
+                    return const CustomModalBottomSheet();
+                  },
+                );
+
+                if (result != null) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VoucherScreen()));
+                }
+              },
+              backgroundColor: mainColor,
+              child: const Icon(
+                Icons.add,
+                size: 30,
+                color: Colors.white,
+              ),
+            ),
+          );
   }
 }
 
