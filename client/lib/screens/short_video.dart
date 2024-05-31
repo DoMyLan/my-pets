@@ -63,6 +63,7 @@ class _ListVideoAppState extends State<ListVideoApp> {
       itemBuilder: (BuildContext context, int index) {
         return VideoApp(
           videoPost: videoPost[index],
+          back: false,
         );
       },
     );

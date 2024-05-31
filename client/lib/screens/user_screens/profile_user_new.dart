@@ -8,6 +8,7 @@ import 'package:found_adoption_application/models/userInfo.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
+import 'package:found_adoption_application/screens/user_screens/video_user.dart';
 import 'package:found_adoption_application/services/followApi.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
@@ -34,7 +35,7 @@ class _ProfileUserState extends State<ProfileUser>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     isLoading = true;
 
     getClient();
@@ -435,8 +436,7 @@ class _ProfileUserState extends State<ProfileUser>
                                         tabs: const <Widget>[
                                           Tab(text: 'Bài viết'),
                                           Tab(text: 'Video'),
-                                          Tab(text: 'Thú cưng'),
-                                          Tab(text: 'Đã bán'),
+                                          Tab(text: 'Đã mua'),
                                         ],
                                       ),
                                       const SizedBox(
@@ -447,14 +447,9 @@ class _ProfileUserState extends State<ProfileUser>
                                           controller: _tabController,
                                           children: [
                                             buildPostsList(petStoriesPosts),
+                                            const ListVideo(),
                                             Center(
-                                              child: Text('Video'),
-                                            ),
-                                            Center(
-                                              child: Text('Thú cưng'),
-                                            ),
-                                            Center(
-                                              child: Text('Đã bán'),
+                                              child: Text('Đã mua'),
                                             ),
                                             // TabView(recipes: listRecipe),
                                             // TabView(recipes: listRecipe),

@@ -67,8 +67,8 @@ class _PostCardState extends State<PostCard> {
       });
     }
     for (var element in likes) {
-      if (element.centerId?.id == currentClient.id ||
-          element.userId?.id == currentClient.id) {
+      if (element.centerId?.id == currentClient!.id ||
+          element.userId?.id == currentClient!.id) {
         if (mounted) {
           setState(() {
             liked = true;

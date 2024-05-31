@@ -84,9 +84,9 @@ class Pet {
       breed: json['breed'],
       gender: json['gender'],
       age: double.parse(json['age'] as String),
+      //không cần đổi múi giờ
       birthday: json['birthday'] != null
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['birthday']))
-              .add(const Duration(hours: 7))
           : null,
       color: json['color'] as List<dynamic>,
       inoculation: json['inoculation'],
@@ -106,13 +106,12 @@ class Pet {
       updatedAt: (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['updatedAt']))
           .add(const Duration(hours: 7)),
       reducePrice: json['reducePrice'] as int,
+      //không cần đổi múi giờ
       dateStartReduce: json['dateStartReduce'] != null
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['dateStartReduce']))
-              .add(const Duration(hours: 7))
           : null,
       dateEndReduce: json['dateEndReduce'] != null
           ? (DateFormat("yyyy-MM-ddTHH:mm:ss").parse(json['dateEndReduce']))
-              .add(const Duration(hours: 7))
           : null,
     );
   }

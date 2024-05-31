@@ -135,7 +135,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
         isLoading = false;
       });
 
-      var pets = await getAllPet();
+      var pets = await getAllPet(centerId);
       if (!listEquals(pets, previousPets)) {
         // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
         setState(() {
