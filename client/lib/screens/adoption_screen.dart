@@ -1,5 +1,4 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/back_to_home.dart';
@@ -8,10 +7,10 @@ import 'package:found_adoption_application/custom_widget/quick_infor.dart';
 import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/filter_dialog.dart';
-import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
 class AdoptionScreen extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final centerId;
 
   const AdoptionScreen({super.key, required this.centerId});
@@ -22,7 +21,9 @@ class AdoptionScreen extends StatefulWidget {
 
 class _AdoptionScreenState extends State<AdoptionScreen>
     with AutomaticKeepAliveClientMixin {
+  // ignore: prefer_typing_uninitialized_variables
   var centerId;
+  // ignore: prefer_typing_uninitialized_variables
   late var currentClient;
   bool isLoading = true;
   late List<Pet> animals = [];
@@ -33,7 +34,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
 
   int _currentTabIndex = 0;
 
-  Map<String, List<Pet>?> _filterResultsByTab = {
+  final Map<String, List<Pet>?> _filterResultsByTab = {
     'all': null,
     'forSale': null,
     'pending': null,
@@ -65,6 +66,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
       //         true; // Đặt biến trạng thái thành true sau khi dữ liệu đã được fetch
       //   });
       // }
+    // ignore: empty_catches
     } catch (error) {}
   }
 
@@ -108,7 +110,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      TBackHomePage(),
+                                      const TBackHomePage(),
                                       TuserQuickInfor(
                                           currentClient: currentClient),
                                       CircleAvatar(
@@ -143,11 +145,11 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                     backgroundColor: mainColor,
                                     unselectedBackgroundColor: Colors.grey[300],
                                     unselectedLabelStyle:
-                                        TextStyle(color: Colors.black),
-                                    labelStyle: TextStyle(
+                                        const TextStyle(color: Colors.black),
+                                    labelStyle: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
-                                    tabs: [
+                                    tabs: const [
                                       Tab(
                                         icon: Icon(Icons.pets),
                                         text: "Tất cả",
@@ -219,7 +221,7 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                 Positioned(
                                   top: 48,
                                   right: 10,
-                                  child: Container(
+                                  child: SizedBox(
                                     width: 70,
                                     height: 50,
                                     child: Row(
@@ -229,14 +231,14 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                                           CrossAxisAlignment.center,
                                       children: [
                                         IconButton(
-                                          icon: Icon(FontAwesomeIcons.sliders),
+                                          icon: const Icon(FontAwesomeIcons.sliders),
                                           color: mainColor,
                                           onPressed: () {
                                             showFilterDialog();
                                           },
                                           iconSize: 20,
                                         ),
-                                        Text(
+                                        const Text(
                                           'Lọc',
                                           style: TextStyle(
                                             color: Colors.black,
@@ -335,7 +337,8 @@ class _AdoptionScreenState extends State<AdoptionScreen>
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
+                  // ignore: deprecated_member_use
                   FontAwesomeIcons.search,
                   color: Colors.grey,
                   size: 16,
@@ -346,8 +349,8 @@ class _AdoptionScreenState extends State<AdoptionScreen>
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    style: TextStyle(fontSize: 13),
-                    decoration: InputDecoration(
+                    style: const TextStyle(fontSize: 13),
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
@@ -364,21 +367,21 @@ class _AdoptionScreenState extends State<AdoptionScreen>
               ],
             ),
           ),
-          Container(
+          SizedBox(
             width: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(FontAwesomeIcons.sliders),
+                  icon: const Icon(FontAwesomeIcons.sliders),
                   color: mainColor,
                   onPressed: () {
                     showFilterDialog();
                   },
                   iconSize: 20,
                 ),
-                Text(
+                const Text(
                   'Lọc',
                   style: TextStyle(
                     color: Colors.black,

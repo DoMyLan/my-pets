@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/payment_VNPAY.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
@@ -14,7 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 // ignore: must_be_immutable
 class PaymentScreen extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  var pet;
+  Pet pet;
   var currentClient;
   PaymentScreen({super.key, required this.pet, required this.currentClient});
 
@@ -33,10 +34,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   var voucherTotal = 0;
   var totalPayment = 0;
   late int _paymentMethod = 0;
+
   late String address = '';
-
   var newAddress = '';
-
   late String? voucherCode = "";
   var orderSuccess = false;
 
@@ -49,9 +49,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
     currentClient = widget.currentClient;
     transportFee = calculateShippingCost(calculateDistance(
         widget.currentClient.location, widget.pet.centerId!.location));
-    totalFee = int.parse(widget.pet.price) + transportFee;
-    priceProduct = int.parse(widget.pet.price);
-    totalPayment = int.parse(widget.pet.price) + transportFee;
+    // kiểm tra ngày hiện tại có nằm trong ngày giảm giá không
+    if (widget.pet.reducePrice > 0) {
+      var now = DateTime.now();
+      var start = widget.pet.dateStartReduce;
+      var end = widget.pet.dateEndReduce;
+      if (now.isAfter(start!) && now.isBefore(end!)) {
+        priceProduct = int.parse(widget.pet.price) - widget.pet.reducePrice > 0
+            ? int.parse(widget.pet.price) - widget.pet.reducePrice
+            : 0;
+        totalFee = (int.parse(widget.pet.price) - widget.pet.reducePrice > 0
+            ? int.parse(widget.pet.price) - widget.pet.reducePrice
+            : 0) + transportFee;
+        totalPayment = (int.parse(widget.pet.price) - widget.pet.reducePrice > 0
+            ? int.parse(widget.pet.price) - widget.pet.reducePrice
+            : 0) + transportFee;
+      } else {
+        priceProduct = int.parse(widget.pet.price);
+        totalFee = int.parse(widget.pet.price) + transportFee;
+        totalPayment = int.parse(widget.pet.price) + transportFee;
+      }
+    } else {
+      priceProduct = int.parse(widget.pet.price);
+      totalFee = int.parse(widget.pet.price) + transportFee;
+      totalPayment = int.parse(widget.pet.price) + transportFee;
+    }
+
     address =
         "${widget.currentClient.firstName} ${widget.currentClient.lastName}, ${widget.currentClient.phoneNumber}, ${widget.currentClient.address}";
   }
@@ -184,11 +207,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             );
                           },
                           child: Text(
-                            widget.pet.centerId != null
-                                ? widget.pet.centerId!.name
-                                : widget.pet.giver!.firstName +
-                                    ' ' +
-                                    widget.pet.giver!.lastName,
+                            widget.pet.centerId!.name,
                             style: const TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold,
@@ -323,7 +342,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: ((context) => VoucherScreen(
-                                    centerId: widget.pet.centerId.id,
+                                    centerId: widget.pet.centerId!.id,
                                     selectedVoucherCode: voucherCode))));
                         if (voucherProduct == 0 &&
                             voucherShipping == 0 &&
@@ -338,16 +357,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 voucherProduct = min(
                                     voucher.discount * priceProduct,
                                     voucher.maxDiscount);
-                                totalPayment = totalFee - voucherProduct;
+                                totalPayment = totalFee - voucherProduct > 0
+                                    ? totalFee - voucherProduct
+                                    : 0;
                               } else if (voucher.type == "Shipping") {
                                 voucherShipping = min(
                                     voucher.discount * transportFee,
                                     voucher.maxDiscount);
-                                totalPayment = totalFee - transportFee;
+                                totalPayment = totalFee - transportFee > 0
+                                    ? totalFee - voucherShipping
+                                    : 0;
                               } else {
                                 voucherTotal = min(voucher.discount * totalFee,
                                     voucher.maxDiscount);
-                                totalPayment = totalFee - voucherTotal;
+                                totalPayment = totalFee - voucherTotal > 0
+                                    ? totalFee - voucherTotal
+                                    : 0;
                               }
                             }
                           });
@@ -403,38 +428,38 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   thickness: 1,
                   height: 1,
                 ),
-                const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Tin nhắn: ',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 100,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: 'Lưu ý cho Trung tâm...',
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(
-                                fontSize: 15, color: Colors.grey.shade400)),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                Divider(
-                  color: Colors.grey.shade300,
-                  thickness: 1,
-                  height: 1,
-                ),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 10.0),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     const Text(
+                //       'Tin nhắn: ',
+                //       style: TextStyle(
+                //         fontSize: 14.0,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //     const SizedBox(
+                //       width: 100,
+                //     ),
+                //     Expanded(
+                //       child: TextFormField(
+                //         decoration: InputDecoration(
+                //             hintText: 'Lưu ý cho Trung tâm...',
+                //             border: InputBorder.none,
+                //             hintStyle: TextStyle(
+                //                 fontSize: 15, color: Colors.grey.shade400)),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 20.0),
+                // Divider(
+                //   color: Colors.grey.shade300,
+                //   thickness: 1,
+                //   height: 1,
+                // ),
+                // const SizedBox(height: 20.0),
                 Column(
                   children: <Widget>[
                     const Row(
@@ -504,14 +529,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 // ),
 //ĐỂ TẠM Ở ĐÂY ĐỂ TEST THANH TOÁN PAYPALS
 
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 10.0),
                 Divider(
                   color: Colors.grey.shade300,
                   thickness: 1,
                   height: 1,
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -544,7 +569,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.pet.price} đ',
+                        int.parse(widget.pet.price) - widget.pet.reducePrice > 0
+                            ? '${int.parse(widget.pet.price) - widget.pet.reducePrice} đ'
+                            : '0 đ',
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
@@ -750,12 +777,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       widget.pet.centerId != null
                                           ? true
                                           : false,
-                                      widget.pet.centerId != null
-                                          ? widget.pet.centerId.id
-                                          // ignore: prefer_null_aware_operators
-                                          : widget.pet.giver == null
-                                              ? null
-                                              : widget.pet.giver.id,
+                                      widget.pet.centerId!.id,
                                       widget.pet,
                                       address,
                                       transportFee,

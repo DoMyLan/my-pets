@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/models/breed_model.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
@@ -23,7 +24,6 @@ class AddPetScreen extends StatefulWidget {
 
 class _AddPetScreenState extends State<AddPetScreen> {
   final _namePetController = TextEditingController();
-  final _breedController = TextEditingController();
   final _weightController = TextEditingController();
   final _originalController = TextEditingController();
   final _instructionController = TextEditingController();
@@ -43,6 +43,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
   List<dynamic> finalResult = [];
+  Breed? selectedBreed;
+  List<Breed> breeds = [];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -73,6 +75,8 @@ class _AddPetScreenState extends State<AddPetScreen> {
     super.initState();
     notificationHandler.initializeNotifications();
     getClient();
+    breeds = Breed.generate('Cat');
+    selectedBreed = breeds[0];
   }
 
   Future<void> getClient() async {
@@ -138,7 +142,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
           currentClient.id,
           _namePetController.text.toString(),
           _selectedPetType,
-          _breedController.text.toString(),
+          selectedBreed!.name,
           birthday!,
           _selectedGender,
           jsonDecode(colorsJson),
@@ -155,7 +159,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
     setState(() {
       imageFileList = [];
       _namePetController.clear();
-      _breedController.clear();
       isFreeOptionSelected = true;
       _ageController.clear();
       _descriptionController.clear();
@@ -253,6 +256,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           onChanged: (value) {
                             setState(() {
                               isFreeOptionSelected = value as bool;
+                              price = '0';
                             });
                           },
                         ),
@@ -291,7 +295,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                 
                       Container(
                         width: MediaQuery.of(context).size.width *
                             0.7, // Đặt chiều rộng của container
@@ -320,7 +323,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
                           ),
                         ),
                       ),
-                     
                     ],
                   ),
                 ),
@@ -331,6 +333,36 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic),
+              ),
+              Row(
+                children: [
+                  const Text('Loại:'),
+                  Radio(
+                    value: 'Cat',
+                    groupValue: _selectedPetType,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPetType = value.toString();
+                        breeds = Breed.generate('Cat');
+
+                        selectedBreed = breeds[0];
+                      });
+                    },
+                  ),
+                  const Text('Mèo'),
+                  Radio(
+                    value: 'Dog',
+                    groupValue: _selectedPetType,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPetType = value.toString();
+                        breeds = Breed.generate('Dog');
+                        selectedBreed = breeds[0];
+                      });
+                    },
+                  ),
+                  const Text('Chó'),
+                ],
               ),
 
               Table(
@@ -355,15 +387,45 @@ class _AddPetScreenState extends State<AddPetScreen> {
                       ),
                       TableCell(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: _breedController,
-                            decoration: const InputDecoration(
-                              labelText: 'Giống loài',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: DropdownButtonFormField<Breed>(
+                              value: selectedBreed,
+                              decoration: const InputDecoration(
+                                labelText: 'Giống loài',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: breeds.map((Breed value) {
+                                return DropdownMenuItem<Breed>(
+                                    value: value,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Image.asset(
+                                          value.asset,
+                                          width: 25,
+                                          height: 25,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        const SizedBox(width: 2),
+                                        SizedBox(
+                                          width: 85,
+                                          child: Text(
+                                            value.name,
+                                            overflow: TextOverflow.fade,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                              }).toList(),
+                              onChanged: (Breed? newValue) {
+                                setState(() {
+                                  selectedBreed = newValue!;
+                                });
+                              },
+                            )),
                       ),
                     ],
                   ),
@@ -398,31 +460,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
                 ],
               ),
 
-              Row(
-                children: [
-                  const Text('Loại:'),
-                  Radio(
-                    value: 'Cat',
-                    groupValue: _selectedPetType,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedPetType = value.toString();
-                      });
-                    },
-                  ),
-                  const Text('Mèo'),
-                  Radio(
-                    value: 'Dog',
-                    groupValue: _selectedPetType,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedPetType = value.toString();
-                      });
-                    },
-                  ),
-                  const Text('Chó'),
-                ],
-              ),
               // TextField(
               //   controller: _colorController,
               //   decoration: InputDecoration(labelText: 'Color'),
@@ -530,7 +567,7 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                   ),
                   const Text(
-                    'Bé trai',
+                    'Đực',
                     style: TextStyle(fontSize: 12),
                   ),
                   Radio(
@@ -543,19 +580,19 @@ class _AddPetScreenState extends State<AddPetScreen> {
                     },
                   ),
                   const Text(
-                    'Bé gái',
+                    'Cái',
                     style: TextStyle(fontSize: 12),
                   ),
-                  Radio(
-                    value: 'ORTHER',
-                    groupValue: _selectedGender,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedGender = value.toString();
-                      });
-                    },
-                  ),
-                  const Text('Không xác định'),
+                  // Radio(
+                  //   value: 'ORTHER',
+                  //   groupValue: _selectedGender,
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       _selectedGender = value.toString();
+                  //     });
+                  //   },
+                  // ),
+                  // const Text('Không xác định'),
                 ],
               ),
               const SizedBox(
@@ -648,13 +685,11 @@ class _AddPetScreenState extends State<AddPetScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_namePetController.text == '' ||
-                          _breedController.text == '' ||
                           birthday == null ||
                           imageFileList.isEmpty ||
                           _selectedPetType == '' ||
                           _selectedGender == '') {
-                        notification(
-                            'Vui lòng điền đầy đủ thông tin', true);
+                        notification('Vui lòng điền đầy đủ thông tin', true);
                         return;
                       }
                       // Create a new Pet object with the entered information
@@ -809,7 +844,6 @@ class _AddPetScreenState extends State<AddPetScreen> {
   @override
   void dispose() {
     _namePetController.dispose();
-    _breedController.dispose();
 
     _ageController.dispose();
     _descriptionController.dispose();

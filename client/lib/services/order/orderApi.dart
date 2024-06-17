@@ -20,11 +20,7 @@ Future<String?> createOrder(
   try {
     var body = jsonEncode({
       "buyer": buyer,
-      "seller": {
-        "typeSeller": isCenterSeller ? "C" : "U",
-        "userId": isCenterSeller ? null : sellerId,
-        "centerId": isCenterSeller ? sellerId : null
-      },
+      "seller": {"typeSeller": "C", "userId": null, "centerId": sellerId},
       "petId": pet.id,
       "address": address,
       "price": pet.price,
