@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> {
                             socket.emit(
                                 'addNewUser', {'userId': currentClient.id});
                             return MaterialApp(
-                              title: 'Flutter Demo',
+                              title: 'My Pets',
                               debugShowCheckedModeBanner: false,
                               theme: ThemeData(
                                 primaryColor: mainColor,
@@ -149,7 +149,7 @@ class _MyAppState extends State<MyApp> {
                             socket.emit(
                                 'addNewUser', {'userId': currentClient.id});
                             return MaterialApp(
-                              title: 'Flutter Demo',
+                              title: 'My Pets',
                               debugShowCheckedModeBanner: false,
                               theme: ThemeData(
                                 primaryColor: mainColor,

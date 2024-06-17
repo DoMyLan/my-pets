@@ -177,17 +177,26 @@ Future<void> deletePet(petId) async {
 }
 
 Future<void> updatePet(
-    String namePet,
-    String petType,
-    String breed,
-    double age,
-    String gender,
-    String color,
-    String description,
-    // String level,
-    List<XFile> imagePaths,
-    bool isNewUpload,
-    String petId) async {
+  String namePet,
+  String petType,
+  String breed,
+  String gender,
+  List<dynamic> color,
+  String description,
+  // String level,
+  List<XFile> imagePaths,
+  bool isNewUpload,
+  String petId,
+  String price,
+  String inoculation,
+  String instruction,
+  String attention,
+  String hobbies,
+  String original,
+  bool free,
+  String weight,
+  DateTime birthday,
+) async {
   var responseData = {};
   List<dynamic> finalResult = [];
   var result;
@@ -201,12 +210,50 @@ Future<void> updatePet(
     "namePet": namePet,
     "petType": petType,
     "breed": breed,
-    "age": age.toString(),
     "gender": gender,
     "color": color,
     "description": description,
+    "price": price,
+    "birthday": DateFormat("MM-dd-yyyy").format(birthday),
+    "inoculation": inoculation,
+    "instruction": instruction,
+    "attention": attention,
+    "hobbies": hobbies,
+    "original": original,
+    "free": free,
+    "weight": weight,
     // "level": level,
     if (isNewUpload) "images": finalResult,
+  });
+  try {
+    responseData = await api('pet/$petId', 'PUT', body);
+    if (responseData['success']) {
+      notification(responseData['message'], false);
+    } else {
+      notification(responseData['message'], true);
+    }
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+}
+
+Future<void> salePet(
+  String petId,
+  int reducePrice,
+  DateTime? dateStartReduce,
+  DateTime? dateEndReduce,
+) async {
+  var responseData = {};
+
+  var body = jsonEncode({
+    "reducePrice": reducePrice,
+    "dateStartReduce": dateStartReduce == null
+        ? null
+        : DateFormat("MM-dd-yyyy").format(dateStartReduce),
+    "dateEndReduce": dateEndReduce == null
+        ? null
+        : DateFormat("MM-dd-yyyy").format(dateEndReduce),
   });
   try {
     responseData = await api('pet/$petId', 'PUT', body);
