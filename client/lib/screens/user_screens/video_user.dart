@@ -5,19 +5,20 @@ import 'package:found_adoption_application/services/post/post.dart';
 import 'package:video_player/video_player.dart';
 
 class ListVideo extends StatefulWidget {
-  const ListVideo({super.key});
+  final String id;
+  const ListVideo({super.key, required this.id});
 
   @override
   State<ListVideo> createState() => _ListVideoState();
 }
 
 class _ListVideoState extends State<ListVideo> {
-  Future<VideoResult>? videoFuture;
+  Future<List<ShortVideo>>? videoFuture;
 
   @override
   void initState() {
     super.initState();
-    videoFuture = getShortVideo(1, 10);
+    videoFuture = getAllVideoPersonal(widget.id);
   }
 
   @override
@@ -36,7 +37,20 @@ class _ListVideoState extends State<ListVideo> {
               );
             }
 
-            List<ShortVideo> videos = snapshot.data!.posts;
+            List<ShortVideo> videos = snapshot.data as List<ShortVideo>;
+
+            if (videos.isEmpty) {
+              return const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.video_library,
+                        size: 50.0), // Adjust the icon and size as needed
+                    Text('Chưa có video nào được tải lên'),
+                  ],
+                ),
+              );
+            }
 
             return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

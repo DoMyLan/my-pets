@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
@@ -8,6 +10,8 @@ import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
+import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/screens/user_screens/video_user.dart';
 import 'package:found_adoption_application/services/followApi.dart';
@@ -196,56 +200,84 @@ class _ProfileCenterState extends State<ProfileCenter>
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              (center!.followerUser.length +
-                                                      center!.followerCenter
-                                                          .length)
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey[800]),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            const Text(
-                                              'Theo dõi',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey,
-                                                  height: 1.5),
-                                            ),
-                                          ],
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FollowerScreen(
+                                                  id: center!.id,
+                                                  currentClient: currentClient,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                (center!.followerUser.length +
+                                                        center!.followerCenter
+                                                            .length)
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              const Text(
+                                                'Theo dõi',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                    height: 1.5),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              (center!.followingCenter.length +
-                                                      center!
-                                                          .followingUser.length)
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.grey[800]),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            const Text(
-                                              'Đang theo dõi',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey,
-                                                  height: 1.5),
-                                            ),
-                                          ],
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FollowingScreen(
+                                                  id: center!.id,
+                                                  currentClient: currentClient,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                (center!.followingCenter.length +
+                                                        center!
+                                                            .followingUser.length)
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey[800]),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              const Text(
+                                                'Đang theo dõi',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                    height: 1.5),
+                                              ),
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -449,8 +481,8 @@ class _ProfileCenterState extends State<ProfileCenter>
                                           controller: _tabController,
                                           children: [
                                             buildPostsList(petStoriesPosts),
-                                            const ListVideo(),
-                                            AdoptionScreen(centerId: center!.id),
+                                            ListVideo(id: center!.id),
+                                            AdoptionScreen(centerId: center!.id)
                                             // TabView(recipes: listRecipe),
                                             // TabView(recipes: listRecipe),
                                             // TabView(recipes: listRecipe),
