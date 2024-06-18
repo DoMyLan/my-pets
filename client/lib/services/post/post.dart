@@ -208,3 +208,18 @@ Future<VideoResult> getShortVideo(page, limit) async {
       totalPost: responseData['totalPost'],
       page: responseData['page']);
 }
+
+Future<List<ShortVideo>> getAllVideoPersonal(var id) async {
+  var responseData;
+  try {
+    responseData = await api('post/personal/$id?type=VIDEO', 'GET', '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  List<dynamic> postList = List.empty();
+
+  postList = responseData['data'] ?? List.empty();
+  List<ShortVideo> posts = postList.map((json) => ShortVideo.fromJson(json)).toList();
+  return posts;
+}

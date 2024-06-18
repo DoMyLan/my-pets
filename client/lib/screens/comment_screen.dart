@@ -7,7 +7,6 @@ import 'package:found_adoption_application/models/pet_center.dart'
 import 'package:found_adoption_application/models/pet_center.dart';
 import 'package:found_adoption_application/models/user.dart' as user_comment;
 import 'package:found_adoption_application/models/user.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/user_screens/profile_user_new.dart';
 import 'package:found_adoption_application/services/post/comment.dart';
@@ -18,7 +17,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class CommentScreen extends StatefulWidget {
   final postId;
-  CommentScreen({super.key, required this.postId});
+  const CommentScreen({super.key, required this.postId});
 
   @override
   _CommentScreenState createState() => _CommentScreenState();
