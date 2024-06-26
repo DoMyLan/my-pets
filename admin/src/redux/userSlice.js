@@ -18,7 +18,7 @@ const userSlice = createSlice({
             state.current= action.payload.infoUserResponse
         },
         setProfile(state, action) {
-            localStorage.setItem('user', JSON.stringify(action.payload.data))
+            localStorage.setItem('user', JSON.stringify(action.payload))
         },
         logout(state) {
             localStorage.removeItem('user')
