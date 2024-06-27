@@ -16,41 +16,37 @@ const LayoutOrder = () => {
   useEffect(() => {
     setIsLoading(true);
 
+    //call api cùng lúc
     orderAPI.getOrder("PENDING")
       .then((dataRes) => {
         setListOrderPD(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
 
     orderAPI.getOrder("CONFIRMED")
       .then((dataRes) => {
         setListOrderCF(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
 
     orderAPI.getOrder("DELIVERING")
       .then((dataRes) => {
         setListOrderDLING(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
 
     orderAPI.getOrder("DELIVERED")
       .then((dataRes) => {
         setListOrderDLED(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
 
     orderAPI.getOrder("COMPLETED")
       .then((dataRes) => {
         setListOrderCPL(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
 
     orderAPI.getOrder("CANCEL")
       .then((dataRes) => {
         setListOrderCC(dataRes.data);
-        setIsLoading(false);
       }).catch((error) => { });
+    setIsLoading(false);
   }, []);
 
   return (

@@ -1,9 +1,7 @@
 import axios from '~/services/axios';
 const voucherAPI = {
     getVoucher: async (status) => {
-        console.log(status)
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user)
         const response = await axios.get(`/voucher/${user._id}?use=${status}`);
         return response.data;
     },

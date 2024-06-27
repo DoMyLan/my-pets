@@ -28,8 +28,8 @@ const NavbarCenter = () => {
     const location = useLocation();
 
     const currentUser = {
-        displayName: userLogin.current?.fullName,
-        image: 'https://avatars.githubusercontent.com/u/102749812?s=400&u=3c7e5db86ba5ac72e8e035234afce6935803dacb&v=4'
+        displayName: JSON.parse(localStorage.getItem('user')).name,
+        image: JSON.parse(localStorage.getItem('user')).avatar
     };
 
     return (
