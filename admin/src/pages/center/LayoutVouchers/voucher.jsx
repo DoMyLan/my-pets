@@ -206,24 +206,24 @@ const Voucher = (props) => {
     setLoading(true);
     voucherAPI.delete(item._id).then((dataRes) => {
       if (dataRes.success) {
-        const index = props.data.findIndex((item) => item._id === id);
+        const index = props.data.findIndex((item1) => item._id === item1._id);
         props.data.splice(index, 1);
         props.setListVoucherAll([...props.data]);
 
-        const index2 = props.listVoucherAfter.findIndex((item) => item._id === id);
-        if (index2) {
+        const index2 = props.listVoucherAfter.findIndex((item1) => item1._id === item._id);
+        if (index2 != -1) {
           props.listVoucherAfter.splice(index2, 1);
           props.setListVoucherAfter([...props.listVoucherAfter]);
         }
 
-        const index3 = props.listVoucherBefore.findIndex((item) => item._id === id);
-        if (index3) {
+        const index3 = props.listVoucherBefore.findIndex((item1) => item1._id === item._id);
+        if (index3 != -1) {
           props.listVoucherBefore.splice(index3, 1);
           props.setListVoucherBefore([...props.listVoucherBefore]);
         }
 
-        const index4 = props.listVoucherBetween.findIndex((item) => item._id === id);
-        if (index4) {
+        const index4 = props.listVoucherBetween.findIndex((item1) => item1._id === item._id);
+        if (index4 != -1) {
           props.listVoucherBetween.splice(index4, 1);
           props.setListVoucherBetween([...props.listVoucherBetween]);
         }

@@ -12,18 +12,24 @@ const SidebarData = {
             id: 3,
             display_name: 'Thú cưng',
             route: '/center/pets',
-            icon: 'bx bx-user-pin'
+            icon: 'bx bx-bone'
         },
         {
             id: 4,
             display_name: 'Đơn hàng',
             route: '/center/orders',
-            icon: 'bx bx-user-pin'
+            icon: 'bx bx-cart'
         },
         {
             id: 5,
             display_name: 'Voucher',
             route: '/center/voucher',
+            icon: 'bx bxs-gift'
+        },
+        {
+            id: 6,
+            display_name: 'Thống kê doanh thu',
+            route: '/center/revenue',
             icon: 'bx bxs-report'
         },
         // {
