@@ -7,7 +7,8 @@ import "package:found_adoption_application/utils/loading.dart";
 import "package:intl/intl.dart";
 
 class CustomModalBottomSheet extends StatefulWidget {
-  const CustomModalBottomSheet({super.key});
+  late Voucher? voucher;
+  CustomModalBottomSheet({super.key, this.voucher});
 
   @override
   State<CustomModalBottomSheet> createState() => _CustomModalBottomSheetState();
@@ -29,10 +30,19 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
   @override
   void initState() {
     super.initState();
-
     start = DateTime.now();
     end = DateTime.now().add(const Duration(days: 1));
     getClient();
+    if (widget.voucher != null) {
+      voucherCodeController.text = widget.voucher!.code;
+      selectedVoucher = widget.voucher!.type;
+      khuyenmai.text = widget.voucher!.discount.toString();
+      toida.text = widget.voucher!.maxDiscount.toString();
+      start = widget.voucher!.startDate;
+      end = widget.voucher!.endDate;
+      selectedActionState = widget.voucher!.status;
+      soluong.text = widget.voucher!.quantity.toString();
+    }
   }
 
   Future<void> getClient() async {
@@ -42,15 +52,34 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
     });
   }
 
-  Future<DateTime?> _selectDate(
+  Future<DateTime?> _selectDateTime(
       BuildContext context, DateTime selectedDate) async {
+    // First, let the user pick a date
     final DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
+      initialDate: DateTime.now().isBefore(start) ? start : DateTime.now(),
+      firstDate: DateTime(2020),
       lastDate: DateTime(2050),
     );
-    return pickedDate;
+    if (pickedDate == null)
+      return null; // If the user cancels the date picker, return null
+
+    // Then, let the user pick a time
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime == null)
+      return null; // If the user cancels the time picker, return null
+
+    // Combine the date and time into a single DateTime object
+    return DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
   }
 
   @override
@@ -60,7 +89,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
       padding: mediaQueryData.viewInsets,
       child: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.75,
+          height: MediaQuery.of(context).size.height * 0.8,
           padding: const EdgeInsets.fromLTRB(15, 4, 15, 4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -247,7 +276,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                         InkWell(
                           onTap: () async {
                             final pickedDate =
-                                await _selectDate(context, start);
+                                await _selectDateTime(context, start);
                             if (pickedDate != null && mounted) {
                               setState(() {
                                 start = pickedDate;
@@ -288,7 +317,7 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                         const SizedBox(height: 8),
                         InkWell(
                           onTap: () async {
-                            final pickedDate = await _selectDate(context, end);
+                            final pickedDate = await _selectDateTime(context, end);
                             if (pickedDate != null && mounted) {
                               setState(() {
                                 end = pickedDate;
@@ -436,7 +465,12 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                       quantity: int.parse(soluong.text),
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now());
-                  await createVoucher(voucher);
+
+                  if (widget.voucher != null) {
+                    await updateVoucher(widget.voucher!.id, voucher);
+                  } else {
+                    await createVoucher(voucher);
+                  }
                   Navigator.of(context).pop();
                   Navigator.pop(context, voucher);
 
@@ -451,18 +485,19 @@ class _CustomModalBottomSheetState extends State<CustomModalBottomSheet> {
                   //code của Tuấn sao nó báo lỗi nên cmt lại
                   //lỗi WidgetStateProperty chưa đc define
                   // backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
                   // shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       side: const BorderSide(color: Colors.green),
                     ),
                   ),
                 ),
-                child: const Text(
-                  'Tạo Voucher',
-                  style: TextStyle(color: Colors.white, fontSize: 14),
+                child: Text(
+                  widget.voucher != null ? 'Cập nhật' : 'Tạo Voucher',
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ), // Văn bản của button
               ),
             ],

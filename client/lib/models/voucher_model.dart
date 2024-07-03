@@ -11,6 +11,7 @@ class Voucher {
   final String status;
   final String createdBy;
   final int quantity;
+  final int? used;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -25,6 +26,7 @@ class Voucher {
     required this.status,
     required this.createdBy,
     required this.quantity,
+    this.used,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -37,13 +39,13 @@ class Voucher {
         discount: json['discount'] as int,
         maxDiscount: json['maxDiscount'] as int,
         startDate: (DateFormat("yyyy-MM-ddTHH:mm:ss")
-                .parse(json['startDate']))
-            .add(const Duration(hours: 7)),
+                .parse(json['startDate'])),
         endDate: (DateFormat("yyyy-MM-ddTHH:mm:ss")
             .parse(json['endDate'])),
         status: json['status'] as String,
         createdBy: json['createdBy'] as String,
         quantity: json['quantity'] as int,
+        used: json['used'] as int,
         createdAt: (DateFormat("yyyy-MM-ddTHH:mm:ss")
                 .parse(json['createdAt']))
             .add(const Duration(hours: 7)),
