@@ -33,6 +33,49 @@ Future<String?> createVoucher(Voucher voucher) async {
   return null;
 }
 
+Future<String?> updateVoucher(String id, Voucher voucher) async {
+  try {
+    var body = jsonEncode({
+      "code": voucher.code,
+      "type": voucher.type,
+      "discount": voucher.discount,
+      "maxDiscount": voucher.maxDiscount,
+      "startDate": DateFormat("MM-dd-yyyy HH:mm").format(voucher.startDate),
+      "endDate": DateFormat("MM-dd-yyyy HH:mm").format(voucher.endDate),
+      "status": voucher.status,
+      "createdBy": voucher.createdBy,
+      "quantity": voucher.quantity,
+    });
+    var responseData = await api('voucher/$id', 'PUT', body);
+
+    if (responseData['success']) {
+      notification(responseData['message'], false);
+    } else {
+      notification(responseData['message'], true);
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
+Future<String?> deleteVoucher(String id) async {
+  try {
+    var responseData = await api('voucher/$id', 'DELETE', '');
+
+    if (responseData['success']) {
+      notification(responseData['message'], false);
+    } else {
+      notification(responseData['message'], true);
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
 Future<List<Voucher>> getVoucher(centerId, use) async {
   var responseData;
   try {
