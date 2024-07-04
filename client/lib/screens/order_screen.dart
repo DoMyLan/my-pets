@@ -260,7 +260,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                             orders[index].statusPayment ==
                                                     'PENDING'
                                                 ? 'Chờ thanh toán'
-                                                : 'Đã thanh toán ${orders[index].paymentMethods}',
+                                                : 'Đã thanh toán',
                                             style: TextStyle(
                                               color:
                                                   orders[index].statusPayment ==

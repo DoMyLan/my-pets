@@ -224,6 +224,25 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                   } else {
                     listPetSale = snapshot.data as List<PetSale>;
 
+                    if (listPetSale.isEmpty) {
+                      return const Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize
+                              .min, 
+                          children: [
+                            Icon(
+                              Icons
+                                  .pets, 
+                              size: 30.0, 
+                              color:
+                                  Colors.grey, 
+                            ),
+                            Text("Không có thú cưng nào được giảm giá!"),
+                          ],
+                        ),
+                      );
+                    }
+
                     return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount:

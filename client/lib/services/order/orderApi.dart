@@ -16,14 +16,15 @@ Future<String?> createOrder(
     voucherTotal,
     totalFee,
     totalPayment,
-    paymentMethods) async {
+    paymentMethods,
+    price) async {
   try {
     var body = jsonEncode({
       "buyer": buyer,
       "seller": {"typeSeller": "C", "userId": null, "centerId": sellerId},
       "petId": pet.id,
       "address": address,
-      "price": pet.price,
+      "price": price.toString(),
       "code": voucher,
       "transportFee": transportFee.toString(),
       "totalFee": totalFee.toString(),

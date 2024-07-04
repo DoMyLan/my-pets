@@ -59,11 +59,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ? int.parse(widget.pet.price) - widget.pet.reducePrice
             : 0;
         totalFee = (int.parse(widget.pet.price) - widget.pet.reducePrice > 0
-            ? int.parse(widget.pet.price) - widget.pet.reducePrice
-            : 0) + transportFee;
+                ? int.parse(widget.pet.price) - widget.pet.reducePrice
+                : 0) +
+            transportFee;
         totalPayment = (int.parse(widget.pet.price) - widget.pet.reducePrice > 0
-            ? int.parse(widget.pet.price) - widget.pet.reducePrice
-            : 0) + transportFee;
+                ? int.parse(widget.pet.price) - widget.pet.reducePrice
+                : 0) +
+            transportFee;
       } else {
         priceProduct = int.parse(widget.pet.price);
         totalFee = int.parse(widget.pet.price) + transportFee;
@@ -569,9 +571,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                       Text(
-                        int.parse(widget.pet.price) - widget.pet.reducePrice > 0
-                            ? '${int.parse(widget.pet.price) - widget.pet.reducePrice} đ'
-                            : '0 đ',
+                        '$priceProduct đ',
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
@@ -787,7 +787,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       voucherTotal,
                                       totalFee,
                                       totalPayment,
-                                      _paymentMethod == 0 ? "COD" : "ONLINE");
+                                      _paymentMethod == 0 ? "COD" : "ONLINE",
+                                      priceProduct);
                                   Navigator.of(context).pop();
                                   if (orderId != null) {
                                     setState(() {
@@ -812,28 +813,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     setState(() {
                                       orderSuccess = true;
                                     });
-
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: const Text('Thông báo'),
-                                          content: orderId != null
-                                              ? const Text(
-                                                  "Đặt hàng thành công")
-                                              : const Text("Chưa thể đặt hàng"),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Đóng'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
                                   }
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Thông báo'),
+                                        content: orderId != null
+                                            ? const Text("Đặt hàng thành công")
+                                            : const Text("Chưa thể đặt hàng"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Đóng'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
                                   //KHÔNG XÓA CODE Ở ĐÂY NHA
                                   // Navigator.push(
