@@ -34,7 +34,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   final TextEditingController _captionController = TextEditingController();
   var avatar = '';
   var name = '';
-  var currentClient;
+  dynamic currentClient;
   String isCenter = '';
   String? dropdownValue;
 
@@ -61,7 +61,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   Future<void> _post() async {
     if (mounted) {
-      await addPost(_captionController.text.toString(), finalResult, dropdownValue, 'NORMAL', '');
+      await addPost(_captionController.text.toString(), finalResult,
+          dropdownValue, 'NORMAL', '');
       setState(() {
         _captionController.clear();
         imageFileList.clear();
@@ -91,6 +92,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   Future<void> getClient() async {
     var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
     if (temp.role == 'CENTER') {
       Future<List<PetCustom>> petFutureTemp = getPetCenterPost(isCenter);
       setState(() {
@@ -183,30 +187,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 maxLines: 2,
                 style: const TextStyle(fontSize: 18.0, color: Colors.black),
               ),
-
-              // Conditionally render the image widget
-              // if (imageFileList.isNotEmpty)
-              //   if (imageFileList.length == 1)
-              //     Image.file(
-              //       File(imageFileList[0].path),
-              //       height: 350.0,
-              //       width: double.infinity,
-              //       fit: BoxFit.cover,
-              //     )
-              //   else
-              //     _slider(finalResult)
-              // else
-              //   Container(
-              //     height: 350.0,
-              //     width: double.infinity,
-              //     color: Colors.grey.shade300,
-              //     child: Center(
-              //       child: IconButton(
-              //         icon: Icon(Icons.camera_alt),
-              //         onPressed: selectImage,
-              //       ),
-              //     ),
-              //   ),
               if (imageFileList.isNotEmpty)
                 if (imageFileList.length == 1)
                   Image.file(
@@ -233,66 +213,69 @@ class _NewPostScreenState extends State<NewPostScreen> {
                         color: Colors.grey[400],
                       ),
                     )),
-
-              const SizedBox(height: 50),
-
-              const Text("Liên kết với một thú cưng",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  )),
               const SizedBox(height: 10),
-              FutureBuilder(
-                  future: petFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return const Center(child: Text('Error'));
-                    } else {
-                      pets = snapshot.data!;
-                      if (pets.isEmpty) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          setState(() {
-                            dropdownValue = pets[0].id;
-                          });
-                        });
-                      }
-                      return DropdownButton<String>(
-                        value: dropdownValue,
-                        icon: const Icon(Icons.arrow_drop_down),
-                        iconSize: 24,
-                        elevation: 16,
-                        style: const TextStyle(color: Colors.black),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.grey[400],
-                        ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue;
-                          });
-                        },
-                        items: pets.map<DropdownMenuItem<String>>(
-                                (PetCustom pet) {
-                              return DropdownMenuItem<String>(
-                                value: pet.id,
-                                child: Row(
-                                  children: <Widget>[
-                                    Image.network(pet.images[0],
-                                        width: 25, height: 25),
-                                    const SizedBox(width: 10),
-                                    Text(pet.namePet),
-                                  ],
-                                ),
-                              );
-                            }).toList() ??
-                            [],
-                      );
-                    }
-                  }),
+              currentClient.role == 'USER'
+                  ? const SizedBox()
+                  : const Text("Liên kết với một thú cưng",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      )),
+              const SizedBox(height: 10),
+              currentClient.role == 'USER'
+                  ? const SizedBox()
+                  : FutureBuilder(
+                      future: petFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return const Center(child: Text('Error'));
+                        } else {
+                          pets = snapshot.data!;
+                          if (pets.isEmpty) {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {
+                                dropdownValue = pets[0].id;
+                              });
+                            });
+                          }
+                          return DropdownButton<String>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            style: const TextStyle(color: Colors.black),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.grey[400],
+                            ),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                            items: pets.map<DropdownMenuItem<String>>(
+                                    (PetCustom pet) {
+                                  return DropdownMenuItem<String>(
+                                    value: pet.id,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Image.network(pet.images[0],
+                                            width: 25, height: 25),
+                                        const SizedBox(width: 10),
+                                        Text(pet.namePet),
+                                      ],
+                                    ),
+                                  );
+                                }).toList() ??
+                                [],
+                          );
+                        }
+                      }),
               const SizedBox(height: 50),
-
               MaterialButton(
                 minWidth: double.infinity,
                 height: 50,

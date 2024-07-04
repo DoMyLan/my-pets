@@ -5,7 +5,6 @@ import 'package:found_adoption_application/custom_widget/price_sale.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
-import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
@@ -36,6 +35,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
   int _priceReduce = 0;
   DateTime? dateStartReduce = null;
   DateTime? dateEndReduce = null;
+  var now = DateTime.now();
+  dynamic start;
+  dynamic end;
 
   final CarouselController carouselController = CarouselController();
 
@@ -44,6 +46,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
     super.initState();
     currentClient = widget.currentId;
     petFuture = getPet(widget.petId);
+    now = DateTime.now();
   }
 
   @override
@@ -68,6 +71,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                   isFavorite = true;
                 }
               }
+
+              start = pet.dateStartReduce;
+              end = pet.dateEndReduce;
 
               return Scaffold(
                 resizeToAvoidBottomInset: false,
@@ -137,11 +143,10 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                           children: [
                                             Text(
                                               pet.reducePrice != 0
-                                                  ? (int.parse(pet.price) -
-                                                              pet.reducePrice) >
-                                                          0
+                                                  ? now.isAfter(start!) &&
+                                                          now.isBefore(end!)
                                                       ? "${int.parse(pet.price) - pet.reducePrice}đ   "
-                                                      : 'Miễn phí   '
+                                                      : pet.price
                                                   : pet.price,
                                               style: const TextStyle(
                                                 color: Colors.white,
@@ -149,7 +154,8 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            pet.reducePrice > 0
+                                            now.isAfter(start!) &&
+                                                          now.isBefore(end!)
                                                 ? Text("${pet.price}đ",
                                                     style: const TextStyle(
                                                         color: Colors.white,
@@ -723,12 +729,12 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return PriceSale(
-                                          petId: pet.id,
-                                          petPrice: int.parse(pet.price),
-                                          priceSale: pet.reducePrice,
-                                          dateStartSale: pet.dateStartReduce!,
-                                          dateEndSale: pet.dateEndReduce!,
-                                          );
+                                        petId: pet.id,
+                                        petPrice: int.parse(pet.price),
+                                        priceSale: pet.reducePrice,
+                                        dateStartSale: pet.dateStartReduce!,
+                                        dateEndSale: pet.dateEndReduce!,
+                                      );
                                     });
                               },
                               child: Container(
