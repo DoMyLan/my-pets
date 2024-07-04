@@ -1,11 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/statistical.dart';
 import 'package:found_adoption_application/services/order/statisticalApi.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class YearlyRevenueChart extends StatefulWidget {
-
-
   @override
   State<YearlyRevenueChart> createState() => _YearlyRevenueChartState();
 }
@@ -73,35 +74,88 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //chọn năm
-                        DropdownButton<int>(
-                          value: selectedYear,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedYear = value!;
-                              _updateData();
-                            });
-                          },
-                          items: List.generate(5, (index) {
-                            return DropdownMenuItem<int>(
-                              value: DateTime.now().year - index,
-                              child: Text(
-                                  (DateTime.now().year - index).toString()),
-                            );
-                          }),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tổng doanh thu năm ',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DropdownButton<int>(
+                                value: selectedYear,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedYear = value!;
+                                    _updateData();
+                                  });
+                                },
+                                items: List.generate(5, (index) {
+                                  return DropdownMenuItem<int>(
+                                    value: DateTime.now().year - index,
+                                    child: Text((DateTime.now().year - index)
+                                        .toString()),
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.all(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tổng: ${NumberFormat('#,##0', 'vi_VN').format(statisticalYear.fold<int>(0, (previousValue, element) => previousValue + element.total))} VND',
+                                style: const TextStyle(
+                                    fontSize: 14, fontStyle: FontStyle.normal),
+                              ),
+                              Text(
+                                'Đã thanh toán: ${NumberFormat('#,##0', 'vi_VN').format(statisticalYear.fold<int>(0, (previousValue, element) => previousValue + element.paid))} VND',
+                                style: const TextStyle(
+                                    fontSize: 14, fontStyle: FontStyle.normal),
+                              ),
+                              Text(
+                                'Chưa thanh toán: ${NumberFormat('#,##0', 'vi_VN').format(statisticalYear.fold<int>(0, (previousValue, element) => previousValue + element.pending))} VND',
+                                style: const TextStyle(
+                                    fontSize: 14, fontStyle: FontStyle.normal),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Cao nhất năm (Tháng ${statisticalYear.reduce((currentMax, e) => e.total > currentMax.total ? e : currentMax).month}): ${NumberFormat('#,##0', 'vi_VN').format(statisticalYear.map((e) => e.total).reduce(max))} VND',
+                                style: const TextStyle(
+                                    fontSize: 14, fontStyle: FontStyle.normal),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Trung bình năm: ${NumberFormat('#,##0', 'vi_VN').format(statisticalYear.fold<int>(0, (previousValue, element) => previousValue + element.total) / statisticalYear.length)} VND',
+                                style: const TextStyle(
+                                    fontSize: 14, fontStyle: FontStyle.normal),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Biểu đồ doanh thu theo năm:',
-                    style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
+                  Text(
+                    'Biểu đồ doanh thu theo năm $selectedYear:',
+                    style: const TextStyle(
+                        fontSize: 15, fontStyle: FontStyle.italic),
                   ),
                   Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 10, 30),
@@ -110,14 +164,6 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Năm $selectedYear',
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
                           SfCartesianChart(
                               primaryXAxis:
                                   const CategoryAxis(), // Changed to CategoryAxis
@@ -134,10 +180,9 @@ class _YearlyRevenueChartState extends State<YearlyRevenueChart> {
                               ]),
                         ],
                       )),
-
-                      SizedBox(height: 20,)
-
-                      
+                  SizedBox(
+                    height: 20,
+                  )
                 ],
               ),
             ));

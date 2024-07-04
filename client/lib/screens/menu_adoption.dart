@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/adoption_screen_giver.dart';
-import 'package:found_adoption_application/screens/user_screens/add_pet_personal_screen.dart';
 
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
