@@ -6,6 +6,7 @@ import "package:found_adoption_application/utils/getCurrentClient.dart";
 import "package:found_adoption_application/utils/loading.dart";
 import "package:intl/intl.dart";
 
+// ignore: must_be_immutable
 class CustomModalBottomSheet extends StatefulWidget {
   late Voucher? voucher;
   CustomModalBottomSheet({super.key, this.voucher});

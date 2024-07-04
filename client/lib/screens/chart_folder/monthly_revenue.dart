@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/statistical.dart';
 import 'package:found_adoption_application/services/order/statisticalApi.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MonthlyRevenueChart extends StatefulWidget {
@@ -14,15 +17,6 @@ class _MonthlyRevenueChartState extends State<MonthlyRevenueChart> {
 
   int selectedYear = DateTime.now().year;
   int selectedMonth = DateTime.now().month;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   chartData = generateSalesData(selectedMonth, selectedYear);
-  //   data = getStatisticalMonth(selectedYear, selectedMonth);
-  //   print('month: $selectedMonth -  year: $selectedYear');
-  // }
 
   @override
   void initState() {
@@ -67,53 +61,119 @@ class _MonthlyRevenueChartState extends State<MonthlyRevenueChart> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //chọn năm
-                          DropdownButton<int>(
-                            value: selectedYear,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedYear = value!;
-                                _updateData();
-                              });
-                            },
-                            items: List.generate(5, (index) {
-                              return DropdownMenuItem<int>(
-                                value: DateTime.now().year - index,
-                                child: Text(
-                                    (DateTime.now().year - index).toString()),
-                              );
-                            }),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Tổng doanh thu',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                DropdownButton<int>(
+                                  value: selectedMonth,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedMonth = value!;
+                                      _updateData();
+                                    });
+                                  },
+                                  items: List.generate(12, (index) {
+                                    return DropdownMenuItem<int>(
+                                        value: index + 1,
+                                        child: Text(
+                                          monthNames[index],
+                                          style: const TextStyle(fontSize: 16),
+                                        ));
+                                  }),
+                                ),
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'năm ',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            DropdownButton<int>(
+                              value: selectedYear,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedYear = value!;
+                                  _updateData();
+                                });
+                              },
+                              items: List.generate(5, (index) {
+                                return DropdownMenuItem<int>(
+                                  value: DateTime.now().year - index,
+                                  child: Text(
+                                      (DateTime.now().year - index).toString(),
+                                      style: const TextStyle(fontSize: 16)),
+                                );
+                              }),
+                            ),
+                          ],
+                        ),
+                        Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.all(8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Tổng: ${NumberFormat('#,##0', 'vi_VN').format(statisticalMonth.fold<int>(0, (previousValue, element) => previousValue + element.total))} VND',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                                Text(
+                                  'Đã thanh toán: ${NumberFormat('#,##0', 'vi_VN').format(statisticalMonth.fold<int>(0, (previousValue, element) => previousValue + element.paid))} VND',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                                Text(
+                                  'Chưa thanh toán: ${NumberFormat('#,##0', 'vi_VN').format(statisticalMonth.fold<int>(0, (previousValue, element) => previousValue + element.pending))} VND',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Cao nhất tháng (Ngày ${statisticalMonth.reduce((currentMax, e) => e.total > currentMax.total ? e : currentMax).day}): ${NumberFormat('#,##0', 'vi_VN').format(statisticalMonth.map((e) => e.total).reduce(max))} VND',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Trung bình tháng: ${NumberFormat('#,##0', 'vi_VN').format(statisticalMonth.fold<int>(0, (previousValue, element) => previousValue + element.total) / statisticalMonth.length)} VND',
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontStyle: FontStyle.normal),
+                                ),
+                              ],
+                            ),
                           ),
-                
-                          //lựa chọn tháng trong năm
-                
-                          DropdownButton<int>(
-                            value: selectedMonth,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedMonth = value!;
-                                _updateData();
-                              });
-                            },
-                            items: List.generate(12, (index) {
-                              return DropdownMenuItem<int>(
-                                value: index + 1,
-                                child: Text(monthNames[index]),
-                              );
-                            }),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const Text(
-                      'Biểu đồ doanh thu theo tháng:',
-                      style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
+                    Text(
+                      'Biểu đồ doanh thu tháng $selectedMonth năm $selectedYear:',
+                      style: const TextStyle(
+                          fontSize: 15, fontStyle: FontStyle.italic),
                     ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 10, 10, 30),
@@ -122,16 +182,8 @@ class _MonthlyRevenueChartState extends State<MonthlyRevenueChart> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Tháng ${selectedMonth} - Năm ${selectedYear}',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
                           SfCartesianChart(
-                              primaryXAxis: CategoryAxis(),
+                              primaryXAxis: const CategoryAxis(),
                               series: <CartesianSeries>[
                                 LineSeries<SalesData, String>(
                                     dataSource: chartData,
@@ -143,8 +195,9 @@ class _MonthlyRevenueChartState extends State<MonthlyRevenueChart> {
                         ],
                       ),
                     ),
-                
-                   const SizedBox(height: 20,)
+                    const SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),

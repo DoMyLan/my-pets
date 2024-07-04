@@ -42,7 +42,7 @@ class _RevenueReportScreenState extends State<RevenueReportScreen>
           },
           color: Theme.of(context).primaryColor,
         ),
-        title: const Text('Revenue Report'),
+        title: const Text('Báo cáo doanh thu'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

@@ -108,11 +108,11 @@ Future<void> changeStatusOrder(orderId, statusOrder) async {
   }
 }
 
-Future<List<Order>> getRevenue(centerId, status) async {
+Future<List<Order>> getRevenue(centerId, status, start, end) async {
   var responseData;
   try {
     responseData =
-        await api('order/$centerId/payment?status=$status', 'GET', '');
+        await api('order/$centerId/payment?status=$status&start=$start&end=$end', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);

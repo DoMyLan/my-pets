@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/order.dart';
 import 'package:found_adoption_application/services/order/orderApi.dart';
+import 'package:intl/intl.dart';
 
 class RevenueDetailScreen extends StatefulWidget {
   final String orderId;
@@ -136,6 +137,91 @@ class _RevenueDetailScreenState extends State<RevenueDetailScreen> {
                         ],
                       ),
                     ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      width: widthDevice,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Giá thú cưng thực tế',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.price)}')
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Giá thú cưng ban đầu',
+                                  style: TextStyle(fontSize: 15)),
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(int.parse(order.petId.price))}')
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Giảm giá voucher',
+                                  style: TextStyle(fontSize: 15)),
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.voucherProduct)}')
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    //PHÍ VẬN CHUYỂN
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      width: widthDevice,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Phí vận chuyển thực tế',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                  'đ ${NumberFormat('#,##0', 'vi_VN').format(order.transportFee - order.voucherShipping)}')
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Phí vận chuyển ban đầu',
+                                  style: TextStyle(fontSize: 15)),
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.transportFee)}')
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Giảm giá vận chuyển voucher',
+                                  style: TextStyle(fontSize: 15)),
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.voucherShipping)}')
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -156,104 +242,15 @@ class _RevenueDetailScreenState extends State<RevenueDetailScreen> {
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
-                              Text('đ ${order.petId.price}')
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.totalFee)}')
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Giá sản phẩm',
+                              const Text('Giảm giá tổng đơn hàng voucher',
                                   style: TextStyle(fontSize: 15)),
-                              Text('đ ${order.petId.price}')
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    //KHUYẾN MÃI
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      width: widthDevice,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  'Khuyến mãi ${order.voucherProduct != 0 ? "thú cưng" : order.voucherShipping != 0 ? "vận chuyển" : "tổng đơn hàng"}',
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
-                                  'đ ${order.voucherProduct != 0 ? order.voucherProduct : order.voucherShipping != 0 ? order.voucherShipping : order.voucherTotal}')
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Trị giá khuyến mãi',
-                                  style: TextStyle(fontSize: 15)),
-                              Text(
-                                  'đ ${order.voucherProduct != 0 ? order.voucherProduct : order.voucherShipping != 0 ? order.voucherShipping : order.voucherTotal}')
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    //PHÍ VẬN CHUYỂN
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      width: widthDevice,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: const Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Phí vận chuyển',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                              Text('đ 0')
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Phí vận chuyển Người mua trả',
-                                  style: TextStyle(fontSize: 15)),
-                              Text('đ 9.000')
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Phí vận chuyển Trung tâm trợ giá',
-                                  style: TextStyle(fontSize: 15)),
-                              Text('đ 10.000')
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Phí vận chuyển thực tế',
-                                  style: TextStyle(fontSize: 15)),
-                              Text('đ 19.000')
+                              Text('đ ${NumberFormat('#,##0', 'vi_VN').format(order.voucherTotal)}')
                             ],
                           ),
                         ],
