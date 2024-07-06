@@ -39,7 +39,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     // ignore: deprecated_member_use
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.plus,
-    FontAwesomeIcons.firstOrder,
+    FontAwesomeIcons.checkToSlot,
     // FontAwesomeIcons.checkToSlot,
     FontAwesomeIcons.moneyBill,
     FontAwesomeIcons.bell,

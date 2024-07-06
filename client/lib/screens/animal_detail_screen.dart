@@ -142,7 +142,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              pet.reducePrice != 0
+                                              pet.reducePrice != 0 &&
+                                                      start != null &&
+                                                      end != null
                                                   ? now.isAfter(start!) &&
                                                           now.isBefore(end!)
                                                       ? "${int.parse(pet.price) - pet.reducePrice}đ   "
@@ -154,19 +156,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            now.isAfter(start!) &&
-                                                          now.isBefore(end!)
-                                                ? Text("${pet.price}đ",
-                                                    style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        decorationThickness:
-                                                            2.0,
-                                                        decorationColor:
-                                                            Colors.white))
+                                            start != null && end != null
+                                                ? now.isAfter(start!) &&
+                                                        now.isBefore(end!)
+                                                    ? Text("${pet.price}đ",
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            decorationThickness:
+                                                                2.0,
+                                                            decorationColor:
+                                                                Colors.white))
+                                                    : const SizedBox()
                                                 : const SizedBox()
                                           ],
                                         )
