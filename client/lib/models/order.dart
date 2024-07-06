@@ -2,15 +2,25 @@ import 'package:intl/intl.dart';
 
 class PetOrder {
   final String id;
+
   final String? giver;
+
   final String? centerId;
+
   final String namePet;
+
   final String petType;
+
   final String breed;
+
   final String price;
+
   final bool free;
+
   List<dynamic> images;
+
   final DateTime? createdAt;
+
   final DateTime? updatedAt;
 
   PetOrder({
@@ -44,13 +54,35 @@ class PetOrder {
           .add(const Duration(hours: 7)),
     );
   }
+
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'giver': giver,
+      'centerId': centerId,
+      'namePet': namePet,
+      'petType': petType,
+      'breed': breed,
+      'price': price,
+      'free': free,
+      'images': images,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+    };
+  }
 }
 
 class CenterOrder {
   final String id;
+
   final String name;
+
   final String avatar;
+
   final String address;
+
   final String phoneNumber;
 
   const CenterOrder({
@@ -70,14 +102,29 @@ class CenterOrder {
       phoneNumber: json['phoneNumber'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'avatar': avatar,
+      'address': address,
+      'phoneNumber': phoneNumber,
+    };
+  }
 }
 
 class UserOrder {
   final String id;
+
   final String firstName;
+
   final String lastName;
+
   final String avatar;
+
   final String address;
+
   final String phoneNumber;
 
   const UserOrder({
@@ -99,11 +146,24 @@ class UserOrder {
       phoneNumber: json['phoneNumber'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'avatar': avatar,
+      'address': address,
+      'phoneNumber': phoneNumber,
+    };
+  }
 }
 
 class Seller {
   final String typeSeller;
+
   final UserOrder? userId;
+
   final CenterOrder? centerId;
 
   const Seller(
@@ -119,17 +179,30 @@ class Seller {
           : null,
     );
   }
+
+   Map<String, dynamic> toJson() {
+    return {
+      'typeSeller': typeSeller,
+      'userId': userId?.toJson(),
+      'centerId': centerId?.toJson(),
+    };
+  }
 }
 
 class Buyer {
   final String id;
+
   final String firstName;
+
   final String lastName;
+
   final String phoneNumber;
+
   final String address;
+
   final String avatar;
 
-  const Buyer(
+  Buyer(
       {required this.id,
       required this.firstName,
       required this.lastName,
@@ -147,31 +220,64 @@ class Buyer {
       avatar: json['avatar'],
     );
   }
+
+   Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'address': address,
+      'avatar': avatar,
+    };
+  }
 }
 
 class Order {
   final String id;
+
   final Seller seller;
+
   final Buyer buyer;
+
   final PetOrder petId;
+
   final String address;
+
   final int price;
+
   final int voucherProduct;
+
   final int voucherShipping;
+
   final int voucherTotal;
+
   final int transportFee;
+
   final int totalFee;
+
   final int totalPayment;
+
   final String paymentMethods;
+
   late String statusOrder;
+
   late String? statusPayment;
+
   final DateTime? dateConfirm;
+
   final DateTime? dateDelivering;
+
   final DateTime? dateCompleted;
+
   final DateTime? dateCancel;
+
   final DateTime? datePaid;
+
   final bool rating;
+
   final DateTime createdAt;
+
   final DateTime updatedAt;
 
   Order({
@@ -248,4 +354,32 @@ class Order {
   get shippingFee => null;
 
   get totalPrice => null;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'seller': seller.toJson(),
+      'buyer': buyer.toJson(),
+      'petId': petId.toJson(),
+      'address': address,
+      'price': price,
+      'voucherProduct': voucherProduct,
+      'voucherShipping': voucherShipping,
+      'voucherTotal': voucherTotal,
+      'transportFee': transportFee,
+      'totalFee': totalFee,
+      'totalPayment': totalPayment,
+      'paymentMethods': paymentMethods,
+      'statusOrder': statusOrder,
+      'statusPayment': statusPayment,
+      'dateConfirm': dateConfirm?.toIso8601String(),
+      'dateDelivering': dateDelivering?.toIso8601String(),
+      'dateCompleted': dateCompleted?.toIso8601String(),
+      'dateCancel': dateCancel?.toIso8601String(),
+      'datePaid': datePaid?.toIso8601String(),
+      'rating': rating,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+    };
+  }
 }
