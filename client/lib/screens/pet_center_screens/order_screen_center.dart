@@ -10,6 +10,7 @@ import 'package:found_adoption_application/utils/fomatPrice.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:found_adoption_application/utils/loading.dart';
 import 'package:found_adoption_application/utils/non_order.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TheOrdersCenter extends StatefulWidget {
   const TheOrdersCenter({super.key});
@@ -138,6 +139,8 @@ class TabTrackingOrder extends StatefulWidget {
 class _TabTrackingOrderState extends State<TabTrackingOrder> {
   Future<List<Order>>? orderFuture;
   late List<Order> orders;
+  List<Order> previousOrders = [];
+  
   final List<String> statusOrder = [
     'PENDING',
     'CONFIRMED',
@@ -165,6 +168,8 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
     super.initState();
     orderFuture = getOrdersBySeller(widget.status);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
