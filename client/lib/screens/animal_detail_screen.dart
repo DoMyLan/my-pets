@@ -1,10 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/price_sale.dart';
 import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
 import 'package:found_adoption_application/screens/review_rating_screen.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
@@ -142,7 +144,9 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         Row(
                                           children: [
                                             Text(
-                                              pet.reducePrice != 0
+                                              pet.reducePrice != 0 &&
+                                                      start != null &&
+                                                      end != null
                                                   ? now.isAfter(start!) &&
                                                           now.isBefore(end!)
                                                       ? "${int.parse(pet.price) - pet.reducePrice}đ   "
@@ -154,19 +158,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            now.isAfter(start!) &&
-                                                          now.isBefore(end!)
-                                                ? Text("${pet.price}đ",
-                                                    style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        decorationThickness:
-                                                            2.0,
-                                                        decorationColor:
-                                                            Colors.white))
+                                            start != null && end != null
+                                                ? now.isAfter(start!) &&
+                                                        now.isBefore(end!)
+                                                    ? Text("${pet.price}đ",
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            decorationThickness:
+                                                                2.0,
+                                                            decorationColor:
+                                                                Colors.white))
+                                                    : const SizedBox()
                                                 : const SizedBox()
                                           ],
                                         )
@@ -331,49 +337,67 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    //Số lượng thú cưng đang đăng bán
-                                    const Row(
+                                    // //Số lượng thú cưng đang đăng bán
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(
-                                          Icons.done,
-                                          color: Colors.green,
-                                          weight: 20,
-                                          fill: 0.8,
-                                        ),
-                                        Text(
-                                          ' Đã mua',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black,
+                                        GestureDetector(
+                                          onTap: () {
+                                            // Chuyển đến Trang ReviewProfileScreen
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProfileCenterPage(
+                                                          centerId:
+                                                              pet.centerId!.id,
+                                                          petId: pet.id,
+                                                        )));
+                                          },
+                                          child: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.done,
+                                                color: Colors.green,
+                                                weight: 20,
+                                                fill: 0.8,
+                                              ),
+                                              Text(
+                                                ' Xem bài viết',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
 
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
+                                    // const SizedBox(
+                                    //   width: 20,
+                                    // ),
 
                                     //đánh giá sao
-                                    RichText(
-                                      text: const TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: '4.9',
-                                            style:
-                                                TextStyle(color: Colors.orange),
-                                          ),
-                                          TextSpan(text: ' Đánh giá'),
-                                        ],
-                                      ),
-                                    ),
+                                    // RichText(
+                                    //   text: const TextSpan(
+                                    //     style: TextStyle(
+                                    //       fontSize: 13,
+                                    //       color: Colors.black,
+                                    //     ),
+                                    //     children: [
+                                    //       TextSpan(
+                                    //         text: '4.9',
+                                    //         style:
+                                    //             TextStyle(color: Colors.orange),
+                                    //       ),
+                                    //       TextSpan(text: ' Đánh giá'),
+                                    //     ],
+                                    //   ),
+                                    // ),
 
                                     GestureDetector(
                                       onTap: () {

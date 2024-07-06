@@ -195,10 +195,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       location,
                       selectedRadio,
                       auboutMeController.text.toString());
-
-                      // LatLng a =await convertAddressToLatLng(addressController.text.toString());
-
-                      // print('Tọa độ Address mới nhập: $a');
                 },
                 color: const Color.fromRGBO(48, 96, 96, 1.0),
                 elevation: 0,

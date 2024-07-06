@@ -37,15 +37,12 @@ Future<void> addReview(
 
     final response = await api('review', 'POST', body);
 
-    print('test response: $response');
-
     if (response['success']) {
       notification(response['message'], false);
     } else {
       notification(response['message'], true);
     }
   } catch (e) {
-    print('error when add review: $e');
     //  notification(e.toString(), true);
   }
 }

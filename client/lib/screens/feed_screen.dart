@@ -9,6 +9,8 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+// ignore: library_prefixes
+import 'package:found_adoption_application/screens/add_short_video.dart' as addShortVideo;
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -275,11 +277,48 @@ class _FeedScreenState extends State<FeedScreen>
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewPostScreen(),
-            ),
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return SafeArea(
+                child: Wrap(
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(Icons.video_call),
+                      title: const Text('Video'),
+                      onTap: () {
+                        // Đóng bottom sheet
+                        Navigator.pop(context);
+                        // Logic để chuyển đến màn hình tạo Video
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                addShortVideo.ShortVideo(), // Đã có sẵn trong comment của bạn
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.article),
+                      title: const Text('Bài viết'),
+                      onTap: () {
+                        // Đóng bottom sheet
+                        Navigator.pop(context);
+                        // Logic để chuyển đến màn hình tạo Bài viết
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const NewPostScreen(), // Đã có sẵn trong comment của bạn
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           );
         },
         backgroundColor: Theme.of(context).primaryColor,

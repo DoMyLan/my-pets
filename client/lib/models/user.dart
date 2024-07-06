@@ -53,13 +53,10 @@ class User {
       'lastName': lastName,
       'avatar': avatar,
       'address': address,
-      'location': location,
       'phoneNumber': phoneNumber,
       'email': email,
       'status': status,
-      'aboutMe': aboutMe,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt
+      'aboutMe': aboutMe
     };
   }
 }

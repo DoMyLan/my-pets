@@ -16,7 +16,6 @@ Future<InfoUser> getProfile(BuildContext context, var userId) async {
     responseData = await api('user/${id}', 'GET', '');
     var userData = responseData['data'];
     user = InfoUser.fromJson(userData);
-    print(user);
   } catch (e) {
     // notification(e.toString(), true);
   }

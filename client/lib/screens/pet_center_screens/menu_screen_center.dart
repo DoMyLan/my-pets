@@ -19,7 +19,7 @@ class MenuCenterScreen extends StatefulWidget {
 
 class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
-   int numNotify = 0;
+  int numNotify = 0;
 
   List<String> menuItems = [
     'Thú cưng',
@@ -30,29 +30,26 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     // 'Manage Adopt',
     'Voucher',
     'Thông báo',
-    
-    // 'Messages',
 
-  
+    // 'Messages',
   ];
 
-  List<dynamic> icons =[];
+  List<dynamic> icons = [];
 
-  void updateIcons(){
-    icons=[ Icon(FontAwesomeIcons.paw),
-    Icon(FontAwesomeIcons.newspaper),
-    // ignore: deprecated_member_use
-    Icon(FontAwesomeIcons.userAlt),
-    Icon(FontAwesomeIcons.plus),
-    CustomFirstOrderIcon( key: UniqueKey(),notificationCount: numNotify), 
+  void updateIcons() {
+    icons = [
+      const Icon(FontAwesomeIcons.paw),
+      const Icon(FontAwesomeIcons.newspaper),
+      // ignore: deprecated_member_use
+      const Icon(FontAwesomeIcons.userAlt),
+      const Icon(FontAwesomeIcons.plus),
+      CustomFirstOrderIcon(key: UniqueKey(), notificationCount: numNotify),
 
-   
-    // FontAwesomeIcons.checkToSlot,
-    Icon(FontAwesomeIcons.moneyBill),
-    Icon(FontAwesomeIcons.bell),];
-   
+      // FontAwesomeIcons.checkToSlot,
+      const Icon(FontAwesomeIcons.moneyBill),
+      const Icon(FontAwesomeIcons.bell),
+    ];
   }
-
 
   @override
   void initState() {
@@ -82,8 +79,6 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     print("after click icon: ${prefs.getInt('numNotify')}");
   }
 
-
-
   Widget buildMenuRow(int index) {
     dynamic icon = icons[index];
     Widget iconWidget;
@@ -92,7 +87,9 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       iconWidget = Icon(
         icon,
         size: iconSize,
-        color: selectedMenuIndex == index ? Colors.white : Colors.white.withOpacity(0.5),
+        color: selectedMenuIndex == index
+            ? Colors.white
+            : Colors.white.withOpacity(0.5),
       );
     } else if (icon is Widget && icon is! IconData) {
       // Handle custom widgets here if needed
@@ -107,10 +104,9 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
           selectedMenuIndex = index;
           widget.menuCallBack(index);
           //CustomFirstOrderIcon- cập nhật numNotify về 0
-          if(index==4){
+          if (index == 4) {
             numNotify = 0;
             _updateNotificationCount(numNotify);
-            
           }
         });
       },
@@ -123,7 +119,9 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
             Text(
               menuItems[index],
               style: TextStyle(
-                color: selectedMenuIndex == index ? Colors.white : Colors.white.withOpacity(0.5),
+                color: selectedMenuIndex == index
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.5),
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -260,7 +258,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    //Phần SETTING
+                      //Phần SETTING
                       Padding(
                         padding: const EdgeInsets.only(right: 30),
                         child: Row(
@@ -272,8 +270,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            SettingScreen()),
+                                        builder: (context) => SettingScreen()),
                                   );
                                 },
                                 child: Text(
@@ -316,7 +313,6 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                           ],
                         ),
                       ),
-                      
                     ],
                   ),
                 ],
@@ -369,6 +365,4 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       },
     );
   }
-
-  
 }

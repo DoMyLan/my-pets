@@ -50,7 +50,6 @@ class _ExampleState extends State<Example> {
       paymentUrl: paymentUrl,
       onPaymentSuccess: (params) {
         setState(() {
-          print('aaa: $responseCode');
           responseCode = params['vnp_ResponseCode'];
           // Navigator.pushReplacementNamed(context, '/returnUrl');
           
@@ -58,7 +57,6 @@ class _ExampleState extends State<Example> {
       },
       onPaymentError: (params) {
         setState(() {
-          print('bbbb: $responseCode');
           responseCode = 'Error';
         });
       },

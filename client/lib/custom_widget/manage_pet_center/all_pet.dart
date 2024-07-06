@@ -83,7 +83,6 @@ class _AllPetCenterState extends State<AllPetCenter>
     super.initState();
     if (widget.filterResult != null) {
       filter = widget.filterResult!;
-      print('aaaaaa: $filter');
     } else {
       filter = null;
     }
@@ -114,7 +113,6 @@ class _AllPetCenterState extends State<AllPetCenter>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print('test searchKeyWord02: $_searchKeyword');
     List<Pet> listToShow;
     if (filter != null) {
       listToShow = filter!;

@@ -285,7 +285,16 @@ class _VideoAppState extends State<VideoApp> {
                     alignment: Alignment.bottomLeft,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.black.withOpacity(0.5),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0),
+                            Colors.black.withOpacity(0.8)
+                          ],
+                        ),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(18),
                         child: Column(

@@ -89,12 +89,9 @@ Future<void> resendcode(String email) async {
         body: jsonEncode({'email': email}));
 
     if (response.statusCode == 200) {
-      print('RESEND SUCCESS !');
 
       final responseData = jsonDecode(response.body);
-      print('Resend success: ${responseData}');
     } else {
-      print('RESEND FAIL');
     }
   } catch (e) {
     print(e);

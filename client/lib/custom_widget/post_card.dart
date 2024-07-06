@@ -235,36 +235,36 @@ class _PostCardState extends State<PostCard> {
                                         currentClient.id ==
                                             clientPost.petCenterId?.id)
                                     ? [
-                                        {'text': 'Edit', 'icon': Icons.edit},
+                                        {'text': 'Sửa', 'icon': Icons.edit},
                                         {
-                                          'text': 'Delete',
+                                          'text': 'Xóa',
                                           'icon': Icons.delete
                                         },
                                         {
-                                          'text': 'Change Status',
+                                          'text': 'Cập nhật trạng thái',
                                           'icon': Icons.refresh
                                         },
                                       ]
                                     : [
-                                        {'text': 'Report', 'icon': Icons.report}
+                                        {'text': 'Báo cáo', 'icon': Icons.report}
                                       ])
                                 .map(
                                   (item) => InkWell(
                                     onTap: () {
-                                      if (item['text'] == 'Change Status') {
+                                      if (item['text'] == 'Cập nhật trạng thái') {
                                         _showBottomSheet(
                                             clientPost.id, clientPost);
-                                      } else if (item['text'] == 'Edit') {
+                                      } else if (item['text'] == 'Sửa') {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditPostScreen(
                                                         onePost: clientPost)));
-                                      } else if (item['text'] == 'Delete') {
+                                      } else if (item['text'] == 'Xóa') {
                                         _showDeleteConfirmationDialog(
                                             clientPost.id);
-                                      } else if (item['text'] == 'Report') {
+                                      } else if (item['text'] == 'Báo cáo') {
                                         showModalBottomSheet(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -275,13 +275,13 @@ class _PostCardState extends State<PostCard> {
                                                   leading: const Icon(
                                                       Icons.public_off),
                                                   title: const Text(
-                                                      'Violates community standards'),
+                                                      'Vi phạm tiêu chuẩn cộng đồng'),
                                                   onTap: () async {
                                                     Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
-                                                        'Violates community standards');
+                                                        'Vi phạm tiêu chuẩn cộng đồng');
                                                     // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                     // ignore: use_build_context_synchronously
@@ -294,13 +294,13 @@ class _PostCardState extends State<PostCard> {
                                                   leading: const Icon(
                                                       Icons.error_outline),
                                                   title: const Text(
-                                                      'Misleading language'),
+                                                      'Ngôn ngữ gây hiểu lầm'),
                                                   onTap: () async {
                                                     Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
-                                                        'Misleading language');
+                                                        'Ngôn ngữ gây hiểu lầm');
                                                     // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                     // ignore: use_build_context_synchronously
@@ -312,13 +312,13 @@ class _PostCardState extends State<PostCard> {
                                                 ListTile(
                                                   leading:
                                                       const Icon(Icons.warning),
-                                                  title: const Text('Violence'),
+                                                  title: const Text('Bạo lực'),
                                                   onTap: () async {
                                                     Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
-                                                        'Violence');
+                                                        'Bạo lực');
                                                     // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                     // ignore: use_build_context_synchronously
@@ -331,13 +331,13 @@ class _PostCardState extends State<PostCard> {
                                                   leading:
                                                       const Icon(Icons.block),
                                                   title: const Text(
-                                                      'Inappropriate content'),
+                                                      'Nội dung không phù hợp'),
                                                   onTap: () async {
                                                     Loading(context);
                                                     await reportPost(
                                                         clientPost.id,
                                                         'POST',
-                                                        'Inappropriate content');
+                                                        'Nội dung không phù hợp');
                                                     // ignore: use_build_context_synchronously
                                                     Navigator.of(context).pop();
                                                     // ignore: use_build_context_synchronously
@@ -349,7 +349,7 @@ class _PostCardState extends State<PostCard> {
                                                 ListTile(
                                                   leading: const Icon(Icons
                                                       .difference_outlined),
-                                                  title: const Text('Other'),
+                                                  title: const Text('Khác'),
                                                   onTap: () {
                                                     // Open dialog to enter custom reason
                                                     showDialog(
@@ -361,7 +361,7 @@ class _PostCardState extends State<PostCard> {
                                                             TextEditingController();
                                                         return AlertDialog(
                                                           title: const Text(
-                                                              'Enter your reason'),
+                                                              'Nhập lý do'),
                                                           content: TextField(
                                                             controller:
                                                                 reasonController,
@@ -372,7 +372,7 @@ class _PostCardState extends State<PostCard> {
                                                           actions: <Widget>[
                                                             TextButton(
                                                               child: const Text(
-                                                                  'Submit'),
+                                                                  'Gửi báo cáo'),
                                                               onPressed:
                                                                   () async {
                                                                 Loading(

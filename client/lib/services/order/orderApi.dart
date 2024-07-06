@@ -53,7 +53,6 @@ Future<List<Order>> getOrdersByBuyer(statusOrder) async {
   }
   var orderList = responseData['data'] as List<dynamic>;
   List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
-  print(orders);
   return orders;
 }
 
@@ -120,7 +119,6 @@ Future<List<Order>> getRevenue(centerId, status, start, end) async {
   }
   var orderList = responseData['data'] as List<dynamic>;
   List<Order> orders = orderList.map((json) => Order.fromJson(json)).toList();
-  print(orders);
   return orders;
 }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/comments.dart';
@@ -63,8 +65,9 @@ class _CommentScreenState extends State<CommentScreen> {
     }
   }
 
-  void _handleComment(data) async {
+  void _handleComment(dataIn) async {
     late Comment newCommentRe;
+    Map<String, dynamic> data = jsonDecode(dataIn as String);
 
     // Extract userId data from the map
     var userIdData = data['userId'];
@@ -77,7 +80,9 @@ class _CommentScreenState extends State<CommentScreen> {
             lastName: userIdData['lastName'],
             avatar: userIdData['avatar'],
             address: userIdData['address'],
-            location: userIdData['location'],
+            location: const Location(
+                latitude: "1",
+                longitude: "1"),
             phoneNumber: userIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -93,7 +98,9 @@ class _CommentScreenState extends State<CommentScreen> {
             name: centerIdData['name'],
             avatar: centerIdData['avatar'],
             address: centerIdData['address'],
-            location: centerIdData['location'],
+            location: const Location(
+                latitude: "1",
+                longitude: "1"),
             phoneNumber: centerIdData['phoneNumber'],
             email: userIdData['email'],
             status: userIdData['status'])
@@ -390,7 +397,7 @@ class _CommentScreenState extends State<CommentScreen> {
                       );
 
                       // Gửi comment thông qua Socket.IO
-                      socket.emit('comment', newComment.toMap());
+                      socket.emit('comment', jsonEncode(newComment.toMap()));
                       // socket.emit('comment', {"hi": "there"});
                       print(socket);
                     }

@@ -7,8 +7,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userInfo.dart';
+import 'package:found_adoption_application/screens/change_password.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -39,7 +41,7 @@ class _ProfileUserState extends State<ProfileUser>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     isLoading = true;
 
     getClient();
@@ -80,6 +82,28 @@ class _ProfileUserState extends State<ProfileUser>
     setState(() {
       currentClient = temp;
     });
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        // Logic để chuyển đến màn hình chỉnh sửa trang cá nhân
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const EditProfileScreen()), 
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  UpdatePasswordScreen()), 
+        );
+        break;
+    }
   }
 
   // Future<void> _handleRefresh() async {
@@ -178,7 +202,7 @@ class _ProfileUserState extends State<ProfileUser>
                                         Column(
                                           children: [
                                             Text(
-                                              user!.follower.toString(),
+                                              posts!.length.toString(),
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
@@ -285,7 +309,48 @@ class _ProfileUserState extends State<ProfileUser>
                                     ),
                                     (currentClient.id == widget.userId ||
                                             widget.userId == "")
-                                        ? const SizedBox()
+                                        ? PopupMenuButton<int>(
+                                            onSelected: (item) =>
+                                                onSelected(context, item),
+                                            itemBuilder: (context) => [
+                                              const PopupMenuItem<int>(
+                                                value: 0,
+                                                child: Text(
+                                                    'Chỉnh sửa trang cá nhân'),
+                                              ),
+                                              const PopupMenuItem<int>(
+                                                value: 1,
+                                                child: Text('Đổi mật khẩu'),
+                                              ),
+                                            ],
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  140,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.teal),
+                                              child: !isLoading
+                                                  ? const Center(
+                                                      child: Text(
+                                                        "Cập nhật thông tin",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    )
+                                                  : const OnPressedButton(
+                                                      size: 13,
+                                                      strokeWidth: 2.0,
+                                                    ),
+                                            ),
+                                          )
                                         : onPressFollow(
                                             follow: user!.follow, id: user!.id)
                                   ],
@@ -468,7 +533,6 @@ class _ProfileUserState extends State<ProfileUser>
                                         tabs: const <Widget>[
                                           Tab(text: 'Bài viết'),
                                           Tab(text: 'Video'),
-                                          Tab(text: 'Đã mua'),
                                         ],
                                       ),
                                       const SizedBox(
@@ -479,14 +543,7 @@ class _ProfileUserState extends State<ProfileUser>
                                           controller: _tabController,
                                           children: [
                                             buildPostsList(petStoriesPosts),
-                                            ListVideo(id: user!.id),
-                                            Center(
-                                              child: Text('Đã mua'),
-                                            ),
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
+                                            ListVideo(id: user!.id)
                                           ],
                                         ),
                                       ),

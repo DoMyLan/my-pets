@@ -108,11 +108,9 @@ Future<LatLng> convertAddressToLatLng(String inputAddress) async {
       throw Exception('Failed to load data');
     }
 
-    print('Convert đc nè: $coordinate');
 
     return coordinate;
   } catch (e) {
-    print('error convert to coordinates: ${e.toString()}');
     return LatLng(0.0, 0.0);
   }
 }
