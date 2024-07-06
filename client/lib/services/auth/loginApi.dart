@@ -73,7 +73,6 @@ Future<void> login(
                       userId: retrievedUser.id,
                     )));
       } else if (responseData['data']['role'] == 'CENTER') {
-        print('jekobject');
         var centerBox = await Hive.openBox('centerBox'); // Lấy Hive box đã mở
         var currentCenter = CurrentCenter()
           ..id = responseData['data']['_id']
@@ -129,7 +128,6 @@ Future<void> login(
     } else {
       Navigator.pop(context);
       notification(responseData['message'], true);
-      print(responseData);
     }
   } catch (e) {
     print(e);

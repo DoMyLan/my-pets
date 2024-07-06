@@ -75,7 +75,6 @@ class _FilterScreenState extends State<FilterScreen> {
                 if (newValue != null) {
                   setState(() {
                     selectedBreed = newValue;
-                    print('new: $selectedBreed');
                   });
                 }
               },

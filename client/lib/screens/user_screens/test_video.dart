@@ -57,7 +57,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     if (result != null) {
       File file = File(result.files.single.path!);
       createAudioUpload('${result.files.single.path!}'); 
-      print('test đường dẫn video: ${result.files.single.path!}');
       await _controller.pause();
       await _controller.dispose();
       setState(() {

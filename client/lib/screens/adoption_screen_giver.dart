@@ -237,7 +237,6 @@ class _AdoptionScreenGiverState extends State<AdoptionScreenGiver>
       if (selectedPetType != '') {
         if (selectedPetType == 'All') {
           _searchResults = List.from(animals);
-          print('aaaa: $_searchResults');
         } else {
           _searchResults =
               animals.where((pet) => pet.petType == selectedPetType).toList();

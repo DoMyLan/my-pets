@@ -361,28 +361,7 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
                       length: 2,
                       child: Column(
                         children: [
-                          // TabBar để chọn giữa "Pet Stories" và "Pet Adoption"
-                          TabBar(
-                            labelColor: Theme.of(context).primaryColor,
-                            tabs: const [
-                              Tab(text: 'Bài viết cá nhân'),
-                              Tab(text: 'Thú cưng'),
-                            ],
-                          ),
-                          // TabBarView để hiển thị nội dung tương ứng với từng tab
-                          SizedBox(
-                            height:
-                                500, // Thay đổi kích thước này tùy theo nhu cầu của bạn
-                            child: TabBarView(
-                              children: [
-                                // Nội dung cho tab "Pet Stories"
-                                buildPostsList(petStoriesPosts!),
-                                // Nội dung cho tab "Pet Adoption"
-                                // buildAdoptionList(),
-                                buildPostsList(petStoriesPosts!),
-                              ],
-                            ),
-                          ),
+                          buildPostsList(petStoriesPosts!),
                         ],
                       ),
                     )
@@ -407,27 +386,16 @@ class _ProfileCenterPageState<T extends AdoptionScreen>
             return const errorWidget();
           } else {
             List<Post>? postList = snapshot.data;
-            if (postList != null) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: postList.length,
-                itemBuilder: (context, index) =>
-                    PostCard(snap: postList[index]),
+            if (postList!.isEmpty) {
+              return const Center(
+                child: Text('Không có bài viết nào'),
               );
-            } else {
-              // Xử lý trường hợp postList là null
-              return const Scaffold(
-                body: Center(
-                  child: Icon(
-                    Icons.cloud_off, // Thay thế bằng icon bạn muốn sử dụng
-                    size: 48.0,
-                    color: Colors.grey,
-                  ),
-                ),
-              );
-
-              // Text('Post list is null');
             }
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: postList.length,
+              itemBuilder: (context, index) => PostCard(snap: postList[index]),
+            );
           }
         });
   }

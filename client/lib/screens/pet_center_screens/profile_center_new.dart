@@ -8,8 +8,10 @@ import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
+import 'package:found_adoption_application/screens/change_password.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -51,6 +53,29 @@ class _ProfileCenterState extends State<ProfileCenter>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        // Logic để chuyển đến màn hình chỉnh sửa trang cá nhân
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  EditProfileScreen()), // Thay thế EditProfileScreen bằng màn hình chỉnh sửa trang cá nhân của bạn
+        );
+        break;
+      case 1:
+        // Logic để chuyển đến màn hình đổi mật khẩu
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  UpdatePasswordScreen()), // Thay thế ChangePasswordScreen bằng màn hình đổi mật khẩu của bạn
+        );
+        break;
+    }
   }
 
   Future<void> _getUser() async {
@@ -257,9 +282,10 @@ class _ProfileCenterState extends State<ProfileCenter>
                                           child: Column(
                                             children: [
                                               Text(
-                                                (center!.followingCenter.length +
-                                                        center!
-                                                            .followingUser.length)
+                                                (center!.followingCenter
+                                                            .length +
+                                                        center!.followingUser
+                                                            .length)
                                                     .toString(),
                                                 style: TextStyle(
                                                     fontSize: 16,
@@ -286,7 +312,48 @@ class _ProfileCenterState extends State<ProfileCenter>
                                     ),
                                     (currentClient.id == widget.centerId ||
                                             widget.centerId == "")
-                                        ? const SizedBox()
+                                        ? PopupMenuButton<int>(
+                                            onSelected: (item) =>
+                                                onSelected(context, item),
+                                            itemBuilder: (context) => [
+                                              const PopupMenuItem<int>(
+                                                value: 0,
+                                                child: Text(
+                                                    'Chỉnh sửa trang cá nhân'),
+                                              ),
+                                              const PopupMenuItem<int>(
+                                                value: 1,
+                                                child: Text('Đổi mật khẩu'),
+                                              ),
+                                            ],
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  140,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: Colors.teal),
+                                              child: !isLoading
+                                                  ? const Center(
+                                                      child: Text(
+                                                        "Cập nhật thông tin",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    )
+                                                  : const OnPressedButton(
+                                                      size: 13,
+                                                      strokeWidth: 2.0,
+                                                    ),
+                                            ),
+                                          )
                                         : OnPressFollow(
                                             follow: center!.follow,
                                             id: center!.id)
@@ -483,10 +550,6 @@ class _ProfileCenterState extends State<ProfileCenter>
                                             buildPostsList(petStoriesPosts),
                                             ListVideo(id: center!.id),
                                             AdoptionScreen(centerId: center!.id)
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
-                                            // TabView(recipes: listRecipe),
                                           ],
                                         ),
                                       ),

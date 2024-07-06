@@ -286,7 +286,6 @@ class _ShortVideoState extends State<ShortVideo> {
       File file = File(result.files.single.path!);
       Loading(context);
       String url = await createAudioUpload('${result.files.single.path!}');
-      print("url: $url");
       Navigator.pop(context);
       await _controller.pause();
       await _controller.dispose();

@@ -80,7 +80,7 @@ class Comment {
           centerId?.toMap(), // Đảm bảo cũng có hàm toMap trong class PetCenter
       'commentId': commentId,
       'content': content,
-      'createdAt': createdAt,
+      'createdAt': createdAt!.toIso8601String()
     };
   }
 }

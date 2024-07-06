@@ -130,7 +130,6 @@ class _NotificationCardState extends State<NotificationCard> {
                           PostScreen(postId: widget.notifies.idDestinate!)));
             } else if (widget.notifies.title == 'Comment') {
 
-              print(widget.notifies.idDestinate);
               // ignore: use_build_context_synchronously
               Navigator.push(
                   context,

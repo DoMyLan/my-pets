@@ -40,8 +40,6 @@ class _UserReviewCardState extends State<UserReviewCard> {
     //     widget.review.images!.isNotEmpty) {
     //   urls = widget.review.images!.map((url) => Image.network(url)).toList();
     // }
-
-    print('testurl: $urls');
   }
 
   @override
@@ -304,7 +302,6 @@ class _UserReviewCardState extends State<UserReviewCard> {
                   );
                 },
               );
-              print('Get videoPath from review: $video');
             },
             child: AspectRatio(
               aspectRatio: 1,

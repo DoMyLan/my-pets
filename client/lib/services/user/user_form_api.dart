@@ -20,8 +20,6 @@ Future<void> userform(
   final accountRegisterBox = await Hive.openBox('accountRegisterBox');
   final storedAccount =
       accountId != '' ? accountId : accountRegisterBox.get('account');
-
-  print(storedAccount);
   try {
     final apiUrl = Uri.parse("$BASE_URL/user/$storedAccount");
 
