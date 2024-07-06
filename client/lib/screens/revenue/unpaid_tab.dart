@@ -18,16 +18,30 @@ class _UnpaidTabState extends State<UnpaidTab> {
   late DateTime start;
   late DateTime end;
   Future<List<Order>>? ordersFuture;
-  late double total = 0;
-  late String nameCenter = 'Trung tâm ABC';
+  late int total = 0;
+  late String nameCenter = 'Trung tâm';
 
   @override
   void initState() {
     super.initState();
-    ordersFuture = getRevenue(widget.centerId, "PENDING");
-
     start = DateTime.parse('2023-08-04');
     end = DateTime.parse('2023-08-16');
+    start = DateTime(DateTime.now().year, DateTime.now().month, 1);
+    end = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
+    ordersFuture = getRevenue(
+        widget.centerId,
+        "PENDING",
+        DateFormat('yyyy-MM-dd').format(start),
+        DateFormat('yyyy-MM-dd').format(end));
+  }
+
+  Future<DateTime?> _selectDate(BuildContext context, DateTime initialDate) {
+    return showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2050),
+    );
   }
 
   @override
@@ -44,16 +58,14 @@ class _UnpaidTabState extends State<UnpaidTab> {
               child: Text('Error'),
             );
           } else {
-
             List<Order> orders = snapshot.data as List<Order>;
-            if(orders.isEmpty) {
-              return const Center(
-                child: Text('Không có dữ liệu'),
-              );
+            if (orders.isNotEmpty) {
+              total = orders.fold(
+                  0,
+                  (previousValue, element) =>
+                      previousValue + element.totalPayment);
+              nameCenter = orders[0].seller.centerId!.name;
             }
-            total = orders.fold(0, (previousValue, element) => previousValue + element.totalPayment);
-            nameCenter = orders[0].seller.centerId!.name;
-
 
             return Padding(
               padding: const EdgeInsets.all(8),
@@ -62,7 +74,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    '$total VNĐ',
+                    '${NumberFormat('#,##0', 'vi_VN').format(total)} VNĐ',
                     style: const TextStyle(
                         color: Color.fromRGBO(48, 96, 96, 1.0),
                         fontSize: 30,
@@ -87,10 +99,11 @@ class _UnpaidTabState extends State<UnpaidTab> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => const RevenueChartPage())));
+                                  builder: ((context) =>
+                                      const RevenueChartPage())));
                         },
                         child: Text(
-                          '(Biểu đồ doanh thu)',
+                          '(Xem biểu đồ doanh thu)',
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 12,
@@ -100,7 +113,7 @@ class _UnpaidTabState extends State<UnpaidTab> {
                     ],
                   ),
 
-                  const Text('Số tiền thanh toán (4 Th08 2023 - 16 Th08 2023)'),
+                  Text('Số tiền thanh toán (${start.day} Th${start.month} ${start.year} - ${end.day} Th${end.month} ${end.year})'),
 
                   //BẮT ĐẦU + KẾT THÚC
                   Padding(
@@ -114,13 +127,18 @@ class _UnpaidTabState extends State<UnpaidTab> {
                           height: 40,
                           child: InkWell(
                             onTap: () async {
-                              // final pickedDate =
-                              //     await _selectDate(context, start);
-                              // if (pickedDate != null && mounted) {
-                              //   setState(() {
-                              //     start = pickedDate;
-                              //   });
-                              // }
+                              final pickedDate =
+                                  await _selectDate(context, start);
+                              if (pickedDate != null && mounted) {
+                                setState(() {
+                                  start = pickedDate;
+                                  ordersFuture = getRevenue(
+                                      widget.centerId,
+                                      "PENDING",
+                                      DateFormat('yyyy-MM-dd').format(start),
+                                      DateFormat('yyyy-MM-dd').format(end));
+                                });
+                              }
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -162,12 +180,18 @@ class _UnpaidTabState extends State<UnpaidTab> {
                           height: 40,
                           child: InkWell(
                             onTap: () async {
-                              // final pickedDate = await _selectDate(context, end);
-                              // if (pickedDate != null && mounted) {
-                              //   setState(() {
-                              //     end = pickedDate;
-                              //   });
-                              // }
+                              final pickedDate =
+                                  await _selectDate(context, end);
+                              if (pickedDate != null && mounted) {
+                                setState(() {
+                                  end = pickedDate;
+                                  ordersFuture = getRevenue(
+                                      widget.centerId,
+                                      "PENDING",
+                                      DateFormat('yyyy-MM-dd').format(start),
+                                      DateFormat('yyyy-MM-dd').format(end));
+                                });
+                              }
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -203,32 +227,39 @@ class _UnpaidTabState extends State<UnpaidTab> {
                     height: 13,
                   ),
 
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: orders.length,
-                      itemBuilder: (context, index) {
-                        final item = orders[index];
+                  orders.isEmpty
+                      ? const Center(
+                          child: Text('Không có dữ liệu'),
+                        )
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              final item = orders[index];
 
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        RevenueDetailScreen(orderId: item.id,)));
-                          },
-                          child: ListItemWidget(
-                            imageUrl: item.petId.images[0],
-                            title: item.petId.namePet,
-                            price: item.petId.price.toString(),
-                            sellerName: item.seller.centerId!.name,
-                            // transactionDate: item.transactionDate,
-                            // transactionStatus: item.transactionStatus,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              RevenueDetailScreen(
+                                                orderId: item.id,
+                                              )));
+                                },
+                                child: ListItemWidget(
+                                  imageUrl: item.petId.images[0],
+                                  title: item.petId.namePet,
+                                  price: item.price.toString(),
+                                  sellerName: item.seller.centerId!.name,
+                                  paymentDate: item.datePaid,
+                                  paymenMethods: item.paymentMethods,
+                                  totalPayment: item.totalPayment,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        ),
                 ],
               ),
             );

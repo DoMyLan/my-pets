@@ -39,7 +39,7 @@ class _TrackingOrderCenterState extends State<TrackingOrderCenter> {
                 color: Color.fromRGBO(48, 96, 96, 1.0),
               )),
           title: const Text(
-            'Order Detail',
+            'Chi tiết đơn hàng',
             style: TextStyle(
                 color: Color.fromRGBO(
                   48,

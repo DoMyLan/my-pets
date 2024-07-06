@@ -70,7 +70,7 @@ class _TheOrdersCenterState extends State<TheOrdersCenter>
             },
           ),
           title: const Text(
-            'Orders',
+            'Quản lý đơn hàng',
             style: TextStyle(
                 color: Color.fromRGBO(48, 96, 96, 1.0),
                 fontSize: 24,
@@ -288,7 +288,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                           orders[index].statusPayment ==
                                                   'PENDING'
                                               ? 'Chờ thanh toán'
-                                              : 'Đã thanh toán ${orders[index].paymentMethods}',
+                                              : 'Đã thanh toán',
                                           style: TextStyle(
                                               color:
                                                   orders[index].statusPayment ==
@@ -372,7 +372,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
-                                          "Tổng tiền: ",
+                                          "Tổng: ",
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),

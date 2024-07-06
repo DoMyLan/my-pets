@@ -16,14 +16,15 @@ Future<String?> createOrder(
     voucherTotal,
     totalFee,
     totalPayment,
-    paymentMethods) async {
+    paymentMethods,
+    price) async {
   try {
     var body = jsonEncode({
       "buyer": buyer,
       "seller": {"typeSeller": "C", "userId": null, "centerId": sellerId},
       "petId": pet.id,
       "address": address,
-      "price": pet.price,
+      "price": price.toString(),
       "code": voucher,
       "transportFee": transportFee.toString(),
       "totalFee": totalFee.toString(),
@@ -108,11 +109,11 @@ Future<void> changeStatusOrder(orderId, statusOrder) async {
   }
 }
 
-Future<List<Order>> getRevenue(centerId, status) async {
+Future<List<Order>> getRevenue(centerId, status, start, end) async {
   var responseData;
   try {
     responseData =
-        await api('order/$centerId/payment?status=$status', 'GET', '');
+        await api('order/$centerId/payment?status=$status&start=$start&end=$end', 'GET', '');
   } catch (e) {
     print(e);
     //  notification(e.toString(), true);

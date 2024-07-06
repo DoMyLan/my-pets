@@ -7,6 +7,7 @@ import 'package:found_adoption_application/screens/pet_center_screens/menu_frame
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/order/voucherApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:found_adoption_application/utils/loading.dart';
 import 'package:intl/intl.dart';
 
 class VoucherScreen extends StatefulWidget {
@@ -100,11 +101,14 @@ class _VoucherState extends State<VoucherScreen>
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
                 final result = await showModalBottomSheet(
-                  isScrollControlled: false,
+                  isScrollControlled: true,
                   context: context,
                   builder: (BuildContext context) {
                     //widget modelbottomsheet
-                    return const CustomModalBottomSheet();
+                    return FractionallySizedBox(
+                      heightFactor: 0.75,
+                      child: CustomModalBottomSheet(),
+                    );
                   },
                 );
 
@@ -241,7 +245,8 @@ class _VoucherItemState extends State<VoucherItem> {
                               Row(
                                 children: [
                                   Container(
-                                    width: 110.0,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
                                     height: 122.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.zero,
@@ -254,12 +259,96 @@ class _VoucherItemState extends State<VoucherItem> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Giảm ${vouchers[index].discount}% tối đa ${vouchers[index].maxDiscount}K',
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Giảm ${vouchers[index].discount}% tối đa ${vouchers[index].maxDiscount} VND',
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              // ignore: use_build_context_synchronously
+                                              showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Container(
+                                                    height: 113,
+                                                    color: Colors.white,
+                                                    child: Column(
+                                                      children: [
+                                                        ListTile(
+                                                          title:
+                                                              const Text('Sửa'),
+                                                          onTap: () async {
+                                                            Navigator.pop(
+                                                                context);
+                                                            final result =
+                                                                await showModalBottomSheet(
+                                                              isScrollControlled:
+                                                                  false,
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                //widget modelbottomsheet
+                                                                return CustomModalBottomSheet(
+                                                                  voucher:
+                                                                      vouchers[
+                                                                          index],
+                                                                );
+                                                              },
+                                                            );
+
+                                                            if (result !=
+                                                                null) {
+                                                              // ignore: use_build_context_synchronously
+                                                              Navigator.pushReplacement(
+                                                                  // ignore: use_build_context_synchronously
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              const VoucherScreen()));
+                                                            }
+                                                          },
+                                                        ),
+                                                        ListTile(
+                                                          title:
+                                                              const Text('Xóa'),
+                                                          onTap: () async {
+                                                            Loading(context);
+                                                            await deleteVoucher(
+                                                                vouchers[index]
+                                                                    .id);
+
+                                                            Navigator.pop(
+                                                                context);
+                                                            // ignore: use_build_context_synchronously
+                                                            Navigator.pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            const VoucherScreen()));
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: Icon(
+                                              Icons.more_vert,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       const SizedBox(
                                         height: 8,
@@ -292,7 +381,7 @@ class _VoucherItemState extends State<VoucherItem> {
                                             width:
                                                 115, // Đặt kích thước tối đa cho Text
                                             child: Text(
-                                              'Số lượng còn lại: ${vouchers[index].quantity}',
+                                              'Số lượng còn lại: ${vouchers[index].quantity - vouchers[index].used!}',
                                               style: const TextStyle(
                                                   fontSize: 11.0),
                                               overflow: TextOverflow
@@ -346,30 +435,79 @@ class _VoucherItemState extends State<VoucherItem> {
                                                 color: Colors.grey,
                                                 size: 10,
                                               ),
-                                              Text(
-                                                'Hiệu lực sau: ${vouchers[index].startDate.difference(DateTime.now()).inHours}',
-                                                style: const TextStyle(
-                                                    fontSize: 10.0,
-                                                    color: Colors.grey),
-                                              ),
+                                              vouchers[index]
+                                                          .startDate
+                                                          .difference(
+                                                              DateTime.now())
+                                                          .inHours <
+                                                      0
+                                                  ? Text(
+                                                      'Hết hiệu lực sau: ${vouchers[index].endDate.difference(DateTime.now()).inHours} giờ',
+                                                      style: const TextStyle(
+                                                          fontSize: 10.0,
+                                                          color: Colors.grey),
+                                                    )
+                                                  : vouchers[index]
+                                                              .endDate
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inHours <
+                                                          0
+                                                      ? const Text(
+                                                          'Hết hạn',
+                                                          style: TextStyle(
+                                                              fontSize: 10.0,
+                                                              color:
+                                                                  Colors.grey),
+                                                        )
+                                                      : Text(
+                                                          'Có hiệu lực sau: ${vouchers[index].startDate.difference(DateTime.now()).inHours} giờ',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      10.0,
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
                                             ],
                                           ),
                                           const SizedBox(
                                             width: 8,
                                           ),
-                                          const Row(
+                                          Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.check_circle_outline,
                                                 color: Colors.grey,
                                                 size: 10,
                                               ),
-                                              Text(
-                                                'Chưa có hiệu lực',
-                                                style: TextStyle(
-                                                    fontSize: 10.0,
-                                                    color: Colors.grey),
-                                              ),
+                                              vouchers[index]
+                                                              .startDate
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inHours <
+                                                          0 &&
+                                                      vouchers[index]
+                                                              .endDate
+                                                              .difference(
+                                                                  DateTime
+                                                                      .now())
+                                                              .inHours >
+                                                          0
+                                                  ? const Text(
+                                                      'Có hiệu lực',
+                                                      style: TextStyle(
+                                                          fontSize: 10.0,
+                                                          color: Colors.grey),
+                                                    )
+                                                  : const Text(
+                                                      'Không có hiệu lực',
+                                                      style: TextStyle(
+                                                          fontSize: 10.0,
+                                                          color: Colors.grey),
+                                                    ),
                                             ],
                                           ),
                                         ],

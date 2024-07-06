@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 
 class ListItemWidget extends StatefulWidget {
   final String imageUrl;
   final String title;
   final String price;
   final String sellerName;
-  // final String paymentStatus;
-  // final String paymentDate;
-
-
+  final String paymenMethods;
+  final DateTime? paymentDate;
+  final int totalPayment;
 
   const ListItemWidget({
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.price,
     required this.sellerName,
-    // required this.paymentStatus,
-    // required this.paymentDate,
-
-  
+    required this.paymenMethods,
+    this.paymentDate,
+    required this.totalPayment,
   });
 
   @override
@@ -30,7 +29,6 @@ class _ListItemWidgetState extends State<ListItemWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-     
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18),
         child: Row(
@@ -51,9 +49,8 @@ class _ListItemWidgetState extends State<ListItemWidget> {
                   left: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(48, 96, 96, 1.0),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
+                        color: const Color.fromRGBO(48, 96, 96, 1.0),
+                        borderRadius: BorderRadius.circular(10)),
                     child: SizedBox(
                       width: 20,
                       height: 20,
@@ -69,7 +66,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
             const SizedBox(
               width: 4,
             ),
-            Container(
+            SizedBox(
               width: 260,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,18 +82,19 @@ class _ListItemWidgetState extends State<ListItemWidget> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: 'đ',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Color.fromRGBO(48, 96, 96, 1.0),
                                 fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline, // Gạch đít
+                                decoration:
+                                    TextDecoration.underline, // Gạch đít
                               ),
                             ),
                             TextSpan(
-                                text: widget.price,
-                                style: TextStyle(
+                                text: NumberFormat('#,##0', 'vi_VN').format(widget.totalPayment),
+                                style: const TextStyle(
                                   fontSize: 16, // Kích thước văn bản
                                   color: Color.fromRGBO(
                                       48, 96, 96, 1.0), // Màu sắc văn bản
@@ -115,14 +113,16 @@ class _ListItemWidgetState extends State<ListItemWidget> {
                     height: 8,
                   ),
                   Text(
-                    "Hoàn tất chuyển khoản vào 13 Th08 2023",
+                    widget.paymentDate == null
+                        ? "Chưa thanh toán"
+                        : "Hoàn tất chuyển khoản vào ${widget.paymentDate!.day}/${widget.paymentDate!.month}/${widget.paymentDate!.year} ${widget.paymentDate!.hour}:${widget.paymentDate!.minute}",
                     style: const TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                   const SizedBox(
                     height: 4,
                   ),
                   Text(
-                    "Đã chuyển khoản cho người bán",
+                    "Giá thú cưng: ${NumberFormat('#,##0', 'vi_VN').format(int.parse(widget.price))} đ",
                     style: const TextStyle(
                         fontSize: 13, color: Color.fromRGBO(48, 96, 96, 1.0)),
                   ),
