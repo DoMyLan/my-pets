@@ -1,10 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/hive/current_location.dart';
+import 'package:found_adoption_application/models/order.dart';
+
+
 import 'package:found_adoption_application/screens/login_screen.dart';
+
 import 'package:found_adoption_application/screens/welcome_screen.dart';
 import 'package:found_adoption_application/services/auth_api.dart';
+import 'package:found_adoption_application/services/order/orderApi.dart';
+
 import 'package:found_adoption_application/utils/messageNotifi.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:found_adoption_application/models/hive/current_center.dart';
@@ -14,13 +23,23 @@ import 'package:found_adoption_application/screens/user_screens/menu_frame_user.
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:hive_flutter/hive_flutter.dart';
 
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(LocationAdapter());
   Hive.registerAdapter(UserAdapter());
   Hive.registerAdapter(CenterAdapter());
-  
+
+
   HttpOverrides.global = MyHttpOverrides();
+ 
+  Timer.periodic(Duration(seconds: 30), (timer) async {
+    await checkForChanges();
+    // print("abc");
+  });
+
+  
 
   runApp(
     Directionality(
@@ -30,6 +49,47 @@ void main() async {
     ),
   );
 }
+
+Future<void> checkForChanges() async {
+  List<Order> newOrders = await getOrdersBySeller('PENDING');
+  int oldOrders = await getOrdersFromLocal();
+
+
+  print("newOrders length: ${newOrders.length}");
+  print("oldOrders length: ${oldOrders}");
+  if (newOrders.length > oldOrders) {
+    int num = newOrders.length - oldOrders;
+    await saveOrdersToLocal(num, 'numNotify');
+    // Nếu có thay đổi, cập nhật previousOrder và lưu trữ mới
+    oldOrders = newOrders.length;
+
+    notify();
+  }
+  await saveOrdersToLocal(newOrders.length, 'countOrders');
+}
+
+
+Future<void> saveOrdersToLocal(int count, String namePref) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setInt(namePref, count);
+}
+
+Future<int> getOrdersFromLocal() async {
+ 
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int orders = prefs.getInt('countOrders') ?? 0;
+
+  return orders;
+}
+
+
+void notify() async{
+  // Hàm để thông báo có sự thay đổi
+   final NotificationHandler notificationHandler = NotificationHandler();
+  await notificationHandler.showNotification();
+  print('Orders have changed!');
+}
+
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -78,7 +138,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      // future: hasValidRefreshToken, 
+      // future: hasValidRefreshToken,
       future: Future.delayed(Duration(seconds: 4), () => hasValidRefreshToken),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
@@ -118,8 +178,7 @@ class _MyAppState extends State<MyApp> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) =>
-                                       LoginScreen())));
+                                  builder: ((context) => LoginScreen())));
                           notification(
                               "The login session has expired, please log in again!",
                               false);
@@ -159,11 +218,11 @@ class _MyAppState extends State<MyApp> {
                           }
                         }
                       }
-                      return const  CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     },
                   );
                 }
-                return const  CircularProgressIndicator();
+                return const CircularProgressIndicator();
               },
             );
           } else {
@@ -176,8 +235,7 @@ class _MyAppState extends State<MyApp> {
             );
           }
         }
-        return  WelcomeScreen();
-       
+        return WelcomeScreen();
       },
     );
   }

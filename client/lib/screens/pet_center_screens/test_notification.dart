@@ -39,8 +39,8 @@ class NotificationHandler {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'SUCCESSFUL ADDITION',
-      'Great news! Your pet has been successfully added to our platform. Thank you for contributing to our pet-loving community.',
+      'GREAT NEWS!',
+      'Có đơn hàng mới đang chờ bạn xử lý',
       platformChannelSpecifics,
       payload: 'custom_payload',
     );

@@ -139,6 +139,8 @@ class TabTrackingOrder extends StatefulWidget {
 class _TabTrackingOrderState extends State<TabTrackingOrder> {
   Future<List<Order>>? orderFuture;
   late List<Order> orders;
+  List<Order> previousOrders = [];
+
   final List<String> statusOrder = [
     'PENDING',
     'CONFIRMED',

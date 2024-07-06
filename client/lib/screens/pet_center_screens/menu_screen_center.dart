@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/custom_widget/design_icon.dart';
 import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/setting.dart';
@@ -6,6 +7,7 @@ import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:hive/hive.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuCenterScreen extends StatefulWidget {
   final Function(int) menuCallBack;
@@ -17,6 +19,7 @@ class MenuCenterScreen extends StatefulWidget {
 
 class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
+  int numNotify = 0;
 
   List<String> menuItems = [
     'Thú cưng',
@@ -27,55 +30,101 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     // 'Manage Adopt',
     'Voucher',
     'Thông báo',
-    
+
     // 'Messages',
-
-  
   ];
 
-  List<IconData> icons = [
-    FontAwesomeIcons.paw,
-    FontAwesomeIcons.newspaper,
-    // ignore: deprecated_member_use
-    FontAwesomeIcons.userAlt,
-    FontAwesomeIcons.plus,
-    FontAwesomeIcons.checkToSlot,
-    // FontAwesomeIcons.checkToSlot,
-    FontAwesomeIcons.moneyBill,
-    FontAwesomeIcons.bell,
- 
-    // FontAwesomeIcons.envelope,
+  List<dynamic> icons = [];
 
- 
-  ];
+  void updateIcons() {
+    icons = [
+      const Icon(FontAwesomeIcons.paw),
+      const Icon(FontAwesomeIcons.newspaper),
+      // ignore: deprecated_member_use
+      const Icon(FontAwesomeIcons.userAlt),
+      const Icon(FontAwesomeIcons.plus),
+      CustomFirstOrderIcon(key: UniqueKey(), notificationCount: numNotify),
+
+      // FontAwesomeIcons.checkToSlot,
+      const Icon(FontAwesomeIcons.moneyBill),
+      const Icon(FontAwesomeIcons.bell),
+    ];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+    // updateIcons();
+  }
+
+  Future<void> _loadPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      numNotify = prefs.getInt('numNotify') ?? 0;
+      updateIcons();
+      print("check numNotify: $numNotify");
+    });
+  }
+
+  Future<void> _updateNotificationCount(int count) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('numNotify', count);
+
+    setState(() {
+      numNotify = count;
+      updateIcons();
+    });
+
+    print("after click icon: ${prefs.getInt('numNotify')}");
+  }
 
   Widget buildMenuRow(int index) {
+    dynamic icon = icons[index];
+    Widget iconWidget;
+    double iconSize = 14;
+    if (icon is IconData) {
+      iconWidget = Icon(
+        icon,
+        size: iconSize,
+        color: selectedMenuIndex == index
+            ? Colors.white
+            : Colors.white.withOpacity(0.5),
+      );
+    } else if (icon is Widget && icon is! IconData) {
+      // Handle custom widgets here if needed
+      iconWidget = icon;
+    } else {
+      throw Exception('Unsupported icon type');
+    }
+
     return InkWell(
       onTap: () {
         setState(() {
           selectedMenuIndex = index;
           widget.menuCallBack(index);
+          //CustomFirstOrderIcon- cập nhật numNotify về 0
+          if (index == 4) {
+            numNotify = 0;
+            _updateNotificationCount(numNotify);
+          }
         });
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Row(
           children: [
-            Icon(
-              icons[index],
-              color: selectedMenuIndex == index
-                  ? Colors.white
-                  : Colors.white.withOpacity(0.5),
-            ),
+            iconWidget,
             const SizedBox(width: 5),
             Text(
               menuItems[index],
               style: TextStyle(
-                  color: selectedMenuIndex == index
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.5),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
+                color: selectedMenuIndex == index
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.5),
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -209,7 +258,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    //Phần SETTING
+                      //Phần SETTING
                       Padding(
                         padding: const EdgeInsets.only(right: 30),
                         child: Row(
@@ -221,8 +270,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            SettingScreen()),
+                                        builder: (context) => SettingScreen()),
                                   );
                                 },
                                 child: Text(
@@ -265,7 +313,6 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                           ],
                         ),
                       ),
-                      
                     ],
                   ),
                 ],
