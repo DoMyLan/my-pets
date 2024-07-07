@@ -20,7 +20,6 @@ class MenuCenterScreen extends StatefulWidget {
 class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
   int numNotify = 0;
-  
 
   List<String> menuItems = [
     'Thú cưng',
@@ -44,8 +43,8 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       // ignore: deprecated_member_use
       const Icon(FontAwesomeIcons.userAlt),
       const Icon(FontAwesomeIcons.plus),
-      CustomFirstOrderIcon( notificationCount: numNotify),
-      
+      CustomFirstOrderIcon(notificationCount: numNotify),
+
       // FontAwesomeIcons.checkToSlot,
       const Icon(FontAwesomeIcons.moneyBill),
       const Icon(FontAwesomeIcons.bell),
@@ -59,14 +58,13 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     super.initState();
 
     _loadPreferences();
-    
   }
 
   @override
-void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
-  super.didUpdateWidget(oldWidget);
-  updateIcons();
-}
+  void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    updateIcons();
+  }
 
   Future<void> _loadPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -76,10 +74,6 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
       print("check numNotify: $numNotify");
     });
   }
-
- 
-
-
 
   Future<void> _updateNotificationCount(int count) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -94,7 +88,6 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
   }
 
   Widget buildMenuRow(int index) {
-   
     return InkWell(
       onTap: () {
         setState(() {
@@ -270,7 +263,7 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
                                   );
                                 },
                                 child: Text(
-                                  'Setting',
+                                  'Hơn nữa',
                                   style: TextStyle(
                                       color: Colors.white.withOpacity(0.5),
                                       fontSize: 20,
@@ -300,7 +293,7 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
                                   _showLogoutDialog(context);
                                 },
                                 child: Text(
-                                  'Log out',
+                                  'Đăng xuất',
                                   style: TextStyle(
                                       color: Colors.white.withOpacity(0.5),
                                       fontSize: 20,
@@ -326,23 +319,23 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Log out'),
+          title: const Text('Đăng xuất'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('You are about to log out. Are you sure?'),
+                Text('Bạn có chắc chắn muốn đăng xuất không?'),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
-              onPressed: () async {
+              child: const Text('Hủy'),
+              onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Log out'),
+              child: const Text('Đăng xuất'),
               onPressed: () async {
                 Navigator.of(context).pop();
                 //Navigate
@@ -354,6 +347,7 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
 
                 var centerBox = await Hive.openBox('centerBox');
                 await centerBox.put('currentCenter', null);
+                // Code to logout the user goes here
               },
             ),
           ],
@@ -362,5 +356,3 @@ void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
     );
   }
 }
-
-

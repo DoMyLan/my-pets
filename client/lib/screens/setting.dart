@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
-import 'package:found_adoption_application/screens/notify.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/revenue/revenue_statistic.dart';
@@ -14,28 +13,38 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  dynamic currentClient;
+  @override
+  void initState() {
+    super.initState();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
+
   int selectedMenuIndex = 0;
 
   List<String> menuItems = [
-    'Edit Profile',
-    'Change Password',
-    'Revenue Statistics',
-    'Notify',
+    'Sửa thông tin cá nhân',
+    'Đổi mật khẩu',
+    'Doanh thu',
   ];
 
   List<IconData> icons = [
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.lockOpen,
     Icons.show_chart_sharp,
-    FontAwesomeIcons.bell,
-  
   ];
 
   List<Widget> menuScreens = [
     EditProfileCenterScreen(),
     UpdatePasswordScreen(),
     RevenueReportScreen(),
-    NotificationPage(),
   ];
 
   @override
@@ -44,12 +53,12 @@ class _SettingScreenState extends State<SettingScreen> {
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(48, 96, 96, 1.0),
           centerTitle: true,
-          title: Text(
-            'Setting',
+          title: const Text(
+            'Chức năng thêm',
             style: TextStyle(
                 fontSize: 17, color: Colors.white, letterSpacing: 0.53),
           ),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(30),
             ),
@@ -81,7 +90,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 }
               }
             },
-            child: Icon(
+            child: const Icon(
               Icons.subject,
               color: Colors.white,
             ),
@@ -89,8 +98,8 @@ class _SettingScreenState extends State<SettingScreen> {
           actions: [
             InkWell(
               onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(
                   Icons.settings,
                   size: 20,
@@ -100,23 +109,22 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ],
           bottom: PreferredSize(
-              child: getAppBottomView(), preferredSize: Size.fromHeight(110.0)),
+              child: getAppBottomView(currentClient),
+              preferredSize: const Size.fromHeight(110.0)),
         ),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: ListView.builder(
             itemCount: menuItems.length,
             itemBuilder: (context, index) {
-             
               if (index != 0) {
                 return Column(
                   children: [
-                    SizedBox(height: 20), 
+                    const SizedBox(height: 20),
                     buildMenuRow(index),
                   ],
                 );
               } else {
-           
                 return buildMenuRow(index);
               }
             },
@@ -151,38 +159,39 @@ class _SettingScreenState extends State<SettingScreen> {
       context,
       MaterialPageRoute(builder: (context) => menuScreens[index]),
     );
-    print('Selected menu index: $index');
   }
 }
 
-Widget getAppBottomView() {
+Widget getAppBottomView(currentClient) {
   return Container(
-    padding: EdgeInsets.only(left: 30, bottom: 20),
+    padding: const EdgeInsets.only(left: 30, bottom: 20),
     child: Row(
       children: [
-        getProfileView(),
+        getProfileView(currentClient),
         Container(
-          margin: EdgeInsets.only(left: 20),
+          margin: const EdgeInsets.only(left: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Đỗ Thị Mỹ Lan',
-                style: TextStyle(
+                currentClient.role == 'CENTER'
+                    ? currentClient.name
+                    : currentClient.firstName + ' ' + currentClient.lastName,
+                style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                     color: Colors.white),
               ),
               Text(
-                'mylan060401@mail.com',
-                style: TextStyle(
+                currentClient.email,
+                style: const TextStyle(
                   fontSize: 13,
                   color: Colors.white,
                 ),
               ),
               Text(
-                '+084 138 1792',
-                style: TextStyle(
+                currentClient.phoneNumber,
+                style: const TextStyle(
                   fontSize: 13,
                   color: Colors.white,
                 ),
@@ -195,13 +204,30 @@ Widget getAppBottomView() {
   );
 }
 
-Widget getProfileView() {
+Widget getProfileView(currentClient) {
   return Stack(
     children: [
-      CircleAvatar(
-        radius: 32,
-        backgroundColor: Colors.white,
-        child: Icon(Icons.person_outline_rounded),
+      Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle, // Đây là điểm chính để đảm bảo hình dạng tròn
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 10,
+              spreadRadius: 1,
+            )
+          ],
+        ),
+        child: CircleAvatar(
+          radius: 32,
+          backgroundColor: Colors.white,
+          child: ClipOval(
+            child: Image.network(currentClient.avatar,
+                fit: BoxFit.cover,
+                width: 64,
+                height: 64), // Đảm bảo hình ảnh vừa vặn
+          ),
+        ),
       ),
       Positioned(
           bottom: 1,
@@ -209,12 +235,12 @@ Widget getProfileView() {
           child: Container(
             height: 30,
             width: 30,
-            child: Icon(
+            child: const Icon(
               Icons.edit,
               color: Color.fromRGBO(48, 96, 96, 1.0),
               size: 20,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.amber,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
           ))
