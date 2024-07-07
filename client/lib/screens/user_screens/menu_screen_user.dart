@@ -216,7 +216,7 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
                             // await Hive.close();
                           },
                           child: Text(
-                            '   Log out',
+                            '   Đăng xuất',
                             style: TextStyle(
                                 color: Colors.white.withOpacity(0.5),
                                 fontSize: 20,
@@ -239,23 +239,23 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Log out'),
+          title: const Text('Đăng xuất'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('You are about to log out. Are you sure?'),
+                Text('Bạn có chắc chắn muốn đăng xuất không?'),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Hủy'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Log out'),
+              child: const Text('Đăng xuất'),
               onPressed: () async {
                 Navigator.of(context).pop();
                 //Navigate

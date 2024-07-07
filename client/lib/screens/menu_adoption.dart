@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:found_adoption_application/screens/adoption_free_screen.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
-import 'package:found_adoption_application/screens/adoption_screen_giver.dart';
-
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       bottomNavigationBar: MotionTabBar(
         controller: _motionTabBarController,
-        initialSelectedTab: "Pet Center",
+        initialSelectedTab: "Thú cưng",
         useSafeArea: true,
-        labels: const ["Pet Center", "Add Pet", "Personal"],
-        icons: const [Icons.pets, Icons.add, FontAwesomeIcons.user],
+        labels: const ["Thú cưng", "Miễn phí"],
+        icons: const [Icons.pets, FontAwesomeIcons.handHoldingHeart],
         tabSize: 50,
         tabBarHeight: 50,
         textStyle: const TextStyle(
@@ -74,7 +73,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // AddPetScreenPersonal(),
           ChangeNotifierProvider(
             create: (_) => Tab2Data(),
-            child: AdoptionScreenGiver(),
+            child: AdoptionFreeScreen(
+              centerId: null,
+            ),
           ),
         ],
       ),

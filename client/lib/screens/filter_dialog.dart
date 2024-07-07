@@ -50,14 +50,15 @@ class _FilterScreenState extends State<FilterScreen> {
   RangeValues selectedAgeRange = RangeValues(1, 10);
   List<String> selectedColors = [];
   List<String> allColors = [
-    'Đen',
-    'Trắng',
-    'Đỏ',
-    'Vàng',
-    'Hồng',
-    'Nâu',
-    'Xám',
-    'Khác'
+    'Red',
+    'Green',
+    'Blue',
+    'Yellow',
+    'Orange',
+    'White',
+    'Black',
+    'Brown',
+    'Grey'
   ];
 
   @override
@@ -79,14 +80,32 @@ class _FilterScreenState extends State<FilterScreen> {
                 }
               },
               items: <String>[
-                'Mèo Xiêm',
-                'Chó Husky',
-                'Poodle',
-                'Pitpull',
-                'Chó cỏ',
-                'Mèo ta',
-                'Mèo Anh lông ngắn',
-                'Khác'
+                "Chó Alaska",
+                "Chó Bắc Kinh",
+                "Chó Beagle",
+                "Chó Becgie",
+                "Chó Chihuahua",
+                "Chó Corgi",
+                "Chó Dachshund",
+                "Chó Golden",
+                "Chó Husky",
+                "Chó Phốc Sóc",
+                "Chó Poodle",
+                "Chó Pug",
+                "Chó Samoyed",
+                "Chó Shiba",
+                "Chó cỏ",
+                "Chó khác",
+                "Mèo Ba Tư",
+                "Mèo Ai Cập",
+                "Mèo Anh lông dài",
+                "Mèo Xiêm",
+                "Mèo Munchkin",
+                "Mèo Ragdoll",
+                "Mèo Mướp",
+                "Mèo Vàng",
+                "Mèo Mun",
+                "Mèo khác"
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

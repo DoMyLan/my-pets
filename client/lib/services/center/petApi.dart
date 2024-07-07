@@ -84,6 +84,27 @@ Future<List<Pet>> getAllPet(String? centerId) async {
   return pets;
 }
 
+Future<List<Pet>> getAllPetFree(String? centerId) async {
+  var responseData;
+  final apiUrl;
+
+  try {
+    if (centerId == null) {
+      apiUrl = "pet/all/pets/free";
+    } else {
+      apiUrl = "pet/${centerId}";
+    }
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+    //  notification(e.toString(), true);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<Pet> pets = petList.map((json) => Pet.fromJson(json)).toList();
+  print(pets);
+  return pets;
+}
+
 Future<List<Pet>> getAllPetPersonal() async {
   var currentClient = await getCurrentClient();
   var responseData;

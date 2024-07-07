@@ -10,7 +10,8 @@ import 'package:found_adoption_application/screens/user_screens/menu_frame_user.
 import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 // ignore: library_prefixes
-import 'package:found_adoption_application/screens/add_short_video.dart' as addShortVideo;
+import 'package:found_adoption_application/screens/add_short_video.dart'
+    as addShortVideo;
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -93,9 +94,11 @@ class _FeedScreenState extends State<FeedScreen>
       });
     }
 
-    setState(() {
-      isLoadingVideo = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoadingVideo = false;
+      });
+    }
   }
 
   Future<void> _loadVisiblePosts() async {
@@ -293,8 +296,8 @@ class _FeedScreenState extends State<FeedScreen>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                addShortVideo.ShortVideo(), // Đã có sẵn trong comment của bạn
+                            builder: (context) => addShortVideo
+                                .ShortVideo(), // Đã có sẵn trong comment của bạn
                           ),
                         );
                       },

@@ -9,24 +9,24 @@ import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class AllPetCenter extends StatefulWidget {
+class AllPetFreeCenter extends StatefulWidget {
   final String listType;
   final String searchKeyword;
   final List<Pet>? filterResult;
   final ValueChanged<String> onSearchKeywordChanged;
   final String? centerId;
-  AllPetCenter(
+  AllPetFreeCenter(
       {required this.listType,
       required this.searchKeyword,
       required this.onSearchKeywordChanged,
       required this.filterResult,
       required this.centerId});
   @override
-  _AllPetCenterState createState() => _AllPetCenterState();
+  _AllPetFreeCenterState createState() => _AllPetFreeCenterState();
 }
 
-class _AllPetCenterState extends State<AllPetCenter>
-    with AutomaticKeepAliveClientMixin<AllPetCenter> {
+class _AllPetFreeCenterState extends State<AllPetFreeCenter>
+    with AutomaticKeepAliveClientMixin<AllPetFreeCenter> {
   late var currentClient;
   Future<List<Pet>>? futurePets;
   String _searchKeyword = '';
@@ -55,9 +55,9 @@ class _AllPetCenterState extends State<AllPetCenter>
       });
       var pets;
       if (temp.role == 'USER') {
-        pets = await getAllPet(widget.centerId);
+        pets = await getAllPetFree(widget.centerId);
       } else {
-        pets = await getAllPet(temp.id);
+        pets = await getAllPetFree(temp.id);
       }
       if (!listEquals(pets, previousPets)) {
         // Nếu dữ liệu mới khác dữ liệu trước đó, cập nhật dữ liệu trước đó và hiển thị dữ liệu mới
@@ -101,7 +101,7 @@ class _AllPetCenterState extends State<AllPetCenter>
   bool get wantKeepAlive => true;
 
   @override
-  void didUpdateWidget(AllPetCenter oldWidget) {
+  void didUpdateWidget(AllPetFreeCenter oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.searchKeyword != widget.searchKeyword) {
       setState(() {

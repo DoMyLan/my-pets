@@ -71,10 +71,12 @@ class _ProfileUserState extends State<ProfileUser>
       infoUser = await getProfile(context, temp.id);
       petStoriesPosts = getAllPostPersonal(temp.id);
     }
-    setState(() {
-      user = infoUser;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        user = infoUser;
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> getClient() async {
@@ -90,17 +92,13 @@ class _ProfileUserState extends State<ProfileUser>
         // Logic để chuyển đến màn hình chỉnh sửa trang cá nhân
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  const EditProfileScreen()), 
+          MaterialPageRoute(builder: (context) => const EditProfileScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  UpdatePasswordScreen()), 
+          MaterialPageRoute(builder: (context) => UpdatePasswordScreen()),
         );
         break;
     }
