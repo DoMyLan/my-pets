@@ -20,6 +20,7 @@ class MenuCenterScreen extends StatefulWidget {
 class _MenuCenterScreenState extends State<MenuCenterScreen> {
   int selectedMenuIndex = 0;
   int numNotify = 0;
+  
 
   List<String> menuItems = [
     'Thú cưng',
@@ -43,20 +44,29 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       // ignore: deprecated_member_use
       const Icon(FontAwesomeIcons.userAlt),
       const Icon(FontAwesomeIcons.plus),
-      CustomFirstOrderIcon(key: UniqueKey(), notificationCount: numNotify),
-
+      CustomFirstOrderIcon( notificationCount: numNotify),
+      
       // FontAwesomeIcons.checkToSlot,
       const Icon(FontAwesomeIcons.moneyBill),
       const Icon(FontAwesomeIcons.bell),
     ];
+
+    print("test numNotify: ${numNotify}");
   }
 
   @override
   void initState() {
     super.initState();
+
     _loadPreferences();
-    // updateIcons();
+    
   }
+
+  @override
+void didUpdateWidget(covariant MenuCenterScreen oldWidget) {
+  super.didUpdateWidget(oldWidget);
+  updateIcons();
+}
 
   Future<void> _loadPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,6 +76,10 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       print("check numNotify: $numNotify");
     });
   }
+
+ 
+
+
 
   Future<void> _updateNotificationCount(int count) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -80,24 +94,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
   }
 
   Widget buildMenuRow(int index) {
-    dynamic icon = icons[index];
-    Widget iconWidget;
-    double iconSize = 14;
-    if (icon is IconData) {
-      iconWidget = Icon(
-        icon,
-        size: iconSize,
-        color: selectedMenuIndex == index
-            ? Colors.white
-            : Colors.white.withOpacity(0.5),
-      );
-    } else if (icon is Widget && icon is! IconData) {
-      // Handle custom widgets here if needed
-      iconWidget = icon;
-    } else {
-      throw Exception('Unsupported icon type');
-    }
-
+   
     return InkWell(
       onTap: () {
         setState(() {
@@ -105,8 +102,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
           widget.menuCallBack(index);
           //CustomFirstOrderIcon- cập nhật numNotify về 0
           if (index == 4) {
-            numNotify = 0;
-            _updateNotificationCount(numNotify);
+            _updateNotificationCount(0);
           }
         });
       },
@@ -114,7 +110,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Row(
           children: [
-            iconWidget,
+            icons[index],
             const SizedBox(width: 5),
             Text(
               menuItems[index],
@@ -366,3 +362,5 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     );
   }
 }
+
+

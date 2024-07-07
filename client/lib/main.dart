@@ -53,12 +53,13 @@ void main() async {
 Future<void> checkForChanges() async {
   List<Order> newOrders = await getOrdersBySeller('PENDING');
   int oldOrders = await getOrdersFromLocal();
-
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int num = prefs.getInt('numNotify') ?? 0;
 
   print("newOrders length: ${newOrders.length}");
   print("oldOrders length: ${oldOrders}");
   if (newOrders.length > oldOrders) {
-    int num = newOrders.length - oldOrders;
+    num += (newOrders.length - oldOrders);
     await saveOrdersToLocal(num, 'numNotify');
     // Nếu có thay đổi, cập nhật previousOrder và lưu trữ mới
     oldOrders = newOrders.length;

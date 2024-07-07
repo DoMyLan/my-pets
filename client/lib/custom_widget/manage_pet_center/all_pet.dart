@@ -314,7 +314,24 @@ class _AllPetCenterState extends State<AllPetCenter>
                           fit: BoxFit.cover,
                         ),
                       ),
-                    )
+                    ),
+                    if (animal.breed == 'Mèo Xiêm' ||
+                        animal.breed == 'Mèo Mướp' ||
+                        animal.breed == 'Husky' ||
+                        animal.breed == 'Chó cỏ')
+                      Positioned(
+                        top: 0, // Khoảng cách từ trên cùng của Stack
+                        left: 0, // Khoảng cách từ trái của Stack
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              "assets/images/gif_sale.gif", // Đường dẫn đến asset
+                              width: 50, // Chiều rộng của ảnh
+                              height: 50, // Chiều cao của ảnh
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 )
               ],

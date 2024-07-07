@@ -122,6 +122,7 @@ flutter:
     - assets/images/dog_banner.png
     - assets/images/success.mp3
     - assets/images/logo.jpg
+    - assets/images/gif_sale.gif
 
     - assets/dogs/alaska.jpg
     - assets/dogs/backinh.jpg
