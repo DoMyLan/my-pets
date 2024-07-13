@@ -87,7 +87,7 @@ class _Home_GuestState extends State<Home_Guest>
                             "Ứng dụng mua bán thú cưng tuyệt vời!",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w300,
                             ),
                           ),

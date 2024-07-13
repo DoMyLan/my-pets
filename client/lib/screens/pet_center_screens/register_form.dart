@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/services/center/center_form.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RegistrationCenterForm extends StatefulWidget {
   const RegistrationCenterForm({super.key});
@@ -110,12 +111,15 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
                 ),
                 child: GestureDetector(
                   onTap: () async {
+                    LatLng location =await convertAddressToLatLng(addressController.text.toString());
                     await centerform(
                         context,
                         nameController.text.toString(),
                         phoneNumberController.text.toString(),
                         addressController.text.toString(),
-                        aboutMeController.text.toString());
+                        aboutMeController.text.toString(),
+                        location,
+                        );
                   },
                   child: const Text(
                     "Tiếp theo",
