@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
@@ -10,9 +8,8 @@ import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
 import 'package:found_adoption_application/screens/guest/widget.dart';
-import 'package:found_adoption_application/screens/map_page.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/place_auto_complete.dart';
 import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
@@ -68,7 +65,7 @@ class _ProfileCenterState extends State<ProfileCenter>
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  EditProfileScreen()), // Thay thế EditProfileScreen bằng màn hình chỉnh sửa trang cá nhân của bạn
+                  EditProfileCenterScreen()), // Thay thế EditProfileScreen bằng màn hình chỉnh sửa trang cá nhân của bạn
         );
         break;
       case 1:

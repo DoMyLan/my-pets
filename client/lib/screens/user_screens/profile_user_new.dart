@@ -73,10 +73,12 @@ class _ProfileUserState extends State<ProfileUser>
       infoUser = await getProfile(context, temp.id);
       petStoriesPosts = getAllPostPersonal(temp.id);
     }
-    setState(() {
-      user = infoUser;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        user = infoUser;
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> getClient() async {
