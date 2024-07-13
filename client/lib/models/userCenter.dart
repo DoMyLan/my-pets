@@ -1,6 +1,8 @@
+import 'package:found_adoption_application/models/location.dart';
 import 'package:intl/intl.dart';
 
 class InfoCenter {
+  final Location location;
   final String id;
   final String accountId;
   final String email;
@@ -22,6 +24,7 @@ class InfoCenter {
   late List<String> followingCenter;
 
   InfoCenter({
+    required this.location,
     required this.id,
     required this.accountId,
     required this.email,
@@ -45,6 +48,7 @@ class InfoCenter {
   // Factory method để tạo đối tượng InfoUser từ JSON
   factory InfoCenter.fromJson(Map<String, dynamic> json) {
     return InfoCenter(
+      location: Location.fromJson(json['location']),
       id: json['_id'] as String,
       accountId: json['accountId']['_id'] as String,
       email: json['accountId']['email'] as String,

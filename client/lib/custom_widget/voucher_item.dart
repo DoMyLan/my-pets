@@ -41,7 +41,7 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
           children: [
             Stack(children: [
               Container(
-                width: 110.0,
+                width: 98.0,
                 height: 122.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.zero,
@@ -75,7 +75,7 @@ class _VoucherItemSelectedState extends State<VoucherItemSelected> {
                                 ? 'Thú cưng'
                                 : 'Tổng đơn hàng',
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 18),
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       )
                     ],
                   ))

@@ -20,6 +20,8 @@ import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileUser extends StatefulWidget {
   final String userId;
@@ -90,17 +92,13 @@ class _ProfileUserState extends State<ProfileUser>
         // Logic để chuyển đến màn hình chỉnh sửa trang cá nhân
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  const EditProfileScreen()), 
+          MaterialPageRoute(builder: (context) => const EditProfileScreen()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  UpdatePasswordScreen()), 
+          MaterialPageRoute(builder: (context) => UpdatePasswordScreen()),
         );
         break;
     }
@@ -417,12 +415,18 @@ class _ProfileUserState extends State<ProfileUser>
                                           height: 1,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      user!.phoneNumber,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1),
+                                    TextButton(
+                                      onPressed: () {
+                                        makePhoneCall(user!.phoneNumber);
+                                      },
+                                      child: Text(
+                                        user!.phoneNumber,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue,
+                                            fontStyle: FontStyle.italic,
+                                            height: 1),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -447,12 +451,19 @@ class _ProfileUserState extends State<ProfileUser>
                                           height: 1,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      user!.email,
-                                      style: const TextStyle(
+                                    TextButton(
+                                      onPressed: () {
+                                        launchEmail(user!.email.toString());
+                                      },
+                                      child: Text(
+                                        user!.email, 
+                                        style: const TextStyle(
                                           fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1),
+                                          color: Colors.blue,
+                                          height: 1,
+                                          fontStyle: FontStyle.italic
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -480,15 +491,23 @@ class _ProfileUserState extends State<ProfileUser>
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width -
                                           100,
-                                      child: Text(
-                                        user!.address,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1,
+                                      child: TextButton(
+                                         onPressed: () =>
+                                            MapsLauncher.launchCoordinates(
+                                                double.parse(user!.location.latitude),
+                                                double.parse(user!.location.longitude),
+                                                user!.firstName +' '+ user!.lastName),
+                                        child: Text(
+                                          user!.address,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.blue,
+                                            height: 1,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -561,6 +580,31 @@ class _ProfileUserState extends State<ProfileUser>
         ));
   }
 }
+void launchEmail(String email) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    // ignore: deprecated_member_use
+    if (await canLaunch(emailLaunchUri.toString())) {
+      // ignore: deprecated_member_use
+      await launch(emailLaunchUri.toString());
+    } else {
+      throw 'Không thể mở ứng dụng email';
+    }
+  }
+
+  void makePhoneCall(String phoneNumber) async {
+    // ignore: deprecated_member_use
+    if (await canLaunch(phoneNumber)) {
+      // ignore: deprecated_member_use
+      await launch(phoneNumber);
+    } else {
+      throw 'Không thể gọi điện thoại';
+    }
+  }
+
+
 
 Widget buildPostsList(Future<List<Post>>? posts) {
   return FutureBuilder<List<Post>>(
@@ -593,6 +637,10 @@ Widget buildPostsList(Future<List<Post>>? posts) {
           }
         }
       });
+
+
+
+      
 }
 
 // ignore: must_be_immutable
