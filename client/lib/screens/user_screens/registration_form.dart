@@ -100,7 +100,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     ),
                     hintText: 'Số điện thoại',
                     labelText: 'Số điện thoại',
-                    prefixText: '+84 '),
+                    prefixText: ''),
               ),
               const SizedBox(
                 height: 24,
@@ -192,6 +192,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       firstNameController.text.toString(),
                       lastNameController.text.toString(),
                       phoneNumberController.text.toString(),
+                      addressController.text.toString(),
                       location,
                       selectedRadio,
                       auboutMeController.text.toString());

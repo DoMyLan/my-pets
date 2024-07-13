@@ -70,7 +70,7 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
                     ),
                     hintText: 'Số điện thoại',
                     labelText: 'Số điện thoại',
-                    prefixText: '+84 '),
+                    prefixText: ''),
               ),
               const SizedBox(
                 height: 24,
@@ -117,8 +117,8 @@ class _RegistrationCenterFormState extends State<RegistrationCenterForm> {
                         nameController.text.toString(),
                         phoneNumberController.text.toString(),
                         addressController.text.toString(),
-                        aboutMeController.text.toString(),
                         location,
+                        aboutMeController.text.toString(),
                         );
                   },
                   child: const Text(
