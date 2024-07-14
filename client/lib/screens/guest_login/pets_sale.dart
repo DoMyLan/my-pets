@@ -3,6 +3,7 @@ import 'package:found_adoption_application/models/pet.dart';
 import 'package:found_adoption_application/models/pet_sale_model.dart';
 import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/guest_login/widget.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -178,16 +179,9 @@ class _OnPressBuyWidgetState extends State<OnPressBuyWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        setState(() {
-          isLoading = true;
-        });
-        Pet pet = await getPet(widget.petSale.id);
-        setState(() {
-          isLoading = false;
-        });
+      onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PaymentScreen(pet: pet, currentClient: widget.currentClient);
+          return LoginScreen();
         }));
       },
       child: Container(

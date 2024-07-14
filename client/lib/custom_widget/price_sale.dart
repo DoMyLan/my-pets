@@ -14,8 +14,8 @@ class PriceSale extends StatefulWidget {
     required this.petPrice,
     required this.petId,
     required this.priceSale,
-    required this.dateStartSale,
-    required this.dateEndSale,
+    this.dateStartSale,
+    this.dateEndSale,
   });
 
   @override
@@ -38,14 +38,34 @@ class _PriceSaleState extends State<PriceSale> {
     dateEndReduce = widget.dateEndSale;
   }
 
-  Future<DateTime?> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  Future<DateTime?> _selectDateAndTime(BuildContext context) async {
+    // Chọn ngày
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now(), // Only allow dates after today
+      firstDate: DateTime.now(), // Chỉ cho phép chọn từ ngày hiện tại trở đi
       lastDate: DateTime(3000),
     );
-    return picked;
+
+    if (pickedDate != null) {
+      // Chọn giờ sau khi đã chọn ngày
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        // Kết hợp ngày và giờ đã chọn thành một DateTime
+        return DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+      }
+    }
+    return null; // Trả về null nếu người dùng hủy bất kỳ lựa chọn nào
   }
 
   @override
@@ -97,7 +117,7 @@ class _PriceSaleState extends State<PriceSale> {
             keyboardType: TextInputType.datetime,
             controller: TextEditingController(
                 text: dateStartReduce != null
-                    ? DateFormat('dd-MM-yyyy')
+                    ? DateFormat('dd-MM-yyyy HH:mm')
                         .format(dateStartReduce!.toLocal())
                     : ''),
             onChanged: (text) {
@@ -111,7 +131,7 @@ class _PriceSaleState extends State<PriceSale> {
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today),
                 onPressed: () async {
-                  DateTime? a = await _selectDate(context);
+                  DateTime? a = await _selectDateAndTime(context);
                   setState(() {
                     dateStartReduce = a;
                   });
@@ -124,7 +144,7 @@ class _PriceSaleState extends State<PriceSale> {
             keyboardType: TextInputType.datetime,
             controller: TextEditingController(
                 text: dateEndReduce != null
-                    ? DateFormat('dd-MM-yyyy').format(dateEndReduce!.toLocal())
+                    ? DateFormat('dd-MM-yyyy HH:mm').format(dateEndReduce!.toLocal())
                     : ''),
             onChanged: (text) {
               errorDateEndReduce = "";
@@ -136,7 +156,7 @@ class _PriceSaleState extends State<PriceSale> {
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today),
                 onPressed: () async {
-                  DateTime? a = await _selectDate(context);
+                  DateTime? a = await _selectDateAndTime(context);
                   setState(() {
                     dateEndReduce = a;
                   });
