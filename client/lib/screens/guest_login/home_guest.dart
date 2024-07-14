@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/models/breed_model.dart';
 import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/models/pet_sale_model.dart';
@@ -9,40 +10,30 @@ import 'package:found_adoption_application/screens/animal_detail_screen.dart';
 import 'package:found_adoption_application/screens/guest_login/pets_breed.dart';
 import 'package:found_adoption_application/screens/guest_login/pets_sale.dart';
 import 'package:found_adoption_application/screens/guest_login/widget.dart';
-import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/pet_breed.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center_new.dart';
-import 'package:found_adoption_application/screens/signUp_screen.dart';
+import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
 import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/followApi.dart';
+import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
-class Home_Guest_NoLogin extends StatefulWidget {
-  const Home_Guest_NoLogin({super.key});
+class Home_Guest extends StatefulWidget {
+  const Home_Guest({super.key});
 
   @override
-  State<Home_Guest_NoLogin> createState() => _Home_Guest_NoLoginState();
+  State<Home_Guest> createState() => _Home_GuestState();
 }
 
-class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
+class _Home_GuestState extends State<Home_Guest>
     with SingleTickerProviderStateMixin {
   late TabController _tabController = TabController(length: 2, vsync: this);
   late List<bool> isLoadingFollows = [false, false, false, false];
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 0) {
-      _showLoginDialog();
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showLoginDialog());
   }
 
   @override
@@ -51,107 +42,20 @@ class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
     super.dispose();
   }
 
-  void _showLoginDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Yêu cầu đăng nhập'),
-          content: const Text('Vui lòng đăng nhập để tiếp tục.'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-                disabledForegroundColor:
-                    Colors.grey.withOpacity(0.38), // Màu khi nút bị vô hiệu hóa
-              ),
-              child: const Text('Đăng nhập'),
-              onPressed: () {
-                // Xử lý đăng nhập tại đây
-                Navigator.of(context).pop(); // Đóng dialog
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginScreen();
-                }));
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-                backgroundColor: Colors.white,
-                disabledForegroundColor:
-                    Colors.grey.withOpacity(0.38), // Màu khi nút bị vô hiệu hóa
-                side: const BorderSide(
-                    color: Colors.blue, width: 1), // Viền của nút
-              ),
-              child: const Text('Hủy'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Đóng dialog
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showRegisterDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Đăng ký tài khoản'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-                disabledForegroundColor:
-                    Colors.grey.withOpacity(0.38), // Màu khi nút bị vô hiệu hóa
-              ),
-              child: const Text('Đăng Ký'),
-              onPressed: () {
-                // Xử lý đăng nhập tại đây
-                Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SignUpScreen();
-                })); // Đóng dialog
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-                backgroundColor: Colors.white,
-                disabledForegroundColor:
-                    Colors.grey.withOpacity(0.38), // Màu khi nút bị vô hiệu hóa
-                side: const BorderSide(
-                    color: Colors.blue, width: 1), // Viền của nút
-              ),
-              child: const Text('Hủy'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Đóng dialog
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          bottom: const PreferredSize(
-            preferredSize: Size.fromHeight(95.0),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(95.0),
             child: Stack(
               children: [
-                Image(
+                const Image(
                     image: AssetImage("assets/images/background_top.png"),
                     fit: BoxFit.fill,
                     height: 150.0,
                     width: double.infinity),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 15.0, left: 20.0, right: 20),
                   child: Row(
                     children: [
@@ -183,13 +87,48 @@ class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
                             "Ứng dụng mua bán thú cưng tuyệt vời!",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 13,
+                              fontSize: 14,
                               fontWeight: FontWeight.w300,
                             ),
                           ),
                         ],
                       ),
                     ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    var currentClient = await getCurrentClient();
+
+                    if (currentClient != null) {
+                      if (currentClient.role == 'USER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuFrameUser(
+                              userId: currentClient.id,
+                            ),
+                          ),
+                        );
+                      } else if (currentClient.role == 'CENTER') {
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          // ignore: use_build_context_synchronously
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MenuFrameCenter(centerId: currentClient.id),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(
+                    FontAwesomeIcons.bars,
+                    size: 25,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -203,25 +142,7 @@ class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
               BreedFavotite(tabController: _tabController),
               const CenterFavorite(),
               const PetSaleWidget(),
-            ])),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton.extended(
-              onPressed: _showLoginDialog,
-              icon: const Icon(Icons.login),
-              label: const Text('Đăng nhập'),
-              backgroundColor: Colors.blue,
-            ),
-            const SizedBox(height: 10), // Khoảng cách giữa hai nút
-            FloatingActionButton.extended(
-              onPressed: _showRegisterDialog,
-              icon: const Icon(Icons.app_registration),
-              label: const Text('Đăng ký     '),
-              backgroundColor: Colors.green,
-            ),
-          ],
-        ));
+            ])));
   }
 }
 
@@ -236,12 +157,21 @@ class PetSaleWidget extends StatefulWidget {
 
 class _PetSaleWidgetState extends State<PetSaleWidget> {
   Future<List<PetSale>>? petFuture;
+  dynamic currentClient;
   List<PetSale> listPetSale = [];
 
   @override
   void initState() {
     super.initState();
     petFuture = getPetSale();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   @override
@@ -297,12 +227,15 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                     if (listPetSale.isEmpty) {
                       return const Center(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize
+                              .min, 
                           children: [
                             Icon(
-                              Icons.pets,
-                              size: 30.0,
-                              color: Colors.grey,
+                              Icons
+                                  .pets, 
+                              size: 30.0, 
+                              color:
+                                  Colors.grey, 
                             ),
                             Text("Không có thú cưng nào được giảm giá!"),
                           ],
@@ -321,7 +254,7 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                                   MaterialPageRoute(builder: (context) {
                                 return AnimalDetailScreen(
                                   petId: listPetSale[index].id,
-                                  currentId: null,
+                                  currentId: currentClient,
                                 );
                               }));
                             },
@@ -411,9 +344,8 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                                               ),
                                               const Spacer(),
                                               OnPressBuyWidget(
-                                                currentClient: null,
-                                                petSale: listPetSale[index],
-                                              ),
+                                                  petSale: listPetSale[index],
+                                                  currentClient: currentClient),
                                             ],
                                           ),
                                         ],
@@ -443,12 +375,22 @@ class CenterFavorite extends StatefulWidget {
 
 class _CenterFavoriteState extends State<CenterFavorite> {
   Future<List<CenterHot>>? centerHotFuture;
+  // ignore: prefer_typing_uninitialized_variables
+  var currentClient;
   List<CenterHot>? listCenterHot;
 
   @override
   void initState() {
     super.initState();
     centerHotFuture = getCenterHot();
+    getClient();
+  }
+
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
   }
 
   // void updateFollower(bool follow, int index) {
@@ -513,9 +455,20 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                     );
                   } else {
                     listCenterHot = snapshot.data as List<CenterHot>;
-                    for (var centerHot in listCenterHot!) {
-                      centerHot.follower = centerHot.followerUser.length +
-                          centerHot.followerCenter.length;
+                    if (currentClient.role == "USER") {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerUser.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
+                    } else {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerCenter.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
                     }
 
                     return ListView.builder(

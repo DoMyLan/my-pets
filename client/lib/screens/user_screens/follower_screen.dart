@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/models/follow_model.dart';
 import 'package:found_adoption_application/models/follower.dart';
-import 'package:found_adoption_application/screens/guest/widget.dart';
+import 'package:found_adoption_application/screens/guest_login/widget.dart';
 import 'package:found_adoption_application/services/followApi.dart';
 
 class FollowerScreen extends StatefulWidget {

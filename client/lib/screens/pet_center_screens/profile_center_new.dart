@@ -6,11 +6,12 @@ import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
+import 'package:found_adoption_application/screens/call_login.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
-import 'package:found_adoption_application/screens/guest/widget.dart';
+import 'package:found_adoption_application/screens/guest_login/widget.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
-import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -20,7 +21,6 @@ import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -85,10 +85,14 @@ class _ProfileCenterState extends State<ProfileCenter>
     if (widget.centerId != "") {
       var temp = await getCurrentClient();
       infoCenter = await getProfileCenter(context, widget.centerId);
-      if (temp.role == "USER") {
-        infoCenter.follow = infoCenter.followerUser.contains(temp.id);
+      if (temp == null) {
+        infoCenter.follow = false;
       } else {
-        infoCenter.follow = infoCenter.followerCenter.contains(temp.id);
+        if (temp.role == "USER") {
+          infoCenter.follow = infoCenter.followerUser.contains(temp.id);
+        } else {
+          infoCenter.follow = infoCenter.followerCenter.contains(temp.id);
+        }
       }
       petStoriesPosts = getAllPostPersonal(widget.centerId);
     } else {
@@ -120,41 +124,55 @@ class _ProfileCenterState extends State<ProfileCenter>
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBar(
-            leading: IconButton(
-              onPressed: () async {
-                var currentClient = await getCurrentClient();
-
-                if (currentClient != null) {
-                  if (currentClient.role == 'USER') {
-                    // ignore: use_build_context_synchronously
-                    Navigator.push(
-                      // ignore: use_build_context_synchronously
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MenuFrameUser(
-                          userId: currentClient.id,
-                        ),
-                      ),
-                    );
-                  } else if (currentClient.role == 'CENTER') {
-                    // ignore: use_build_context_synchronously
-                    Navigator.push(
-                      // ignore: use_build_context_synchronously
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MenuFrameCenter(centerId: currentClient.id),
-                      ),
-                    );
-                  }
-                }
-              },
-              icon: const Icon(
-                FontAwesomeIcons.bars,
-                size: 25,
-                color: Color.fromRGBO(48, 96, 96, 1.0),
-              ),
+            title: const Text(
+              "Trang cá nhân",
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromRGBO(48, 96, 96, 1.0),
+                  fontWeight: FontWeight.bold),
             ),
+            leading: currentClient != null
+                ? IconButton(
+                    onPressed: () async {
+                      var currentClient = await getCurrentClient();
+
+                      if (currentClient != null) {
+                        if (currentClient.role == 'USER') {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            // ignore: use_build_context_synchronously
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MenuFrameUser(
+                                userId: currentClient.id,
+                              ),
+                            ),
+                          );
+                        } else if (currentClient.role == 'CENTER') {
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            // ignore: use_build_context_synchronously
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MenuFrameCenter(centerId: currentClient.id),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.bars,
+                      size: 25,
+                      color: Color.fromRGBO(48, 96, 96, 1.0),
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back_ios),
+                  ),
           ),
         ),
         body: RefreshIndicator(
@@ -229,16 +247,27 @@ class _ProfileCenterState extends State<ProfileCenter>
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FollowerScreen(
-                                                  id: center!.id,
-                                                  currentClient: currentClient,
+                                            if (currentClient == null) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
                                                 ),
-                                              ),
-                                            );
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FollowerScreen(
+                                                    id: center!.id,
+                                                    currentClient:
+                                                        currentClient,
+                                                  ),
+                                                ),
+                                              );
+                                            }
                                           },
                                           child: Column(
                                             children: [
@@ -270,16 +299,27 @@ class _ProfileCenterState extends State<ProfileCenter>
                                         ),
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FollowingScreen(
-                                                  id: center!.id,
-                                                  currentClient: currentClient,
+                                            if (currentClient == null) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
                                                 ),
-                                              ),
-                                            );
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FollowingScreen(
+                                                    id: center!.id,
+                                                    currentClient:
+                                                        currentClient,
+                                                  ),
+                                                ),
+                                              );
+                                            }
                                           },
                                           child: Column(
                                             children: [
@@ -312,53 +352,59 @@ class _ProfileCenterState extends State<ProfileCenter>
                                     const SizedBox(
                                       height: 15,
                                     ),
-                                    (currentClient.id == widget.centerId ||
-                                            widget.centerId == "")
-                                        ? PopupMenuButton<int>(
-                                            onSelected: (item) =>
-                                                onSelected(context, item),
-                                            itemBuilder: (context) => [
-                                              const PopupMenuItem<int>(
-                                                value: 0,
-                                                child: Text(
-                                                    'Chỉnh sửa trang cá nhân'),
-                                              ),
-                                              const PopupMenuItem<int>(
-                                                value: 1,
-                                                child: Text('Đổi mật khẩu'),
-                                              ),
-                                            ],
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  140,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.teal),
-                                              child: !isLoading
-                                                  ? const Center(
-                                                      child: Text(
-                                                        "Cập nhật thông tin",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    )
-                                                  : const OnPressedButton(
-                                                      size: 13,
-                                                      strokeWidth: 2.0,
-                                                    ),
-                                            ),
-                                          )
-                                        : OnPressFollow(
-                                            follow: center!.follow,
-                                            id: center!.id)
+                                    currentClient != null
+                                        ? (currentClient.id ==
+                                                    widget.centerId ||
+                                                widget.centerId == "")
+                                            ? PopupMenuButton<int>(
+                                                onSelected: (item) =>
+                                                    onSelected(context, item),
+                                                itemBuilder: (context) => [
+                                                  const PopupMenuItem<int>(
+                                                    value: 0,
+                                                    child: Text(
+                                                        'Chỉnh sửa trang cá nhân'),
+                                                  ),
+                                                  const PopupMenuItem<int>(
+                                                    value: 1,
+                                                    child: Text('Đổi mật khẩu'),
+                                                  ),
+                                                ],
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      140,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.teal),
+                                                  child: !isLoading
+                                                      ? const Center(
+                                                          child: Text(
+                                                            "Cập nhật thông tin",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        )
+                                                      : const OnPressedButton(
+                                                          size: 13,
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                ),
+                                              )
+                                            : OnPressFollow(
+                                                follow: center!.follow,
+                                                id: center!.id,
+                                                currentClient: currentClient)
+                                        : const SizedBox()
                                   ],
                                 )
                               ],
@@ -501,10 +547,11 @@ class _ProfileCenterState extends State<ProfileCenter>
                                       child: TextButton(
                                         onPressed: () =>
                                             MapsLauncher.launchCoordinates(
-                                                double.parse(center!.location.latitude),
-                                                double.parse(center!.location.longitude),
+                                                double.parse(
+                                                    center!.location.latitude),
+                                                double.parse(
+                                                    center!.location.longitude),
                                                 center!.name),
-                                        
                                         child: Text(
                                           center!.address,
                                           style: const TextStyle(
@@ -570,9 +617,17 @@ class _ProfileCenterState extends State<ProfileCenter>
                                         child: TabBarView(
                                           controller: _tabController,
                                           children: [
-                                            buildPostsList(petStoriesPosts),
-                                            ListVideo(id: center!.id),
-                                            AdoptionScreen(centerId: center!.id)
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : buildPostsList(
+                                                    petStoriesPosts),
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : ListVideo(id: center!.id),
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : AdoptionScreen(
+                                                    centerId: center!.id)
                                           ],
                                         ),
                                       ),
@@ -652,10 +707,12 @@ Widget buildPostsList(Future<List<Post>>? posts) {
 class OnPressFollow extends StatefulWidget {
   late bool follow;
   final String id;
+  final dynamic currentClient;
   OnPressFollow({
     super.key,
     required this.follow,
     required this.id,
+    this.currentClient,
   });
 
   @override
@@ -672,7 +729,14 @@ class _onPressFollowState extends State<OnPressFollow> {
         setState(() {
           isLoading = true;
         });
-        await follow_unfollow("", widget.id);
+        widget.currentClient != null
+            ? await follow_unfollow("", widget.id)
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(),
+                ),
+              );
         setState(() {
           widget.follow = !widget.follow;
         });

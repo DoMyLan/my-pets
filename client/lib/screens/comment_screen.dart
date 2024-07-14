@@ -399,10 +399,9 @@ class _CommentScreenState extends State<CommentScreen> {
                       // Gửi comment thông qua Socket.IO
                       socket.emit('comment', jsonEncode(newComment.toMap()));
                       // socket.emit('comment', {"hi": "there"});
-                      print(socket);
+
                     }
                   } else {
-                    print("Not validated");
                   }
                 },
                 formKey: formKey,

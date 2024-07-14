@@ -86,11 +86,13 @@ class _PetBreedState extends State<PetBreed> {
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: animals.length,
                 itemBuilder: (context, index) {
-                  calculateDistance(currentClient.location,
-                          animals[index].centerId!.location)
-                      .then((value) {
-                    value.toStringAsFixed(2);
-                  });
+                  if (currentClient != null) {
+                    calculateDistance(currentClient.location,
+                            animals[index].centerId!.location)
+                        .then((value) {
+                      value.toStringAsFixed(2);
+                    });
+                  }
 
                   return GestureDetector(
                     onTap: () {
@@ -177,61 +179,64 @@ class _PetBreedState extends State<PetBreed> {
                                           ],
                                         ),
                                         const SizedBox(height: 4),
-                                        if (currentClient.role == 'USER')
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                // ignore: deprecated_member_use
-                                                FontAwesomeIcons.mapMarkerAlt,
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              // ignore: deprecated_member_use
+                                              FontAwesomeIcons.mapMarkerAlt,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              size: 14.0,
+                                            ),
+                                            const SizedBox(width: 1),
+                                            Text(
+                                              'Khoảng cách: ',
+                                              style: TextStyle(
+                                                fontSize: 13,
                                                 color: Theme.of(context)
                                                     .primaryColor,
-                                                size: 14.0,
+                                                fontWeight: FontWeight.w400,
                                               ),
-                                              const SizedBox(width: 1),
-                                              Text(
-                                                'Khoảng cách: ',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                              FutureBuilder<double>(
-                                                future: calculateDistance(
-                                                    currentClient.location,
-                                                    animals[index]
-                                                        .centerId!
-                                                        .location),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
+                                            ),
+                                            FutureBuilder<double>(
+                                              future: currentClient != null
+                                                  ? calculateDistance(
+                                                      currentClient.location,
+                                                      animals[index]
+                                                          .centerId!
+                                                          .location)
+                                                  : null,
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const Text(
+                                                      'Calculating...');
+                                                } else if (snapshot.hasError) {
+                                                  return const Text('Error');
+                                                } else {
+                                                  if (snapshot.data == null) {
                                                     return const Text(
-                                                        'Calculating...');
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return const Text('Error');
-                                                  } else {
-                                                    String distanceString =
-                                                        snapshot.data!
-                                                            .toStringAsFixed(2);
-                                                    return Text(
-                                                      '$distanceString km',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                      ),
-                                                      softWrap: true,
-                                                    );
+                                                        'Không xác định');
                                                   }
-                                                },
-                                              ),
-                                            ],
-                                          ),
+                                                  String distanceString =
+                                                      snapshot.data!
+                                                          .toStringAsFixed(2);
+                                                  return Text(
+                                                    '$distanceString km',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                    ),
+                                                    softWrap: true,
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),

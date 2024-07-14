@@ -52,6 +52,12 @@ class _FeedScreenState extends State<FeedScreen>
     _loadPostsVideo();
   }
 
+  @override
+  void dispose() {
+    // Cancel any ongoing operations here
+    super.dispose();
+  }
+
   Future<void> _loadPostsVideo() async {
     try {
       setState(() {

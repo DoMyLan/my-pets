@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/design_icon.dart';
 import 'package:found_adoption_application/main.dart';
+import 'package:found_adoption_application/screens/guest/home_guest.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/setting.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -50,7 +51,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       const Icon(FontAwesomeIcons.bell),
     ];
 
-    print("test numNotify: ${numNotify}");
+    // print("test numNotify: ${numNotify}");
   }
 
   @override
@@ -71,7 +72,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     setState(() {
       numNotify = prefs.getInt('numNotify') ?? 0;
       updateIcons();
-      print("check numNotify: $numNotify");
+      // print("check numNotify: $numNotify");
     });
   }
 
@@ -84,7 +85,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       updateIcons();
     });
 
-    print("after click icon: ${prefs.getInt('numNotify')}");
+    // print("after click icon: ${prefs.getInt('numNotify')}");
   }
 
   Widget buildMenuRow(int index) {
@@ -341,7 +342,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                 Navigator.of(context).pop();
                 //Navigate
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: ((context) => LoginScreen())));
+                    MaterialPageRoute(builder: ((context) => Home_Guest_NoLogin())));
 
                 var userBox = await Hive.openBox('userBox');
                 await userBox.put('currentUser', null);

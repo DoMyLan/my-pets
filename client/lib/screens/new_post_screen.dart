@@ -270,8 +270,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                       ],
                                     ),
                                   );
-                                }).toList() ??
-                                [],
+                                }).toList(),
                           );
                         }
                       }),

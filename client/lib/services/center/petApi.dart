@@ -271,10 +271,10 @@ Future<void> salePet(
     "reducePrice": reducePrice,
     "dateStartReduce": dateStartReduce == null
         ? null
-        : DateFormat("MM-dd-yyyy").format(dateStartReduce),
+        : DateFormat("MM-dd-yyyy HH:mm:ss").format(dateStartReduce),
     "dateEndReduce": dateEndReduce == null
         ? null
-        : DateFormat("MM-dd-yyyy").format(dateEndReduce),
+        : DateFormat("MM-dd-yyyy HH:mm:ss").format(dateEndReduce),
   });
   try {
     responseData = await api('pet/$petId', 'PUT', body);

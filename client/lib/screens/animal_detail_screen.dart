@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/custom_widget/price_sale.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/payment_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_pet_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/profile_center.dart';
@@ -67,10 +68,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
               return const errorWidget();
             } else {
               Pet pet = snapshot.data as Pet;
-
-              for (var element in pet.favorites!) {
-                if (element == currentClient.id) {
-                  isFavorite = true;
+              if (currentClient != null) {
+                for (var element in pet.favorites!) {
+                  if (element == currentClient.id) {
+                    isFavorite = true;
+                  }
                 }
               }
 
@@ -200,51 +202,55 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                   color: Theme.of(context).primaryColor,
                                 ),
                               ),
-                              currentClient.role == 'CENTER'
-                                  ? PopupMenuButton<String>(
-                                      color: Colors.white,
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      onSelected: (String choice) {
-                                        // Handle menu item selection
-                                        if (choice == 'edit') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditPetScreen(pet: pet),
-                                            ),
-                                          );
-                                        } else if (choice == 'delete') {
-                                          _showDeleteConfirmationDialog(pet.id);
-                                        }
-                                      },
-                                      itemBuilder: (BuildContext context) =>
-                                          <PopupMenuEntry<String>>[
-                                        PopupMenuItem<String>(
-                                          value: 'edit',
-                                          child: Text(
-                                            'Chỉnh sửa',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
+                              currentClient != null
+                                  ? currentClient.role == 'CENTER'
+                                      ? PopupMenuButton<String>(
+                                          color: Colors.white,
+                                          icon: Icon(
+                                            Icons.more_vert,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
-                                        ),
-                                        PopupMenuItem<String>(
-                                          value: 'delete',
-                                          child: Text(
-                                            'Xóa',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                          onSelected: (String choice) {
+                                            // Handle menu item selection
+                                            if (choice == 'edit') {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditPetScreen(pet: pet),
+                                                ),
+                                              );
+                                            } else if (choice == 'delete') {
+                                              _showDeleteConfirmationDialog(
+                                                  pet.id);
+                                            }
+                                          },
+                                          itemBuilder: (BuildContext context) =>
+                                              <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              value: 'edit',
+                                              child: Text(
+                                                'Chỉnh sửa',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
+                                            PopupMenuItem<String>(
+                                              value: 'delete',
+                                              child: Text(
+                                                'Xóa',
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox()
                                   : const SizedBox(),
                             ],
                           ),
@@ -346,15 +352,21 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                         GestureDetector(
                                           onTap: () {
                                             // Chuyển đến Trang ReviewProfileScreen
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfileCenterPage(
-                                                          centerId:
-                                                              pet.centerId!.id,
-                                                          petId: pet.id,
-                                                        )));
+                                            currentClient != null
+                                                ? Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileCenterPage(
+                                                              centerId: pet
+                                                                  .centerId!.id,
+                                                              petId: pet.id,
+                                                            )))
+                                                : Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginScreen()));
                                           },
                                           child: const Row(
                                             children: [
@@ -402,13 +414,19 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     GestureDetector(
                                       onTap: () {
                                         // Chuyển đến Trang ReviewProfileScreen
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ReviewProfileScreen(
-                                                        centerId:
-                                                            pet.centerId!.id)));
+                                        currentClient != null
+                                            ? Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReviewProfileScreen(
+                                                            centerId: pet
+                                                                .centerId!.id)))
+                                            : Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginScreen()));
                                       },
                                       child: Row(
                                         children: [
@@ -561,8 +579,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                     ),
 
                     Spacer(),
-                    if (currentClient.role == "USER" &&
-                        pet.statusPaid == 'NOTHING')
+                    if (currentClient == null)
                       Padding(
                         padding: const EdgeInsets.all(2.0),
                         child: Padding(
@@ -573,13 +590,11 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () async {
-                                  setState(() {
-                                    isFavorite = !isFavorite;
-                                  });
-                                  Loading(context);
-                                  await favoritePet(pet.id);
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginScreen()),
+                                  );
                                 },
                                 child: Material(
                                   borderRadius: BorderRadius.circular(20),
@@ -605,9 +620,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => PaymentScreen(
-                                              pet: pet,
-                                              currentClient: currentClient)),
+                                          builder: (context) => LoginScreen()),
                                     );
                                   },
                                   child: Material(
@@ -617,7 +630,7 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                                     child: const Padding(
                                       padding: EdgeInsets.all(15.0),
                                       child: Text(
-                                        'Mua ngay',
+                                        'Đăng nhập để mua',
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -632,250 +645,359 @@ class _AnimalDetailScreenState extends State<AnimalDetailScreen> {
                           ),
                         ),
                       ),
-                    if (currentClient.role == "USER" &&
-                        pet.statusPaid != 'NOTHING')
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Container(
-                          height: 50,
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(30),
-                                topLeft: Radius.circular(30),
-                              )),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 22),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    setState(() {
-                                      isFavorite = !isFavorite;
-                                    });
-                                    Loading(context);
-                                    await favoritePet(pet.id);
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Material(
-                                    borderRadius: BorderRadius.circular(20),
-                                    elevation: 4,
-                                    color: Colors.amber,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(15.0),
-                                      child: Icon(
-                                        isFavorite
-                                            ? FontAwesomeIcons.solidHeart
-                                            : FontAwesomeIcons.heart,
-                                        color: Colors.red,
+                    currentClient == null
+                        ? const SizedBox()
+                        : (currentClient.role == "USER" &&
+                                pet.statusPaid == 'NOTHING')
+                            ? Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 22),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () async {
+                                          setState(() {
+                                            isFavorite = !isFavorite;
+                                          });
+                                          Loading(context);
+                                          await favoritePet(pet.id);
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Material(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          elevation: 4,
+                                          color: Theme.of(context).primaryColor,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Icon(
+                                              isFavorite
+                                                  ? FontAwesomeIcons.solidHeart
+                                                  : FontAwesomeIcons.heart,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
                                       ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PaymentScreen(
+                                                          pet: pet,
+                                                          currentClient:
+                                                              currentClient)),
+                                            );
+                                          },
+                                          child: Material(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            elevation: 4,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(15.0),
+                                              child: Text(
+                                                'Mua ngay',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(),
+                    currentClient != null
+                        ? (currentClient.role == "USER" &&
+                                pet.statusPaid != 'NOTHING')
+                            ? Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Container(
+                                  height: 50,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(30),
+                                        topLeft: Radius.circular(30),
+                                      )),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 22),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            setState(() {
+                                              isFavorite = !isFavorite;
+                                            });
+                                            Loading(context);
+                                            await favoritePet(pet.id);
+                                            // ignore: use_build_context_synchronously
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Material(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            elevation: 4,
+                                            color: Colors.amber,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Icon(
+                                                isFavorite
+                                                    ? FontAwesomeIcons
+                                                        .solidHeart
+                                                    : FontAwesomeIcons.heart,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {},
+                                            child: Material(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              elevation: 4,
+                                              color: Colors.amber,
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(15.0),
+                                                child: Text(
+                                                  'Đã bán',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 15),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(20),
-                                      elevation: 4,
-                                      color: Colors.amber,
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Text(
-                                          'Đã bán',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
-                                          textAlign: TextAlign.center,
+                              )
+                            : const SizedBox()
+                        : const SizedBox(),
+                    //HIỂN THỊ 2 BUTTON CỦA USER
+                    currentClient != null
+                        ? (currentClient.role == 'CENTER' &&
+                                pet.statusPaid == 'NOTHING')
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 10),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditPetScreen(pet: pet),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                    0.5 -
+                                                20,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                        child: const Center(
+                                          child: Text(
+                                            "Chỉnh sửa",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    //HIỂN THỊ 2 BUTTON CỦA USER
-
-                    if (currentClient.role == 'CENTER' &&
-                        pet.statusPaid == 'NOTHING')
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 20, bottom: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditPetScreen(pet: pet),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, bottom: 10, right: 20),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        //giảm giá
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return PriceSale(
+                                                petId: pet.id,
+                                                petPrice: int.parse(pet.price),
+                                                priceSale: pet.reducePrice,
+                                                dateStartSale:
+                                                    pet.dateStartReduce,
+                                                dateEndSale: pet.dateEndReduce,
+                                              );
+                                            });
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                    0.3 -
+                                                20,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.blue),
+                                        child: const Center(
+                                          child: Text(
+                                            "Giảm giá",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.5 -
-                                    20,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Theme.of(context).primaryColor),
-                                child: const Center(
-                                  child: Text(
-                                    "Chỉnh sửa",
-                                    style: TextStyle(
+                                  // MaterialButton(
+                                  //   color: Theme.of(context).primaryColor,
+                                  //   minWidth: double.infinity,
+                                  //   height: 40,
+                                  //   onPressed: () {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => EditPetScreen(pet: pet),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  //   // defining the shape
+                                  //   shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(10)),
+                                  //   child: const Text(
+                                  //     "Chỉnh sửa",
+                                  //     style: TextStyle(
+                                  //         fontWeight: FontWeight.w600,
+                                  //         fontSize: 18,
+                                  //         color: Colors.white),
+                                  //   ),
+                                  // ),
+                                  // MaterialButton(
+                                  //   color: Theme.of(context).primaryColor,
+                                  //   minWidth: double.infinity,
+                                  //   height: 40,
+                                  //   onPressed: () {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => EditPetScreen(pet: pet),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  //   // defining the shape
+                                  //   shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(10)),
+                                  //   child: const Text(
+                                  //     "Giảm giá",
+                                  //     style: TextStyle(
+                                  //         fontWeight: FontWeight.w600,
+                                  //         fontSize: 18,
+                                  //         color: Colors.white),
+                                  //   ),
+                                  // ),
+                                ],
+                              )
+                            :
+                            // : const SizedBox(
+                            //     height: 0,
+                            //   ),
+
+                            (pet.statusPaid == 'PAID')
+                                ? MaterialButton(
+                                    color: Colors.white,
+                                    padding: const EdgeInsets.all(10),
+
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReviewProfileScreen(
+                                                    centerId: pet.centerId!.id,
+                                                  )));
+                                    },
+                                    // defining the shape
+                                    shape: RoundedRectangleBorder(
+                                        side: const BorderSide(
+                                            color: Colors.green),
+                                        borderRadius: BorderRadius.circular(0)),
+                                    child: const Text(
+                                      "Xem Đánh giá/ Phản hồi",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                          color: Colors.green),
+                                    ),
+                                  )
+                                : (currentClient.role == 'CENTER' &&
+                                        pet.statusPaid == 'PENDING')
+                                    ? MaterialButton(
                                         color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                left: 10, bottom: 10, right: 20),
-                            child: GestureDetector(
-                              onTap: () {
-                                //giảm giá
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return PriceSale(
-                                        petId: pet.id,
-                                        petPrice: int.parse(pet.price),
-                                        priceSale: pet.reducePrice,
-                                        dateStartSale: pet.dateStartReduce!,
-                                        dateEndSale: pet.dateEndReduce!,
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.3 -
-                                    20,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.blue),
-                                child: const Center(
-                                  child: Text(
-                                    "Giảm giá",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          // MaterialButton(
-                          //   color: Theme.of(context).primaryColor,
-                          //   minWidth: double.infinity,
-                          //   height: 40,
-                          //   onPressed: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) => EditPetScreen(pet: pet),
-                          //       ),
-                          //     );
-                          //   },
-                          //   // defining the shape
-                          //   shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(10)),
-                          //   child: const Text(
-                          //     "Chỉnh sửa",
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w600,
-                          //         fontSize: 18,
-                          //         color: Colors.white),
-                          //   ),
-                          // ),
-                          // MaterialButton(
-                          //   color: Theme.of(context).primaryColor,
-                          //   minWidth: double.infinity,
-                          //   height: 40,
-                          //   onPressed: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) => EditPetScreen(pet: pet),
-                          //       ),
-                          //     );
-                          //   },
-                          //   // defining the shape
-                          //   shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(10)),
-                          //   child: const Text(
-                          //     "Giảm giá",
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.w600,
-                          //         fontSize: 18,
-                          //         color: Colors.white),
-                          //   ),
-                          // ),
-                        ],
-                      )
-                    // : const SizedBox(
-                    //     height: 0,
-                    //   ),
+                                        padding: const EdgeInsets.all(10),
 
-                    else if (pet.statusPaid == 'PAID')
-                      MaterialButton(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(10),
-
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReviewProfileScreen(
-                                        centerId: pet.centerId!.id,
-                                      )));
-                        },
-                        // defining the shape
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(0)),
-                        child: const Text(
-                          "Xem Đánh giá/ Phản hồi",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.green),
-                        ),
-                      )
-                    else if (currentClient.role == 'CENTER' &&
-                        pet.statusPaid == 'PENDING')
-                      MaterialButton(
-                        color: Colors.white,
-                        padding: const EdgeInsets.all(10),
-
-                        onPressed: () {},
-                        // defining the shape
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.green),
-                            borderRadius: BorderRadius.circular(0)),
-                        child: const Text(
-                          "Đang có người mua",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.green),
-                        ),
-                      )
+                                        onPressed: () {},
+                                        // defining the shape
+                                        shape: RoundedRectangleBorder(
+                                            side: const BorderSide(
+                                                color: Colors.green),
+                                            borderRadius:
+                                                BorderRadius.circular(0)),
+                                        child: const Text(
+                                          "Đang có người mua",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
+                                              color: Colors.green),
+                                        ),
+                                      )
+                                    : const SizedBox()
+                        : const SizedBox(),
                   ],
                 ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:found_adoption_application/screens/guest/home_guest.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:hive/hive.dart';
@@ -259,8 +260,10 @@ class _MenuUserScreenState extends State<MenuUserScreen> {
               onPressed: () async {
                 Navigator.of(context).pop();
                 //Navigate
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: ((context) => LoginScreen())));
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => const Home_Guest_NoLogin())));
 
                 var userBox = await Hive.openBox('userBox');
                 await userBox.put('currentUser', null);
