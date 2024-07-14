@@ -14,6 +14,7 @@ Future<void> userform(
     String firstName,
     String lastName,
     String phoneNumber,
+    String address,
     LatLng location,
     bool experience,
     aboutMe) async {
@@ -32,9 +33,10 @@ Future<void> userform(
         'firstName': firstName,
         'lastName': lastName,
         'phoneNumber': phoneNumber,
+        'address': address,
         'location': {
-          'latitude': location.latitude,
-          'longitude': location.longitude
+          'latitude': 10.8508873,
+          'longitude': 106.755526
         },
         'experience': experience,
         'aboutMe': aboutMe

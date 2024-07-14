@@ -87,7 +87,7 @@ class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
                             "Ứng dụng mua bán thú cưng tuyệt vời!",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w300,
                             ),
                           ),

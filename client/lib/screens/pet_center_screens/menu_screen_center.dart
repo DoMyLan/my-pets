@@ -249,7 +249,8 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                     children: [
                       //Phần SETTING
                       Padding(
-                        padding: const EdgeInsets.only(right: 30),
+                        padding: const EdgeInsets.only(right: 12),
+                    
                         child: Row(
                           children: [
                             Icon(Icons.settings,
@@ -263,7 +264,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                                   );
                                 },
                                 child: Text(
-                                  'Hơn nữa',
+                                  'Khám phá',
                                   style: TextStyle(
                                       color: Colors.white.withOpacity(0.5),
                                       fontSize: 20,
@@ -282,7 +283,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
                       ),
 
                       Padding(
-                        padding: const EdgeInsets.only(left: 30),
+                        padding: const EdgeInsets.only(left: 12),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

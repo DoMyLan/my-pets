@@ -12,6 +12,7 @@ import 'package:found_adoption_application/screens/guest_login/widget.dart';
 import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
+import 'package:found_adoption_application/screens/user_screens/edit_profile_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/following_screen.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -21,6 +22,9 @@ import 'package:found_adoption_application/services/post/post.dart';
 import 'package:found_adoption_application/services/user/profile_api.dart';
 import 'package:found_adoption_application/utils/error.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileCenter extends StatefulWidget {
   final String centerId;
@@ -430,12 +434,18 @@ class _ProfileCenterState extends State<ProfileCenter>
                                           height: 1,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      center!.phoneNumber,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1),
+                                    TextButton(
+                                      onPressed: () {
+                                        makePhoneCall(center!.phoneNumber);
+                                      },
+                                      child: Text(
+                                        center!.phoneNumber,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue,
+                                            fontStyle: FontStyle.italic,
+                                            height: 1),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -460,12 +470,18 @@ class _ProfileCenterState extends State<ProfileCenter>
                                           height: 1,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      center!.email,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1),
+                                    TextButton(
+                                      onPressed: () {
+                                        launchEmail(center!.email);
+                                      },
+                                      child: Text(
+                                        center!.email,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.blue,
+                                            height: 1),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -493,15 +509,24 @@ class _ProfileCenterState extends State<ProfileCenter>
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width -
                                           100,
-                                      child: Text(
-                                        center!.address,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                          height: 1,
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            MapsLauncher.launchCoordinates(
+                                                double.parse(center!.location.latitude),
+                                                double.parse(center!.location.longitude),
+                                                center!.name),
+                                        
+                                        child: Text(
+                                          center!.address,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue,
+                                            fontStyle: FontStyle.italic,
+                                            height: 1,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -582,6 +607,30 @@ class _ProfileCenterState extends State<ProfileCenter>
                   ],
                 ),
         ));
+  }
+}
+
+void launchEmail(String email) async {
+  final Uri emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: email,
+  );
+  // ignore: deprecated_member_use
+  if (await canLaunch(emailLaunchUri.toString())) {
+    // ignore: deprecated_member_use
+    await launch(emailLaunchUri.toString());
+  } else {
+    throw 'Không thể mở ứng dụng email';
+  }
+}
+
+void makePhoneCall(String phoneNumber) async {
+  // ignore: deprecated_member_use
+  if (await canLaunch(phoneNumber)) {
+    // ignore: deprecated_member_use
+    await launch(phoneNumber);
+  } else {
+    throw 'Không thể gọi điện thoại';
   }
 }
 
