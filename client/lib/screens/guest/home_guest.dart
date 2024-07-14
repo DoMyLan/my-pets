@@ -27,16 +27,6 @@ class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
     with SingleTickerProviderStateMixin {
   late TabController _tabController = TabController(length: 2, vsync: this);
   late List<bool> isLoadingFollows = [false, false, false, false];
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 0) {
-      _showLoginDialog();
-    }
-  }
 
   @override
   void initState() {
