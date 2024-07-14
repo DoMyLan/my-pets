@@ -74,7 +74,7 @@ class _CurrencyConversionTestWidgetState
                       _convertedAmount = convertedAmount;
                     });
                   }).catchError((error) {
-                    print('Error: $error');
+                    // print('Error: $error');
                   });
                 });
               },

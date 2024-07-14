@@ -166,7 +166,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   //đóng hộp thoại và trả về dataPet
                   Navigator.pop<List<Pet>>(context, pets);
                 } catch (e) {
-                  print('errorr12: ${e.toString()}');
+                  // print('errorr12: ${e.toString()}');
                 }
               },
               child: Text(

@@ -18,14 +18,14 @@ import 'package:found_adoption_application/services/center/petApi.dart';
 import 'package:found_adoption_application/services/followApi.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 
-class Home_Guest_NoLogin extends StatefulWidget {
-  const Home_Guest_NoLogin({super.key});
+class Home_Guest extends StatefulWidget {
+  const Home_Guest({super.key});
 
   @override
-  State<Home_Guest_NoLogin> createState() => _Home_Guest_NoLoginState();
+  State<Home_Guest> createState() => _Home_GuestState();
 }
 
-class _Home_Guest_NoLoginState extends State<Home_Guest_NoLogin>
+class _Home_GuestState extends State<Home_Guest>
     with SingleTickerProviderStateMixin {
   late TabController _tabController = TabController(length: 2, vsync: this);
   late List<bool> isLoadingFollows = [false, false, false, false];
@@ -227,12 +227,15 @@ class _PetSaleWidgetState extends State<PetSaleWidget> {
                     if (listPetSale.isEmpty) {
                       return const Center(
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize
+                              .min, 
                           children: [
                             Icon(
-                              Icons.pets,
-                              size: 30.0,
-                              color: Colors.grey,
+                              Icons
+                                  .pets, 
+                              size: 30.0, 
+                              color:
+                                  Colors.grey, 
                             ),
                             Text("Không có thú cưng nào được giảm giá!"),
                           ],
@@ -372,14 +375,23 @@ class CenterFavorite extends StatefulWidget {
 
 class _CenterFavoriteState extends State<CenterFavorite> {
   Future<List<CenterHot>>? centerHotFuture;
+  // ignore: prefer_typing_uninitialized_variables
+  var currentClient;
   List<CenterHot>? listCenterHot;
 
   @override
   void initState() {
     super.initState();
     centerHotFuture = getCenterHot();
+    getClient();
   }
 
+  Future<void> getClient() async {
+    var temp = await getCurrentClient();
+    setState(() {
+      currentClient = temp;
+    });
+  }
 
   // void updateFollower(bool follow, int index) {
   //   setState(() {
@@ -443,9 +455,20 @@ class _CenterFavoriteState extends State<CenterFavorite> {
                     );
                   } else {
                     listCenterHot = snapshot.data as List<CenterHot>;
-                    for (var centerHot in listCenterHot!) {
-                      centerHot.follower = centerHot.followerUser.length +
-                          centerHot.followerCenter.length;
+                    if (currentClient.role == "USER") {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerUser.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
+                    } else {
+                      for (var centerHot in listCenterHot!) {
+                        centerHot.follow =
+                            centerHot.followerCenter.contains(currentClient.id);
+                        centerHot.follower = centerHot.followerUser.length +
+                            centerHot.followerCenter.length;
+                      }
                     }
 
                     return ListView.builder(

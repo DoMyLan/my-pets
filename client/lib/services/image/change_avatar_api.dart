@@ -59,9 +59,9 @@ Future<String> changeAvatar(BuildContext context, imageFile) async {
       url = responseData['url'];
     } else {
       // Handle error
-      print('Error uploading image: ${response.statusCode}');
+      // print('Error uploading image: ${response.statusCode}');
       var errorBody = await response.stream.bytesToString();
-      print('Error response: $errorBody');
+      // print('Error response: $errorBody');
     }
 
     //call api update avatar

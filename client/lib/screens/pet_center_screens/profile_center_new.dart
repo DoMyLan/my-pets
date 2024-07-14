@@ -6,8 +6,10 @@ import 'package:found_adoption_application/custom_widget/post_card.dart';
 import 'package:found_adoption_application/models/post.dart';
 import 'package:found_adoption_application/models/userCenter.dart';
 import 'package:found_adoption_application/screens/adoption_screen.dart';
+import 'package:found_adoption_application/screens/call_login.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
-import 'package:found_adoption_application/screens/guest/widget.dart';
+import 'package:found_adoption_application/screens/guest_login/widget.dart';
+import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/user_screens/follower_screen.dart';
@@ -81,10 +83,14 @@ class _ProfileCenterState extends State<ProfileCenter>
     if (widget.centerId != "") {
       var temp = await getCurrentClient();
       infoCenter = await getProfileCenter(context, widget.centerId);
-      if (temp.role == "USER") {
-        infoCenter.follow = infoCenter.followerUser.contains(temp.id);
+      if (temp == null) {
+        infoCenter.follow = false;
       } else {
-        infoCenter.follow = infoCenter.followerCenter.contains(temp.id);
+        if (temp.role == "USER") {
+          infoCenter.follow = infoCenter.followerUser.contains(temp.id);
+        } else {
+          infoCenter.follow = infoCenter.followerCenter.contains(temp.id);
+        }
       }
       petStoriesPosts = getAllPostPersonal(widget.centerId);
     } else {
@@ -308,53 +314,58 @@ class _ProfileCenterState extends State<ProfileCenter>
                                     const SizedBox(
                                       height: 15,
                                     ),
-                                    (currentClient.id == widget.centerId ||
-                                            widget.centerId == "")
-                                        ? PopupMenuButton<int>(
-                                            onSelected: (item) =>
-                                                onSelected(context, item),
-                                            itemBuilder: (context) => [
-                                              const PopupMenuItem<int>(
-                                                value: 0,
-                                                child: Text(
-                                                    'Chỉnh sửa trang cá nhân'),
-                                              ),
-                                              const PopupMenuItem<int>(
-                                                value: 1,
-                                                child: Text('Đổi mật khẩu'),
-                                              ),
-                                            ],
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  140,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  color: Colors.teal),
-                                              child: !isLoading
-                                                  ? const Center(
-                                                      child: Text(
-                                                        "Cập nhật thông tin",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    )
-                                                  : const OnPressedButton(
-                                                      size: 13,
-                                                      strokeWidth: 2.0,
-                                                    ),
-                                            ),
-                                          )
-                                        : OnPressFollow(
-                                            follow: center!.follow,
-                                            id: center!.id)
+                                    currentClient != null
+                                        ? (currentClient.id ==
+                                                    widget.centerId ||
+                                                widget.centerId == "")
+                                            ? PopupMenuButton<int>(
+                                                onSelected: (item) =>
+                                                    onSelected(context, item),
+                                                itemBuilder: (context) => [
+                                                  const PopupMenuItem<int>(
+                                                    value: 0,
+                                                    child: Text(
+                                                        'Chỉnh sửa trang cá nhân'),
+                                                  ),
+                                                  const PopupMenuItem<int>(
+                                                    value: 1,
+                                                    child: Text('Đổi mật khẩu'),
+                                                  ),
+                                                ],
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      140,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.teal),
+                                                  child: !isLoading
+                                                      ? const Center(
+                                                          child: Text(
+                                                            "Cập nhật thông tin",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        )
+                                                      : const OnPressedButton(
+                                                          size: 13,
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                ),
+                                              )
+                                            : OnPressFollow(
+                                                follow: center!.follow,
+                                                id: center!.id)
+                                        : const SizedBox()
                                   ],
                                 )
                               ],
@@ -545,9 +556,17 @@ class _ProfileCenterState extends State<ProfileCenter>
                                         child: TabBarView(
                                           controller: _tabController,
                                           children: [
-                                            buildPostsList(petStoriesPosts),
-                                            ListVideo(id: center!.id),
-                                            AdoptionScreen(centerId: center!.id)
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : buildPostsList(
+                                                    petStoriesPosts),
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : ListVideo(id: center!.id),
+                                            currentClient == null
+                                                ? const CallLogin()
+                                                : AdoptionScreen(
+                                                    centerId: center!.id)
                                           ],
                                         ),
                                       ),

@@ -641,6 +641,7 @@ class _TheOrdersState extends State<TheOrders>
 
 // ignore: must_be_immutable
 class TabTrackingOrder extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var status;
   TabTrackingOrder({
     super.key,
@@ -747,13 +748,13 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                 ),
                                 child: Row(
                                   children: [
-                                    Expanded(child: Divider()),
+                                    const Expanded(child: Divider()),
                                     Text(
                                       isToday ? 'Hôm nay' : 'Ngày $orderDate',
                                       style: const TextStyle(
                                           fontSize: 16, color: Colors.grey),
                                     ),
-                                    Expanded(child: Divider()),
+                                    const Expanded(child: Divider()),
                                   ],
                                 ),
                               ),

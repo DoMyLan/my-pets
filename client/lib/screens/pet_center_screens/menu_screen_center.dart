@@ -50,7 +50,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       const Icon(FontAwesomeIcons.bell),
     ];
 
-    print("test numNotify: ${numNotify}");
+    // print("test numNotify: ${numNotify}");
   }
 
   @override
@@ -71,7 +71,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
     setState(() {
       numNotify = prefs.getInt('numNotify') ?? 0;
       updateIcons();
-      print("check numNotify: $numNotify");
+      // print("check numNotify: $numNotify");
     });
   }
 
@@ -84,7 +84,7 @@ class _MenuCenterScreenState extends State<MenuCenterScreen> {
       updateIcons();
     });
 
-    print("after click icon: ${prefs.getInt('numNotify')}");
+    // print("after click icon: ${prefs.getInt('numNotify')}");
   }
 
   Widget buildMenuRow(int index) {

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
+import 'package:found_adoption_application/screens/guest/home_guest.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/test_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +55,6 @@ Future<void> checkForChanges() async {
   int oldOrders = await getOrdersFromLocal();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int num = prefs.getInt('numNotify') ?? 0;
-
-  print("newOrders length: ${newOrders.length}");
-  print("oldOrders length: ${oldOrders}");
   if (newOrders.length > oldOrders) {
     num += (newOrders.length - oldOrders);
     await saveOrdersToLocal(num, 'numNotify');
@@ -88,7 +85,6 @@ void notify() async{
   // Hàm để thông báo có sự thay đổi
    final NotificationHandler notificationHandler = NotificationHandler();
   await notificationHandler.showNotification();
-  print('Orders have changed!');
 }
 
 
@@ -232,7 +228,7 @@ class _MyAppState extends State<MyApp> {
               theme: ThemeData(
                 primaryColor: mainColor,
               ),
-              home: LoginScreen(),
+              home: Home_Guest_NoLogin(),
             );
           }
         }
