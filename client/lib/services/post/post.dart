@@ -165,7 +165,7 @@ Future<void> reportPost(String postId, String title, String reason) async {
     "reason": reason,
   });
   try {
-    responseData = await api('/report/$postId', 'POST', body);
+    responseData = await api('report/$postId', 'POST', body);
     if (responseData['success']) {
       notification(responseData['message'], false);
     } else {
