@@ -517,8 +517,7 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                     orders[index]
                                                             .paymentMethods ==
                                                         'COD' &&
-                                                    orders[index]
-                                                            .statusPayment ==
+                                                    orders[index].statusPayment ==
                                                         "PENDING"
                                                 ? Row(
                                                     children: [
@@ -645,61 +644,119 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                           ),
                                                         ),
                                                       )
-                                                    : const SizedBox(),
-                                            (widget.tabIndex == 1 ||
-                                                        widget.tabIndex == 2 &&
-                                                            (orders[index]
-                                                                    .statusPayment ==
-                                                                "PAID")) ||
-                                                    (widget.tabIndex == 0 &&
-                                                        ((orders[index].statusPayment ==
-                                                                    'PENDING' &&
-                                                                orders[index]
-                                                                        .paymentMethods ==
-                                                                    'COD') ||
+                                                    : widget.tabIndex == 2 &&
                                                             orders[index]
                                                                     .paymentMethods ==
-                                                                'ONLINE'))
-                                                ? GestureDetector(
-                                                    onTap: () async {
-                                                      Loading(context);
-                                                      await changeStatusOrder(
-                                                          orders[index].id,
-                                                          statusOrder[
-                                                              widget.tabIndex +
-                                                                  1]);
-                                                      // ignore: use_build_context_synchronously
-                                                      Navigator.pop(context);
+                                                                'ONLINE' &&
+                                                            orders[index]
+                                                                    .statusPayment ==
+                                                                "PENDING"
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              Loading(context);
+                                                              //Hủy đơn hàng
+                                                              await changeStatusOrder(
+                                                                  orders[index]
+                                                                      .id,
+                                                                  "CANCEL");
+                                                              Navigator.pop(
+                                                                  context);
+                                                              setState(() {
+                                                                orders.removeAt(
+                                                                    index);
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              width: 120,
+                                                              height: 30,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                color: Colors
+                                                                    .redAccent,
+                                                              ),
+                                                              child:
+                                                                  const Center(
+                                                                child: Text(
+                                                                  'Hủy đơn',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : (widget.tabIndex == 1 ||
+                                                                    widget.tabIndex ==
+                                                                            2 &&
+                                                                        (orders[index].statusPayment ==
+                                                                            "PAID")) ||
+                                                                (widget.tabIndex ==
+                                                                        0 &&
+                                                                    ((orders[index].statusPayment == 'PENDING' && orders[index].paymentMethods == 'COD') ||
+                                                                        orders[index].paymentMethods ==
+                                                                            'ONLINE'))
+                                                            ? GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  Loading(
+                                                                      context);
+                                                                  await changeStatusOrder(
+                                                                      orders[index]
+                                                                          .id,
+                                                                      statusOrder[
+                                                                          widget.tabIndex +
+                                                                              1]);
+                                                                  // ignore: use_build_context_synchronously
+                                                                  Navigator.pop(
+                                                                      context);
 
-                                                      setState(() {
-                                                        orders.removeAt(index);
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                      width: 85,
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        color: Colors.orange,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          statusOrderButton[
-                                                              widget.tabIndex],
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : const SizedBox(),
+                                                                  setState(() {
+                                                                    orders.removeAt(
+                                                                        index);
+                                                                  });
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  width: 85,
+                                                                  height: 30,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      statusOrderButton[
+                                                                          widget
+                                                                              .tabIndex],
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : const SizedBox(),
                                           ],
                                         ),
                                         const SizedBox(
