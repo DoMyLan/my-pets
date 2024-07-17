@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:found_adoption_application/screens/change_password.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/best_seller_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/edit_profile_center.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/inventory_screen.dart';
 import 'package:found_adoption_application/screens/pet_center_screens/menu_frame_center.dart';
 import 'package:found_adoption_application/screens/revenue/revenue_statistic.dart';
 import 'package:found_adoption_application/screens/user_screens/menu_frame_user.dart';
@@ -33,18 +35,24 @@ class _SettingScreenState extends State<SettingScreen> {
     'Sửa thông tin cá nhân',
     'Đổi mật khẩu',
     'Doanh thu',
+    'Thú cưng tồn kho',
+    'Thú cưng bán chạy'
   ];
 
   List<IconData> icons = [
     FontAwesomeIcons.userAlt,
     FontAwesomeIcons.lockOpen,
     Icons.show_chart_sharp,
+    Icons.pets,
+    Icons.pets
   ];
 
   List<Widget> menuScreens = [
     EditProfileCenterScreen(),
     UpdatePasswordScreen(),
     RevenueReportScreen(),
+    LongTermStockPetsScreen(),
+     BestSellingPetsScreen()
   ];
 
   @override

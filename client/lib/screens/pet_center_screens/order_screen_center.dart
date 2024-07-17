@@ -646,15 +646,20 @@ class _TabTrackingOrderState extends State<TabTrackingOrder> {
                                                         ),
                                                       )
                                                     : const SizedBox(),
-                                            widget.tabIndex < 3 &&
-                                                    ((orders[index].statusPayment ==
-                                                                'PAID' &&
+                                            (widget.tabIndex == 1 ||
+                                                        widget.tabIndex == 2 &&
+                                                            (orders[index]
+                                                                    .statusPayment ==
+                                                                "PAID")) ||
+                                                    (widget.tabIndex == 0 &&
+                                                        ((orders[index].statusPayment ==
+                                                                    'PENDING' &&
+                                                                orders[index]
+                                                                        .paymentMethods ==
+                                                                    'COD') ||
                                                             orders[index]
                                                                     .paymentMethods ==
-                                                                'COD') ||
-                                                        orders[index]
-                                                                .paymentMethods ==
-                                                            'ONLINE')
+                                                                'ONLINE'))
                                                 ? GestureDetector(
                                                     onTap: () async {
                                                       Loading(context);

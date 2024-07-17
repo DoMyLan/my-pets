@@ -3,7 +3,9 @@ import 'package:found_adoption_application/models/breed_model.dart';
 import 'package:found_adoption_application/models/centerLoad.dart';
 import 'package:found_adoption_application/models/center_hot_model.dart';
 import 'package:found_adoption_application/models/pet.dart';
+import 'package:found_adoption_application/models/pet_inventory.dart';
 import 'package:found_adoption_application/models/pet_sale_model.dart';
+import 'package:found_adoption_application/screens/pet_center_screens/best_seller_screen.dart';
 import 'package:found_adoption_application/services/api.dart';
 import 'package:found_adoption_application/services/image/multi_image_api.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
@@ -430,4 +432,34 @@ Future<List<Pet>> getPetBreed(String breed) async {
     //  notification(e.toString(), true);
     return [];
   }
+}
+
+Future<List<PetInventory>> getPetInventory(day) async {
+  // ignore: prefer_typing_uninitialized_variables
+  var responseData;
+  try {
+    final apiUrl = "pet/inventory/day?day=$day";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<PetInventory> pets =
+      petList.map((json) => PetInventory.fromJson(json)).toList();
+  return pets;
+}
+
+Future<List<BreedBestSeller>> getPetStats(type) async {
+  // ignore: prefer_typing_uninitialized_variables
+  var responseData;
+  try {
+    final apiUrl = "pet/bestseller/breeds/type?type=$type";
+    responseData = await api(apiUrl, "GET", '');
+  } catch (e) {
+    print(e);
+  }
+  var petList = responseData['data'] as List<dynamic>;
+  List<BreedBestSeller> pets =
+      petList.map((json) => BreedBestSeller.fromJson(json)).toList();
+  return pets;
 }

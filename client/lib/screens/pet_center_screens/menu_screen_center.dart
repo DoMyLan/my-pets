@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:found_adoption_application/custom_widget/design_icon.dart';
 import 'package:found_adoption_application/main.dart';
 import 'package:found_adoption_application/screens/guest/home_guest.dart';
-import 'package:found_adoption_application/screens/login_screen.dart';
 import 'package:found_adoption_application/screens/setting.dart';
 import 'package:found_adoption_application/utils/getCurrentClient.dart';
 import 'package:hive/hive.dart';
